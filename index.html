@@ -3,14 +3,24 @@
 
 <head>
     <title>Cylinder Chess</title>
+    <script>
+        const startgame = document.getElementById("startgame");
+        startgame.addEventListener("click", function () {
+            fetch("/api", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: { 'startgame': true }
+            }).then(res => {
+                console.log("Request complete! response:", res);
+            });
+        });
+    </script>
 </head>
 
 <body>
     <h1>Cylinder Chess</h1>
     <p>hello hello.</p>
-    <form action="" method="post">
-        <input type="submit" name="Start Game" value="init_game" />
-    </form>
+    <div id="start_game">Start Game</div>
 </body>
 
 </html>
