@@ -1,17 +1,9 @@
-import fs from 'fs';
-import { createServer } from 'http';
+const http = require('http');
 
 const requestListener = function (req, res) {
-    fs.readFile(__dirname + 'index.file', function (err, data) {
-        if (err) {
-            res.writeHead(404);
-            res.end(JSON.stringify(err));
-            return;
-        }
-        res.writeHead(200);
-        res.end(data);
-    });
+    res.writeHead(200);
+    res.end('Hello, World!');
 }
 
-const server = createServer(requestListener);
+const server = http.createServer(requestListener);
 server.listen(3000);
