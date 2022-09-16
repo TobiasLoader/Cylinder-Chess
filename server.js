@@ -1,9 +1,18 @@
-const http = require('http');
+var fs = require('fs'),
+    http = require('http');
 
 const requestListener = function (req, res) {
-    res.writeHead(200);
-    res.end('Hello, World!');
+    fs.readFile(__dirname + 'index.file', function (err, data) {
+        if (err) {
+            res.writeHead(404);
+            res.end(JSON.stringify(err));
+            console.log(JSON.stringify(err));
+            return;
+        }
+        res.writeHead(200);
+        res.end(data);
+    });
 }
 
-const server = http.createServer(requestListener);
+const server = createServer(requestListener);
 server.listen(3000);
