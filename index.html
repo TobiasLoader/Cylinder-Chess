@@ -31,13 +31,13 @@
     });
 
     const joingame = document.getElementById("joingame");
-    startgame.addEventListener("click", function () {
+    joingame.addEventListener("click", function () {
         fetch("/api", {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: { 'joingame': true }
         }).then(res => {
-            console.log("Request complete! response:", res);
+            console.log("Request complete! response:", res.toString());
         });
     });
 </script>

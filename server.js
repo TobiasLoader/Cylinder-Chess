@@ -3,7 +3,7 @@ var fs = require('fs'),
 
 const requestListener = function (request, response) {
     const { headers, method, url } = request;
-    console.log(headers, method, url);
+    console.log(method, url);
     let body = [];
     request.on('error', (err) => {
         console.error(err);
@@ -11,7 +11,7 @@ const requestListener = function (request, response) {
         body.push(chunk);
     }).on('end', () => {
         body = Buffer.concat(body).toString();
-        console.log(body);
+        console.log(body.toString());
         if (method == "GET") {
             fs.readFile(__dirname + '/index.html', function (err, data) {
                 if (err) {
