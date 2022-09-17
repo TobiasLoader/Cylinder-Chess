@@ -2,7 +2,7 @@ var fs = require('fs'),
     http = require('http');
 
 function readStaticFile(res, filepath) {
-    fs.readFile(__dirname + '/' + filepath, function (err, data) {
+    return fs.readFile(__dirname + '/' + filepath, function (err, data) {
         if (err) {
             res.writeHead(404);
             res.end(JSON.stringify(err));
@@ -26,6 +26,7 @@ const requestListener = function (request, response) {
         if (method == "GET") {
             const indexhtml = readStaticFile(response, 'index.html');
             const stylescss = readStaticFile(response, 'styles.css');
+            console.log(indexhtml, stylescss);
             if (indexhtml && stylescss) {
                 response.writeHead(200);
                 response.write(indexhtml);
