@@ -21,7 +21,7 @@
 <script>
     const startgame = document.getElementById("startgame");
     startgame.addEventListener("click", function () {
-        fetch("/api", {
+        fetch("/game_init", {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 'startgame': true })
@@ -32,7 +32,7 @@
 
     const joingame = document.getElementById("joingame");
     joingame.addEventListener("click", function () {
-        fetch("/api", {
+        fetch("/game_init", {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 'joingame': true })

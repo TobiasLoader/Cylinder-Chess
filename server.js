@@ -3,10 +3,11 @@ const app = express()
 
 app.use(express.static('public'))
 
-// app.get('/', (req, res) => {
-// })
+app.get('/favicon', (req, res) => {
+    res.sendFile('favicon.ico');
+})
 
-app.post('/', (req, res) => {
+app.post('/game_init', (req, res) => {
     const { headers, method, url } = req;
     console.log(method, url);
     let body = [];
@@ -21,9 +22,7 @@ app.post('/', (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log(`listening on port 3000`)
-})
+app.listen(3000)
 
 // var fs = require('fs'),
 //     http = require('http');
