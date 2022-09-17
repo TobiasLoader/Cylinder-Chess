@@ -12,16 +12,22 @@ const requestListener = function (request, response) {
     }).on('end', () => {
         body = Buffer.concat(body).toString();
         console.log(body);
-        fs.readFile(__dirname + '/index.html', function (err, data) {
-            if (err) {
-                res.writeHead(404);
-                res.end(JSON.stringify(err));
-                console.log(JSON.stringify(err));
-                return;
-            }
+        if (method == "GET") {
+            fs.readFile(__dirname + '/index.html', function (err, data) {
+                if (err) {
+                    res.writeHead(404);
+                    res.end(JSON.stringify(err));
+                    console.log(JSON.stringify(err));
+                    return;
+                }
+                response.writeHead(200);
+                response.end(data);
+            });
+        }
+        if (method == "POST") {
             response.writeHead(200);
-            response.end(data);
-        });
+            response.end(body);
+        }
     });
 }
 

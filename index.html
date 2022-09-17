@@ -14,13 +14,25 @@
                 console.log("Request complete! response:", res);
             });
         });
+
+        const joingame = document.getElementById("joingame");
+        startgame.addEventListener("click", function () {
+            fetch("/api", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: { 'joingame': true }
+            }).then(res => {
+                console.log("Request complete! response:", res);
+            });
+        });
     </script>
 </head>
 
 <body>
     <h1>Cylinder Chess</h1>
     <p>hello hello.</p>
-    <div id="start_game">Start Game</div>
+    <div id="startgame" class="postbutton">Start Game</div>
+    <div id="joingame" class="postbutton">Join Game</div>
 </body>
 
 </html>
