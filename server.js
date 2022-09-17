@@ -3,19 +3,16 @@ var fs = require('fs'),
 
 async function sendStaticFiles(res, filepaths) {
     for (var filepath of filepaths) {
-        fs.readFile(__dirname + '/' + filepath, function (err, data) {
-            if (res.writeableEnded) {
-                if (!err) {
-                    res.write(data);
-                    console.log(filepath + ' found')
-                } else {
-                    res.writeHead(404);
-                    res.end(JSON.stringify(err));
-                    res.log(JSON.stringify(err));
-                    console.log(filepath + ' not found')
-                }
-            }
-        });
+        var file;
+        try {
+            file = fs.readFileSync(__dirname + '/' + filepath);
+            res.write(file);
+            console.log(filepath + ' found');
+
+        } catch (err) {
+            res.log(JSON.stringify(err));
+            console.log(filepath + ' not found');
+        }
     }
 }
 
@@ -32,11 +29,9 @@ const requestListener = function (request, response) {
     }).on('end', () => {
         body = Buffer.concat(body).toString();
         if (method == "GET") {
-            (async () => {
-                response.writeHead(200);
-                await sendStaticFiles(response, ['index.html', 'styles.css']);
-                response.end();
-            })();
+            response.writeHead(200);
+            sendStaticFiles(response, ['index.html', 'styles.css']);
+            response.end();
         }
         if (method == "POST") {
             response.writeHead(200);
