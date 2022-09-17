@@ -25,8 +25,11 @@
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 'startgame': true })
-        }).then(res => {
-            console.log("Request complete! response:", res);
+        }).then(function (response) {
+            return response.text();
+        }).then(function (data) {
+            console.log('startgame body:');
+            console.log(data);
         });
     });
 
@@ -36,8 +39,11 @@
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 'joingame': true })
-        }).then(res => {
-            console.log("Request complete! response:", res.toString());
+        }).then(function (response) {
+            return response.text();
+        }).then(function (data) {
+            console.log('joingame body:');
+            console.log(data);
         });
     });
 </script>
