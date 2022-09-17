@@ -24,7 +24,7 @@
         fetch("/api", {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
-            body: { 'startgame': true }
+            body: JSON.stringify({ 'startgame': true })
         }).then(res => {
             console.log("Request complete! response:", res);
         });
@@ -35,7 +35,7 @@
         fetch("/api", {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
-            body: { 'joingame': true }
+            body: JSON.stringify({ 'joingame': true })
         }).then(res => {
             console.log("Request complete! response:", res.toString());
         });

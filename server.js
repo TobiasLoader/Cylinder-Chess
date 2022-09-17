@@ -1,6 +1,17 @@
 var fs = require('fs'),
     http = require('http');
 
+function readStaticFile(res, filepath) {
+    fs.readFile(__dirname + '/' + filepath, function (err, data) {
+        if (err) {
+            res.writeHead(404);
+            res.end(JSON.stringify(err));
+            res.log(JSON.stringify(err));
+            return false;
+        } else return data;
+    });
+}
+
 const requestListener = function (request, response) {
     const { headers, method, url } = request;
     console.log(method, url);
@@ -10,19 +21,17 @@ const requestListener = function (request, response) {
     }).on('data', (chunk) => {
         body.push(chunk);
     }).on('end', () => {
+        console.log(body);
         body = Buffer.concat(body).toString();
-        console.log(body.toString());
         if (method == "GET") {
-            fs.readFile(__dirname + '/index.html', function (err, data) {
-                if (err) {
-                    res.writeHead(404);
-                    res.end(JSON.stringify(err));
-                    console.log(JSON.stringify(err));
-                    return;
-                }
+            const indexhtml = readStaticFile(response, 'index.html');
+            const stylescss = readStaticFile(response, 'styles.css');
+            if (indexhtml && stylescss) {
                 response.writeHead(200);
-                response.end(data);
-            });
+                response.write(indexhtml);
+                response.write(styles.css);
+                response.end();
+            }
         }
         if (method == "POST") {
             response.writeHead(200);
@@ -33,4 +42,3 @@ const requestListener = function (request, response) {
 
 const server = http.createServer(requestListener);
 server.listen(3000);
-
