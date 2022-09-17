@@ -1,14 +1,14 @@
 var fs = require('fs'),
     http = require('http');
 
-function readStaticFile(res, filepath) {
-    return fs.readFile(__dirname + '/' + filepath, function (err, data) {
+function sendStaticFile(res, filepath) {
+    fs.readFileSync(__dirname + '/' + filepath, function (err, data) {
         if (err) {
             res.writeHead(404);
             res.end(JSON.stringify(err));
             res.log(JSON.stringify(err));
-            return false;
-        } else return data;
+        }
+        res.write(data);
     });
 }
 
@@ -21,18 +21,12 @@ const requestListener = function (request, response) {
     }).on('data', (chunk) => {
         body.push(chunk);
     }).on('end', () => {
-        console.log(body);
         body = Buffer.concat(body).toString();
         if (method == "GET") {
-            const indexhtml = readStaticFile(response, 'index.html');
-            const stylescss = readStaticFile(response, 'styles.css');
-            console.log(indexhtml, stylescss);
-            if (indexhtml && stylescss) {
-                response.writeHead(200);
-                response.write(indexhtml);
-                response.write(stylescss);
-                response.end();
-            }
+            response.writeHead(200);
+            sendStaticFile(response, 'index.html');
+            sendStaticFile(response, 'styles.css');
+            response.end();
         }
         if (method == "POST") {
             response.writeHead(200);
