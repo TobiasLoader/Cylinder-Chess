@@ -29,7 +29,7 @@ const requestListener = function (request, response) {
             if (indexhtml && stylescss) {
                 response.writeHead(200);
                 response.write(indexhtml);
-                response.write(styles.css);
+                response.write(stylescss);
                 response.end();
             }
         }
