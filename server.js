@@ -2,15 +2,21 @@ var fs = require('fs'),
     http = require('http');
 
 function sendStaticFile(res, filepath) {
-    fs.readFileSync(__dirname + '/' + filepath, function (err, data) {
-        if (err) {
-            res.writeHead(404);
-            res.end(JSON.stringify(err));
-            res.log(JSON.stringify(err));
+    fs.readFile(__dirname + '/' + filepath, function (err, data) {
+        if (res.writeableEnded) {
+            if (!err) {
+                res.write(data);
+                console.log('hey');
+            } else {
+                res.writeHead(404);
+                res.end(JSON.stringify(err));
+                res.log(JSON.stringify(err));
+            }
         }
-        res.write(data);
     });
 }
+
+
 
 const requestListener = function (request, response) {
     const { headers, method, url } = request;
