@@ -14,6 +14,7 @@ app.get('/favicon', (req, res) => {
 })
 
 var gameid = 1000;
+var gamehost = {};
 var numplayers = {};
 
 app.post('/game_init', (req, res) => {
@@ -30,8 +31,6 @@ app.post('/game_init', (req, res) => {
         if (body['type'] == 'init') {
             body['room'] = gameid;
             gameid += 1;
-        } else if (body['type'] == 'join') {
-            app.use(express.static('public'))
         }
         res.writeHead(200);
         res.end(Buffer.from(JSON.stringify(body)));
@@ -39,20 +38,29 @@ app.post('/game_init', (req, res) => {
 });
 
 io.sockets.on('connection', function (socket) {
-    console.log('connected');
+    console.log('socket initiated');
+
+    socket.on('createroom', function (room, user) {
+        console.log('room ' + room.toString() + 'created by ' + user);
+        gamehost[room] = user;
+    });
     socket.on('join', function (room) {
-        if (numplayers[room] == undefined || numplayers[room] < 2) {
-            socket.join(room);
-            socket.room = room;
-            if (numplayers[room] == undefined) {
-                numplayers[room] = 1;
-            } else {
-                numplayers[room] += 1;
-            }
-            console.log('joined room ' + room.toString())
-            console.log('there are now ' + numplayers[room] + ' players')
-            if (numplayers[room] == 2) {
-                io.sockets.in(room).emit('room full', 'true');
+        if (gamehost[room] == undefined) {
+            socket.emit('error', 'game doesn\'t exist')
+        } else {
+            if (numplayers[room] == undefined || numplayers[room] < 2) {
+                socket.join(room);
+                socket.room = room;
+                if (numplayers[room] == undefined) {
+                    numplayers[room] = 1;
+                } else {
+                    numplayers[room] += 1;
+                }
+                console.log('joined room ' + room.toString())
+                console.log('there are now ' + numplayers[room] + ' players')
+                if (numplayers[room] == 2) {
+                    io.sockets.in(room).emit('capacity', 'room full');
+                }
             }
         }
     });
