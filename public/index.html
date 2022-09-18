@@ -12,7 +12,14 @@
     <div id="startgame" class="postbutton">Start Game</div>
     <input id="roomnum" />
     <div id="joingame" class="postbutton">Join Game</div>
-    <div id="gamearea" style="display:none;width:400px;height:400px;border:black 1px solid;">Game AREA</div>
+    <div id="waitingarea" style="display:none;width:400px;height:400px;border:black 1px solid;">
+        Waiting AREA
+        <h2 class="room"></h2>
+    </div>
+    <div id="gamearea" style="display:none;width:400px;height:400px;border:black 1px solid;">
+        Game AREA
+        <h2 class="room"></h2>
+    </div>
 </body>
 
 <script src="/socket.io/socket.io.js"></script>

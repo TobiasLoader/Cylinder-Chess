@@ -60,7 +60,7 @@ io.sockets.on('connection', function (socket) {
                 console.log('there are now ' + numplayers[room] + ' players')
                 socket.emit('status', 'joined');
                 if (numplayers[room] == 2) {
-                    io.sockets.in(room).emit('capacity', 'room full');
+                    io.sockets.in(room).emit('status', 'full');
                 }
             } else {
                 socket.emit('error', 'the room is already full, you cannot join')
