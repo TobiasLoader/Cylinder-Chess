@@ -8,10 +8,11 @@ function logsocketresponses(socket) {
 }
 
 function begingame() {
-  document.getElementById("startgame").style('display', 'none');
-  document.getElementById("joingame").style('display', 'none');
-  document.getElementById("roomnum").style('display', 'none');
-  document.getElementById("gamearea").style('display', 'block');
+  console.log('game is joined');
+  document.getElementById("startgame").style.display = 'none';
+  document.getElementById("joingame").style.display = 'none';
+  document.getElementById("roomnum").style.display = 'none';
+  document.getElementById("gamearea").style.display = 'block';
 }
 
 const startgame = document.getElementById("startgame");
