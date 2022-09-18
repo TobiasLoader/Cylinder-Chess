@@ -9,6 +9,10 @@ startgame.addEventListener("click", function () {
   }).then(function (data) {
     console.log('startgame body:');
     console.log(data);
+    if (data['startgame'] == true) {
+      var socket = io();
+      socket.emit('join', data['room']);
+    }
   });
 });
 

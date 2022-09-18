@@ -1,11 +1,17 @@
 const express = require('express')
 const app = express()
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
 app.use(express.static('public'))
 
 app.get('/favicon', (req, res) => {
     res.sendFile('favicon.ico');
 })
+
+var gameid = 0;
 
 app.post('/game_init', (req, res) => {
     const { headers, method, url } = req;
@@ -17,10 +23,18 @@ app.post('/game_init', (req, res) => {
         body.push(chunk);
     }).on('end', () => {
         body = Buffer.concat(body).toString();
-        console.log(JSON.parse(body));
+        body = JSON.parse(body);
+        body['room'] = gameid;
+        gameid += 1;
         res.writeHead(200);
         res.end(body);
     });
 });
 
-app.listen(3000);
+io.sockets.on('connection', function (socket) {
+    socket.on('join', function (room) {
+        socket.join(room);
+        console.log('joined room ' + r0oom.toString())
+    });
+});
+server.listen(3000);
