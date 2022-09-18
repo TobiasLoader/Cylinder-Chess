@@ -3,49 +3,14 @@
 
 <head>
     <title>Cylinder Chess</title>
-
 </head>
 
 <body>
     <h1>Cylinder Chess</h1>
     <p>hello hello.</p>
-    <div id="startgame" class="postbutton" style="border: black 1px solid;
-    width: 200px;
-    height: 100px;
-    cursor: pointer;">Start Game</div>
-    <div id="joingame" class="postbutton" style="border: black 1px solid;
-    width: 200px;
-    height: 100px;
-    cursor: pointer;">Join Game</div>
+    <div id="startgame" class="postbutton">Start Game</div>
+    <div id="joingame" class="postbutton">Join Game</div>
 </body>
-<script>
-    const startgame = document.getElementById("startgame");
-    startgame.addEventListener("click", function () {
-        fetch("/game_init", {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 'startgame': true })
-        }).then(function (response) {
-            return response.text();
-        }).then(function (data) {
-            console.log('startgame body:');
-            console.log(data);
-        });
-    });
-
-    const joingame = document.getElementById("joingame");
-    joingame.addEventListener("click", function () {
-        fetch("/game_init", {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 'joingame': true })
-        }).then(function (response) {
-            return response.text();
-        }).then(function (data) {
-            console.log('joingame body:');
-            console.log(data);
-        });
-    });
-</script>
+<script src="script.js"></script>
 
 </html>
