@@ -41,7 +41,7 @@ io.sockets.on('connection', function (socket) {
     console.log('socket initiated');
 
     socket.on('createroom', function (room, user) {
-        console.log('room ' + room.toString() + 'created by ' + user);
+        console.log('room ' + room.toString() + ' created by ' + user);
         gamehost[room] = user;
     });
     socket.on('join', function (room) {

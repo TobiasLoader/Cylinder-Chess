@@ -2,6 +2,7 @@ var socket;
 
 function updateroomnumber(socket) {
   const rooms = document.getElementsByClassName("room");
+  console.log(rooms);
   for (var i = 0; i < rooms.length; i += 1) {
     rooms[i].innerText = "ROOM ID: " + socket.room.toString();
   }
@@ -16,8 +17,8 @@ function logsocketresponses(socket) {
   });
 }
 
-function waitingroom() {
-  updateroomnumber();
+function waitingroom(socket) {
+  updateroomnumber(socket);
   console.log('game is joined');
   document.getElementById("startgame").style.display = 'none';
   document.getElementById("joingame").style.display = 'none';
@@ -26,8 +27,8 @@ function waitingroom() {
   document.getElementById("gamearea").style.display = 'none';
 }
 
-function begingame() {
-  updateroomnumber();
+function begingame(socket) {
+  updateroomnumber(socket);
   console.log('game is joined');
   document.getElementById("startgame").style.display = 'none';
   document.getElementById("joingame").style.display = 'none';
@@ -50,14 +51,15 @@ startgame.addEventListener("click", function () {
     data = JSON.parse(data.toString());
     console.log(data);
     if (data['type'] == 'init') {
-      socket = io();
+      if (socket == undefined) socket = io();
       socket.emit('createroom', data['room'], 'user-1');
       socket.emit('join', data['room']);
       logsocketresponses(socket);
       socket.on('status', (msg) => {
         if (msg == 'joined') {
+          console.log('joined')
           socket.room = data['room'];
-          waitingroom();
+          waitingroom(socket);
         }
       });
     }
@@ -66,14 +68,15 @@ startgame.addEventListener("click", function () {
 
 const joingame = document.getElementById("joingame");
 joingame.addEventListener("click", function () {
-  socket = io();
+  if (socket == undefined) socket = io();
   var roomnum = Number.parseInt(document.getElementById('roomnum').value);
   if (roomnum != undefined && roomnum >= 1000) socket.emit('join', roomnum);
   logsocketresponses(socket);
   socket.on('status', (msg) => {
     if (msg == 'joined') {
+      console.log('joined')
       socket.room = roomnum;
-      begingame();
+      begingame(socket);
     }
   });
 });
