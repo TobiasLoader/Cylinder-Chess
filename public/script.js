@@ -60,6 +60,9 @@ startgame.addEventListener("click", function () {
           console.log('joined')
           socket.room = data['room'];
           waitingroom(socket);
+          socket.on('status', (msg) => {
+            if (msg == 'full') begingame(socket);
+          });
         }
       });
     }
