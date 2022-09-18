@@ -27,7 +27,7 @@ app.post('/game_init', (req, res) => {
         body['room'] = gameid;
         gameid += 1;
         res.writeHead(200);
-        res.end(body);
+        res.end(Buffer.from(JSON.stringify(body)));
     });
 });
 
