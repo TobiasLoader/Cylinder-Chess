@@ -41,7 +41,7 @@ app.post('/game_init', (req, res) => {
 io.sockets.on('connection', function (socket) {
     console.log('connected');
     socket.on('join', function (room) {
-        if (numplayers[room] < 2) {
+        if (numplayers[room] == undefined || numplayers[room] < 2) {
             socket.join(room);
             socket.room = room;
             if (numplayers[room] == undefined) {

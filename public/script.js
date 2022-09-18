@@ -8,7 +8,8 @@ startgame.addEventListener("click", function () {
     return response.text();
   }).then(function (data) {
     console.log('startgame body:');
-    console.log(JSON.parse(data.toString()));
+    data = JSON.parse(data.toString());
+    console.log(data);
     if (data['type'] == 'init') {
       var socket = io();
       socket.emit('join', data['room']);
