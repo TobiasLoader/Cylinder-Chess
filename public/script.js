@@ -83,3 +83,19 @@ joingame.addEventListener("click", function () {
     }
   });
 });
+
+const gamearea = document.getElementById("gamearea");
+socket.on('play', function (room, player) {
+  gamearea.addEventListener("click", function () {
+    socket.emit('move', Math.random(), room, player);
+  });
+});
+
+socket.on('move', function (move) {
+  console.log(move);
+});
+
+const closegame = document.getElementById("closegame");
+closegame.addEventListener("click", function () {
+  socket.emit('end');
+});

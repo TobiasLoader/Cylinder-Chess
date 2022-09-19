@@ -16,6 +16,7 @@ app.get('/favicon', (req, res) => {
 var gameid = 1000;
 var gamehost = {};
 var numplayers = {};
+var roomsockets = {};
 
 app.post('/game_init', (req, res) => {
     const { headers, method, url } = req;
@@ -43,6 +44,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('createroom', function (room, user) {
         console.log('room ' + room.toString() + ' created by ' + user);
         gamehost[room] = user;
+        roomsockets[room] = {};
     });
     socket.on('join', function (room) {
         if (gamehost[room] == undefined) {
@@ -56,16 +58,28 @@ io.sockets.on('connection', function (socket) {
                 } else {
                     numplayers[room] += 1;
                 }
+                roomsockets[room][numplayers[room]] = socket;
                 console.log('joined room ' + room.toString())
                 console.log('there are now ' + numplayers[room] + ' players')
                 socket.emit('status', 'joined');
                 if (numplayers[room] == 2) {
                     io.sockets.in(room).emit('status', 'full');
+                    roomsockets[room][1].emit('play', room, 1);
                 }
             } else {
                 socket.emit('error', 'the room is already full, you cannot join')
             }
         }
+    });
+
+
+    socket.on('move', function (move, room, player) {
+        io.sockets.in(room).emit('move', move);
+        roomsockets[room][3 - player].emit('play', room, 3 - player);
+    });
+
+    socket.on('end', function () {
+        socket.disconnect(0);
     });
 });
 
