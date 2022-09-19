@@ -1,15 +1,17 @@
 var socket;
 var mymove = false;
+var myroom = 0;
+var myplayerid = 0;
 
 const startgame = document.getElementById("startgame");
 const joingame = document.getElementById("joingame");
 const gamearea = document.getElementById("gamearea");
 const closegame = document.getElementById("closegame");
 
-function updateroomnumber(socket) {
+function updateroomnumber() {
   const rooms = document.getElementsByClassName("room");
   for (var i = 0; i < rooms.length; i += 1) {
-    rooms[i].innerText = "ROOM ID: " + socket.room.toString();
+    rooms[i].innerText = "ROOM ID: " + myroom.toString();
   }
 }
 
@@ -22,27 +24,35 @@ function logsocketresponses(socket) {
 function waitingroom(socket) {
   updateroomnumber(socket);
   console.log('game is joined');
-  document.getElementById("startgame").style.display = 'none';
-  document.getElementById("joingame").style.display = 'none';
+  startgame.style.display = 'none';
+  joingame.style.display = 'none';
   document.getElementById("roomnum").style.display = 'none';
   document.getElementById("waitingarea").style.display = 'block';
-  document.getElementById("gamearea").style.display = 'none';
+  gamearea.style.display = 'none';
 }
 
 function begingame(socket) {
-  updateroomnumber(socket);
+  myroom = socket.room;
+  updateroomnumber();
   console.log('game is joined');
-  document.getElementById("startgame").style.display = 'none';
-  document.getElementById("joingame").style.display = 'none';
+  startgame.style.display = 'none';
+  joingame.style.display = 'none';
   document.getElementById("roomnum").style.display = 'none';
   document.getElementById("waitingarea").style.display = 'none';
-  document.getElementById("gamearea").style.display = 'block';
-  gameplay(socket);
+  gamearea.style.display = 'block';
+
+  socket.on('playerid', (id) => {
+    myplayerid = id;
+    console.log('my player id: ' + id);
+  }).then(function () {
+    console.log('then');
+    gameplay(socket);
+  });
 }
 
 function gameplay(socket) {
-  socket.on('play', function (room, player) {
-    console.log('received play', room, player);
+  socket.on('play', function () {
+    console.log('received play command');
     onmymove();
   });
   socket.on('move', function (move) {
@@ -52,22 +62,22 @@ function gameplay(socket) {
 
 function onmymove() {
   mymove = true;
-  gamearea.style.background = rgb(200, 100, 100);
-  gamearea.style.color = rgb(255, 255, 255);
+  gamearea.style.background = 'rgb(200, 100, 100)';
+  gamearea.style.color = 'rgb(255, 255, 255)';
 }
 function offmymove() {
   mymove = false;
-  gamearea.style.background = rgb(255, 255, 255);
-  gamearea.style.color = rgb(0, 0, 0);
+  gamearea.style.background = 'rgb(255, 255, 255)';
+  gamearea.style.color = 'rgb(0, 0, 0)';
 }
 
 function closeaction() {
   console.log('game to be/is closed');
-  document.getElementById("startgame").style.display = 'block';
-  document.getElementById("joingame").style.display = 'block';
+  startgame.style.display = 'block';
+  joingame.style.display = 'block';
   document.getElementById("roomnum").style.display = 'block';
   document.getElementById("waitingarea").style.display = 'none';
-  document.getElementById("gamearea").style.display = 'none';
+  gamearea.style.display = 'none';
 }
 
 
@@ -118,7 +128,7 @@ joingame.addEventListener("click", function () {
 gamearea.addEventListener("click", function () {
   if (mymove) {
     console.log('move made by me');
-    socket.emit('move', Math.random(), room, player);
+    socket.emit('move', Math.random(), myroom, myplayerid);
     offmymove();
   }
 });

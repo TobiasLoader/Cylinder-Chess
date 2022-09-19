@@ -64,7 +64,9 @@ io.sockets.on('connection', function (socket) {
                 socket.emit('status', 'joined');
                 if (numplayers[room] == 2) {
                     io.sockets.in(room).emit('status', 'full');
-                    roomsockets[room][1].emit('play', room, 1);
+                    roomsockets[room][1].emit('playerid', 1);
+                    roomsockets[room][2].emit('playerid', 2);
+                    roomsockets[room][1].emit('play');
                 }
             } else {
                 socket.emit('error', 'the room is already full, you cannot join')
