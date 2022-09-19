@@ -1,8 +1,12 @@
 var socket;
 
+const startgame = document.getElementById("startgame");
+const joingame = document.getElementById("joingame");
+const gamearea = document.getElementById("gamearea");
+const closegame = document.getElementById("closegame");
+
 function updateroomnumber(socket) {
   const rooms = document.getElementsByClassName("room");
-  console.log(rooms);
   for (var i = 0; i < rooms.length; i += 1) {
     rooms[i].innerText = "ROOM ID: " + socket.room.toString();
   }
@@ -35,10 +39,37 @@ function begingame(socket) {
   document.getElementById("roomnum").style.display = 'none';
   document.getElementById("waitingarea").style.display = 'none';
   document.getElementById("gamearea").style.display = 'block';
+  gameplay(socket);
+}
+
+function gameplay(socket) {
+  socket.on('play', function (room, player) {
+    console.log('received play', room, player);
+    gamearea.addEventListener("click", function () {
+      console.log('move made');
+      socket.emit('move', Math.random(), room, player);
+    });
+  });
+  socket.on('move', function (move) {
+    console.log('move received back');
+    console.log(move);
+  });
+  closegame.addEventListener("click", function () {
+    socket.emit('end');
+    closegame();
+  });
+}
+
+function closegame() {
+  console.log('game to be/is closed');
+  document.getElementById("startgame").style.display = 'block';
+  document.getElementById("joingame").style.display = 'block';
+  document.getElementById("roomnum").style.display = 'block';
+  document.getElementById("waitingarea").style.display = 'none';
+  document.getElementById("gamearea").style.display = 'none';
 }
 
 
-const startgame = document.getElementById("startgame");
 startgame.addEventListener("click", function () {
   fetch("/game_init", {
     method: "POST",
@@ -69,7 +100,6 @@ startgame.addEventListener("click", function () {
   });
 });
 
-const joingame = document.getElementById("joingame");
 joingame.addEventListener("click", function () {
   if (socket == undefined) socket = io();
   var roomnum = Number.parseInt(document.getElementById('roomnum').value);
@@ -82,20 +112,4 @@ joingame.addEventListener("click", function () {
       begingame(socket);
     }
   });
-});
-
-const gamearea = document.getElementById("gamearea");
-socket.on('play', function (room, player) {
-  gamearea.addEventListener("click", function () {
-    socket.emit('move', Math.random(), room, player);
-  });
-});
-
-socket.on('move', function (move) {
-  console.log(move);
-});
-
-const closegame = document.getElementById("closegame");
-closegame.addEventListener("click", function () {
-  socket.emit('end');
 });

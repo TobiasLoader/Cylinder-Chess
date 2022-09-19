@@ -74,11 +74,13 @@ io.sockets.on('connection', function (socket) {
 
 
     socket.on('move', function (move, room, player) {
+        console.log('move', move, room, player);
         io.sockets.in(room).emit('move', move);
         roomsockets[room][3 - player].emit('play', room, 3 - player);
     });
 
     socket.on('end', function () {
+        console.log('disconnect');
         socket.disconnect(0);
     });
 });
