@@ -15,15 +15,15 @@ function updateroomnumber() {
   }
 }
 
-function logsocketresponses(socket) {
+function logsocketresponses() {
   socket.on('error', (msg) => {
     console.log('error: ' + msg);
   });
 }
 
-function waitingroom(socket) {
-  updateroomnumber(socket);
-  console.log('game is joined');
+function waitingroom() {
+  updateroomnumber();
+  console.log('waiting room is joined');
   startgame.style.display = 'none';
   joingame.style.display = 'none';
   document.getElementById("roomnum").style.display = 'none';
@@ -31,7 +31,7 @@ function waitingroom(socket) {
   gamearea.style.display = 'none';
 }
 
-function begingame(socket) {
+function begingame() {
   myroom = socket.room;
   updateroomnumber();
   console.log('game is joined');
@@ -44,13 +44,12 @@ function begingame(socket) {
   socket.on('playerid', (id) => {
     myplayerid = id;
     console.log('my player id: ' + id);
-  }).then(function () {
-    console.log('then');
     gameplay(socket);
   });
 }
 
-function gameplay(socket) {
+function gameplay() {
+  console.log('gameplay begun');
   socket.on('play', function () {
     console.log('received play command');
     onmymove();
@@ -99,7 +98,7 @@ startgame.addEventListener("click", function () {
       logsocketresponses(socket);
       socket.on('status', (msg) => {
         if (msg == 'joined') {
-          console.log('joined')
+          console.log('socket is joined')
           socket.room = data['room'];
           waitingroom(socket);
           socket.on('status', (msg) => {
@@ -112,20 +111,23 @@ startgame.addEventListener("click", function () {
 });
 
 joingame.addEventListener("click", function () {
-  if (socket == undefined) socket = io();
-  var roomnum = Number.parseInt(document.getElementById('roomnum').value);
-  if (roomnum != undefined && roomnum >= 1000) socket.emit('join', roomnum);
-  logsocketresponses(socket);
-  socket.on('status', (msg) => {
-    if (msg == 'joined') {
-      console.log('joined')
-      socket.room = roomnum;
-      begingame(socket);
-    }
-  });
+  if (socket == undefined) {
+    socket = io();
+    var roomnum = Number.parseInt(document.getElementById('roomnum').value);
+    if (roomnum != undefined && roomnum >= 1000) socket.emit('join', roomnum);
+    logsocketresponses(socket);
+    socket.on('status', (msg) => {
+      if (msg == 'joined') {
+        console.log('joined')
+        socket.room = roomnum;
+        begingame(socket);
+      }
+    });
+  }
 });
 
 gamearea.addEventListener("click", function () {
+  console.log('my move: ' + mymove.toString())
   if (mymove) {
     console.log('move made by me');
     socket.emit('move', Math.random(), myroom, myplayerid);
