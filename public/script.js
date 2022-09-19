@@ -1,4 +1,5 @@
 var socket;
+var mymove = false;
 
 const startgame = document.getElementById("startgame");
 const joingame = document.getElementById("joingame");
@@ -13,9 +14,6 @@ function updateroomnumber(socket) {
 }
 
 function logsocketresponses(socket) {
-  // socket.on('capacity', (msg) => {
-  //   console.log('capacity: ' + msg);
-  // });
   socket.on('error', (msg) => {
     console.log('error: ' + msg);
   });
@@ -45,22 +43,25 @@ function begingame(socket) {
 function gameplay(socket) {
   socket.on('play', function (room, player) {
     console.log('received play', room, player);
-    gamearea.addEventListener("click", function () {
-      console.log('move made');
-      socket.emit('move', Math.random(), room, player);
-    });
+    onmymove();
   });
   socket.on('move', function (move) {
-    console.log('move received back');
-    console.log(move);
-  });
-  closegame.addEventListener("click", function () {
-    socket.emit('end');
-    closegame();
+    console.log('move played on board', move);
   });
 }
 
-function closegame() {
+function onmymove() {
+  mymove = true;
+  gamearea.style.background = rgb(200, 100, 100);
+  gamearea.style.color = rgb(255, 255, 255);
+}
+function offmymove() {
+  mymove = false;
+  gamearea.style.background = rgb(255, 255, 255);
+  gamearea.style.color = rgb(0, 0, 0);
+}
+
+function closeaction() {
   console.log('game to be/is closed');
   document.getElementById("startgame").style.display = 'block';
   document.getElementById("joingame").style.display = 'block';
@@ -112,4 +113,17 @@ joingame.addEventListener("click", function () {
       begingame(socket);
     }
   });
+});
+
+gamearea.addEventListener("click", function () {
+  if (mymove) {
+    console.log('move made by me');
+    socket.emit('move', Math.random(), room, player);
+    offmymove();
+  }
+});
+
+closegame.addEventListener("click", function () {
+  socket.emit('end');
+  closeaction();
 });
