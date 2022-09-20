@@ -1,4 +1,4 @@
-import { TimeFormat } from './time.mjs';
+import { TimeFormat, printPrettyTimeFormat, updateTimeTimeFormat } from './time.mjs';
 
 var socket;
 var mymove = false;
@@ -147,8 +147,8 @@ gamearea.addEventListener("click", function () {
   if (mymove) {
     console.log('move made by me');
     const movetime = Date.now() - mymovemillis;
-    mytime.updateTime(movetime);
-    mytime.printPretty();
+    updateTimeTimeFormat(mytime, movetime);
+    printPrettyTimeFormat(mytime);
     const newtimeobject = {};
     newtimeobject[myplayerid] = mytime;
     newtimeobject[myplayerid] = opponenttime;
