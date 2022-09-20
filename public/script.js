@@ -56,6 +56,8 @@ function gameplay() {
   });
   socket.on('move', function (move) {
     console.log('move played on board', move);
+    console.log('-----');
+    document.getElementById('movemade').innerText = 'move: ' + move.toString();
   });
 }
 
