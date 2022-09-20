@@ -2,10 +2,10 @@
   "name": "cylinder-chess",
   "version": "1.0.0",
   "description": "an interactive web app to play Cylinder Chess online against friends!",
-  "main": "server.js",
+  "main": "server.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.mjs"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,5 @@
   "bugs": {
     "url": "https://github.com/TobiasLoader/Cylinder-Chess/issues"
   },
-  "homepage": "https://github.com/TobiasLoader/Cylinder-Chess#readme",
-  "type": "module"
+  "homepage": "https://github.com/TobiasLoader/Cylinder-Chess#readme"
 }

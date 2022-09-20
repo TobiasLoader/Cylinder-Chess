@@ -1,4 +1,4 @@
-import './time.mjs';
+import { TimeFormat } from './time.mjs';
 
 var socket;
 var mymove = false;

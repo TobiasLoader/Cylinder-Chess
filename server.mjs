@@ -1,4 +1,4 @@
-import './time.mjs';
+import { TimeFormat } from './time.mjs';
 
 const express = require('express')
 const app = express()
