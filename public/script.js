@@ -1,7 +1,31 @@
+class TimeFormat {
+  constructor(min, sec, inc) {
+    this.min = min;
+    this.sec = sec;
+    this.mil = 0;
+    this.inc = inc;
+    this.current_mil = 1000 * (60 * min + sec);
+  }
+  print() {
+    console.log(this.min, this.sec, this.mil, this.inc, this.current_mil);
+  }
+  printPretty() {
+    const m = Math.floor(this.current_mil / 60000);
+    const s = Math.floor((this.current_mil / 1000) - m);
+    console.log(m + ":" + s);
+  }
+  updateTime(movetime) {
+    this.current_mil -= movetime;
+  }
+}
+
 var socket;
 var mymove = false;
 var myroom = 0;
 var myplayerid = 0;
+var mytime = TimeFormat(5, 0, 0);
+var opponenttime = TimeFormat(5, 0, 0);
+var mymovemillis = 0;
 
 const startgame = document.getElementById("startgame");
 const joingame = document.getElementById("joingame");
@@ -22,6 +46,7 @@ function logsocketresponses() {
 }
 
 function waitingroom() {
+  myroom = socket.room;
   updateroomnumber();
   console.log('waiting room is joined');
   startgame.style.display = 'none';
@@ -50,12 +75,17 @@ function begingame() {
 
 function gameplay() {
   console.log('gameplay begun');
+  socket.on('time', function (time) {
+    mytime = time[myplayerid];
+    opponenttime = time[3 - myplayerid];
+  });
   socket.on('play', function () {
     console.log('received play command');
     onmymove();
   });
-  socket.on('move', function (move) {
+  socket.on('boardmove', function (move, time) {
     console.log('move played on board', move);
+    time[myplayerid].print();
     console.log('-----');
     document.getElementById('movemade').innerText = 'move: ' + move.toString();
   });
@@ -65,6 +95,7 @@ function onmymove() {
   mymove = true;
   gamearea.style.background = 'rgb(200, 100, 100)';
   gamearea.style.color = 'rgb(255, 255, 255)';
+  mymovemillis = Date.now();
 }
 function offmymove() {
   mymove = false;
@@ -132,6 +163,9 @@ gamearea.addEventListener("click", function () {
   console.log('my move: ' + mymove.toString())
   if (mymove) {
     console.log('move made by me');
+    const movetime = Date.now() - mymovemillis;
+    mytime.updatetime(movetime);
+    mytime.printPretty();
     socket.emit('move', Math.random(), myroom, myplayerid);
     offmymove();
   }

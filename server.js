@@ -5,9 +5,28 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-app.use(express.static('public'))
-// app.use('/join', express.static('join'))
+class TimeFormat {
+    constructor(min, sec, inc) {
+        this.min = min;
+        this.sec = sec;
+        this.mil = 0;
+        this.inc = inc;
+        this.current_mil = 1000 * (60 * min + sec);
+    }
+    print() {
+        console.log(this.min, this.sec, this.mil, this.inc, this.current_mil);
+    }
+    printPretty() {
+        const m = Math.floor(this.current_mil / 60000);
+        const s = Math.floor((this.current_mil / 1000) - m);
+        console.log(m + ":" + s);
+    }
+    updateTime(movetime) {
+        this.current_mil -= movetime;
+    }
+}
 
+app.use(express.static('public'))
 
 app.get('/favicon', (req, res) => {
     res.sendFile('favicon.ico');
@@ -17,6 +36,7 @@ var gameid = 1000;
 var gamehost = {};
 var numplayers = {};
 var roomsockets = {};
+var roomtimes = {};
 
 app.post('/game_init', (req, res) => {
     const { headers, method, url } = req;
@@ -45,6 +65,10 @@ io.sockets.on('connection', function (socket) {
         console.log('room ' + room.toString() + ' created by ' + user);
         gamehost[room] = user;
         roomsockets[room] = {};
+        roomtimes[room] = {
+            1: TimeFormat(5, 0, 0),
+            2: TimeFormat(5, 0, 0)
+        };
     });
     socket.on('join', function (room) {
         if (gamehost[room] == undefined) {
@@ -64,6 +88,7 @@ io.sockets.on('connection', function (socket) {
                 socket.emit('status', 'joined');
                 if (numplayers[room] == 2) {
                     io.sockets.in(room).emit('status', 'full');
+                    io.sockets.in(room).emit('time', roomtimes[room]);
                     roomsockets[room][1].emit('playerid', 1);
                     roomsockets[room][2].emit('playerid', 2);
                     roomsockets[room][1].emit('play');
@@ -74,11 +99,13 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
-
-    socket.on('move', function (move, room, player) {
+    socket.on('move', function (move, room, player, time) {
+        roomtimes[room] = time;
+        roomtimes[room][1].print();
+        roomtimes[room][2].print();
         console.log('move', move, room, player);
-        io.sockets.in(room).emit('move', move);
-        roomsockets[room][3 - player].emit('play', room, 3 - player);
+        io.sockets.in(room).emit('boardmove', move, roomtimes[room]);
+        roomsockets[room][3 - player].emit('play');
     });
 
     socket.on('end', function () {
