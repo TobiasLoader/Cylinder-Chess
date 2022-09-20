@@ -168,11 +168,10 @@ gamearea.addEventListener("click", function () {
     const movetime = Date.now() - mymovemillis;
     mytime.updateTime(movetime);
     mytime.printPretty();
-    socket.emit('move', Math.random(), myroom, myplayerid, {
-      myplayerid: mytime,
-      opponentid: opponenttime
-    }
-    );
+    const newtimeobject = {};
+    newtimeobject[myplayerid] = mytime;
+    newtimeobject[myplayerid] = opponenttime;
+    socket.emit('move', Math.random(), myroom, myplayerid, newtimeobject);
     offmymove();
   }
 });
