@@ -13,10 +13,10 @@ export function printTimeFormat(t) {
   console.log(t.min, t.sec, t.mil, t.inc, t.current_mil);
 }
 
-export function printPrettyTimeFormat(t) {
+export function strPrettyTimeFormat(t) {
   const m = Math.floor(t.current_mil / 60000);
   const s = Math.floor((t.current_mil / 1000) % 60);
-  console.log(m + ":" + s);
+  return m.toString() + ":" + s.toString();
 }
 
 export function updateTimeTimeFormat(t, move_time) {

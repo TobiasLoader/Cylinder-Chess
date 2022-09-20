@@ -1,4 +1,4 @@
-import { TimeFormat, printPrettyTimeFormat, updateTimeTimeFormat } from './time.mjs';
+import { TimeFormat, strPrettyTimeFormat, updateTimeTimeFormat } from './time.mjs';
 
 var socket;
 var mymove = false;
@@ -12,6 +12,8 @@ var mymovemillis = 0;
 const startgame = document.getElementById("startgame");
 const joingame = document.getElementById("joingame");
 const gamearea = document.getElementById("gamearea");
+const mytimeel = document.getElementById("mytime");
+const opponenttimeel = document.getElementById("opponenttime");
 const closegame = document.getElementById("closegame");
 
 function updateroomnumber() {
@@ -19,6 +21,10 @@ function updateroomnumber() {
   for (var i = 0; i < rooms.length; i += 1) {
     rooms[i].innerText = "ROOM ID: " + myroom.toString();
   }
+}
+
+function updatetime() {
+  mytimeel.innerText = strPrettyTimeFormat(mytime);
 }
 
 function logsocketresponses() {
@@ -61,6 +67,7 @@ function gameplay() {
   socket.on('time', function (time) {
     mytime = time[myplayerid];
     opponenttime = time[opponentid];
+    updatetime();
   });
   socket.on('play', function () {
     console.log('received play command');
@@ -68,8 +75,8 @@ function gameplay() {
   });
   socket.on('boardmove', function (move, time) {
     console.log('move played on board', move);
-    printPrettyTimeFormat(time[myplayerid]);
-    printPrettyTimeFormat(time[opponentid]);
+    console.log(strPrettyTimeFormat(time[myplayerid]), strPrettyTimeFormat(time[opponentid]));
+    updatetime();
     console.log('-----');
     document.getElementById('movemade').innerText = 'move: ' + move.toString();
   });
