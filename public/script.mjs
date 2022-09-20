@@ -68,7 +68,8 @@ function gameplay() {
   });
   socket.on('boardmove', function (move, time) {
     console.log('move played on board', move);
-    time[myplayerid].print();
+    printPrettyTimeFormat(time[myplayerid]);
+    printPrettyTimeFormat(time[opponentid]);
     console.log('-----');
     document.getElementById('movemade').innerText = 'move: ' + move.toString();
   });
@@ -148,10 +149,9 @@ gamearea.addEventListener("click", function () {
     console.log('move made by me');
     const movetime = Date.now() - mymovemillis;
     updateTimeTimeFormat(mytime, movetime);
-    printPrettyTimeFormat(mytime);
     const newtimeobject = {};
     newtimeobject[myplayerid] = mytime;
-    newtimeobject[myplayerid] = opponenttime;
+    newtimeobject[opponentid] = opponenttime;
     socket.emit('move', Math.random(), myroom, myplayerid, newtimeobject);
     offmymove();
   }

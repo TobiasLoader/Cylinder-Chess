@@ -86,11 +86,12 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('move', function (move, room, player, time) {
         roomtimes[room] = time;
-        printTimeFormat(1, roomtimes[room][1])
-        printTimeFormat(2, roomtimes[room][2]);
+        printTimeFormat(roomtimes[room][1]);
+        printTimeFormat(roomtimes[room][2]);
         console.log('move', move, room, player);
         io.sockets.in(room).emit('boardmove', move, roomtimes[room]);
         roomsockets[room][3 - player].emit('play');
+        console.log('play command sent');
     });
 
     socket.on('end', function () {

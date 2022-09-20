@@ -9,12 +9,13 @@ export class TimeFormat {
 }
 
 export function printTimeFormat(t) {
+  console.log(t);
   console.log(t.min, t.sec, t.mil, t.inc, t.current_mil);
 }
 
 export function printPrettyTimeFormat(t) {
-  const m = Math.floor(this.current_mil / 60000);
-  const s = Math.floor((this.current_mil / 1000) - m);
+  const m = Math.floor(t.current_mil / 60000);
+  const s = Math.floor((t.current_mil / 1000) % 60);
   console.log(m + ":" + s);
 }
 
