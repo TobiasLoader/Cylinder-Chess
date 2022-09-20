@@ -66,8 +66,8 @@ io.sockets.on('connection', function (socket) {
         gamehost[room] = user;
         roomsockets[room] = {};
         roomtimes[room] = {
-            1: TimeFormat(5, 0, 0),
-            2: TimeFormat(5, 0, 0)
+            1: new TimeFormat(5, 0, 0),
+            2: new TimeFormat(5, 0, 0)
         };
     });
     socket.on('join', function (room) {

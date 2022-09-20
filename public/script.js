@@ -23,8 +23,9 @@ var socket;
 var mymove = false;
 var myroom = 0;
 var myplayerid = 0;
-var mytime = TimeFormat(5, 0, 0);
-var opponenttime = TimeFormat(5, 0, 0);
+var opponentid = 0;
+var mytime = new TimeFormat(5, 0, 0);
+var opponenttime = new TimeFormat(5, 0, 0);
 var mymovemillis = 0;
 
 const startgame = document.getElementById("startgame");
@@ -68,6 +69,7 @@ function begingame() {
 
   socket.on('playerid', (id) => {
     myplayerid = id;
+    opponentid = 3 - id;
     console.log('my player id: ' + id);
     gameplay(socket);
   });
@@ -77,7 +79,7 @@ function gameplay() {
   console.log('gameplay begun');
   socket.on('time', function (time) {
     mytime = time[myplayerid];
-    opponenttime = time[3 - myplayerid];
+    opponenttime = time[opponentid];
   });
   socket.on('play', function () {
     console.log('received play command');
@@ -164,9 +166,13 @@ gamearea.addEventListener("click", function () {
   if (mymove) {
     console.log('move made by me');
     const movetime = Date.now() - mymovemillis;
-    mytime.updatetime(movetime);
+    mytime.updateTime(movetime);
     mytime.printPretty();
-    socket.emit('move', Math.random(), myroom, myplayerid);
+    socket.emit('move', Math.random(), myroom, myplayerid, {
+      myplayerid: mytime,
+      opponentid: opponenttime
+    }
+    );
     offmymove();
   }
 });
