@@ -1,0 +1,25 @@
+{
+  "name": "cylinder-chess",
+  "version": "1.0.0",
+  "description": "an interactive web app to play Cylinder Chess online against friends!",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TobiasLoader/Cylinder-Chess.git"
+  },
+  "keywords": [
+    "Chess",
+    "NodeJS"
+  ],
+  "author": "Tobias Loader",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TobiasLoader/Cylinder-Chess/issues"
+  },
+  "homepage": "https://github.com/TobiasLoader/Cylinder-Chess#readme",
+  "type": "module"
+}

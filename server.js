@@ -82,6 +82,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('move', function (move, room, player, time) {
         roomtimes[room] = time;
+        console.log(roomtimes[room])
         roomtimes[room][1].print();
         roomtimes[room][2].print();
         console.log('move', move, room, player);
