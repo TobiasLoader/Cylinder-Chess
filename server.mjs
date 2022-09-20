@@ -1,5 +1,9 @@
 import { TimeFormat } from './time.mjs';
 
+// Implement the old require function
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url)
+
 const express = require('express')
 const app = express()
 const http = require('http');
