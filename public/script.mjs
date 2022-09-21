@@ -24,7 +24,8 @@ function updateroomnumber() {
 }
 
 function updatetime() {
-  mytimeel.innerText = strPrettyTimeFormat(mytime);
+  mytimeel.innerText = "ME: " + strPrettyTimeFormat(mytime);
+  opponenttimeel.innerText = "OP: " + strPrettyTimeFormat(opponenttime);
 }
 
 function logsocketresponses() {
