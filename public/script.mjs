@@ -5,9 +5,10 @@ var mymove = false;
 var myroom = 0;
 var myplayerid = 0;
 var opponentid = 0;
-var mytime = new TimeFormat(5, 0, 0);
-var opponenttime = new TimeFormat(5, 0, 0);
+var mytimeel;
+var opponenttime;
 var mymovemillis = 0;
+var movehistory = [];
 
 const startgame = document.getElementById("startgame");
 const joingame = document.getElementById("joingame");
@@ -65,21 +66,19 @@ function begingame() {
 
 function gameplay() {
   console.log('gameplay begun');
-  socket.on('time', function (time) {
-    mytime = time[myplayerid];
-    opponenttime = time[opponentid];
-    updatetime();
-  });
   socket.on('play', function () {
     console.log('received play command');
     onmymove();
   });
   socket.on('boardmove', function (move, time) {
+    mytime = time[myplayerid];
+    opponenttime = time[opponentid];
+    updatetime();
+    document.getElementById('movemade').innerText = 'move: ' + move.toString();
+    movehistory.push(move.toString());
     console.log('move played on board', move);
     console.log(strPrettyTimeFormat(time[myplayerid]), strPrettyTimeFormat(time[opponentid]));
-    updatetime();
     console.log('-----');
-    document.getElementById('movemade').innerText = 'move: ' + move.toString();
   });
 }
 
