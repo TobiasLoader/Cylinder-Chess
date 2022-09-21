@@ -73,9 +73,8 @@ io.sockets.on('connection', function (socket) {
                 socket.emit('status', 'joined');
                 if (numplayers[room] == 2) {
                     io.sockets.in(room).emit('status', 'full');
-                    io.sockets.in(room).emit('time', roomtimes[room]);
-                    roomsockets[room][1].emit('playerid', 1);
-                    roomsockets[room][2].emit('playerid', 2);
+                    roomsockets[room][1].emit('setup', 1, roomtimes[room]);
+                    roomsockets[room][2].emit('setup', 2, roomtimes[room]);
                     roomsockets[room][1].emit('play');
                 }
             } else {

@@ -5,7 +5,7 @@ var mymove = false;
 var myroom = 0;
 var myplayerid = 0;
 var opponentid = 0;
-var mytimeel;
+var mytime;
 var opponenttime;
 var mymovemillis = 0;
 var movehistory = [];
@@ -56,10 +56,13 @@ function begingame() {
   document.getElementById("waitingarea").style.display = 'none';
   gamearea.style.display = 'block';
 
-  socket.on('playerid', (id) => {
+  socket.on('setup', (id, time) => {
     myplayerid = id;
     opponentid = 3 - id;
     console.log('my player id: ' + id);
+    mytime = time[myplayerid];
+    opponenttime = time[opponentid];
+    updatetime();
     gameplay(socket);
   });
 }
@@ -119,14 +122,14 @@ startgame.addEventListener("click", function () {
       if (socket == undefined) socket = io();
       socket.emit('createroom', data['room'], 'user-1');
       socket.emit('join', data['room']);
-      logsocketresponses(socket);
+      logsocketresponses();
       socket.on('status', (msg) => {
         if (msg == 'joined') {
           console.log('socket is joined')
           socket.room = data['room'];
-          waitingroom(socket);
+          waitingroom();
           socket.on('status', (msg) => {
-            if (msg == 'full') begingame(socket);
+            if (msg == 'full') begingame();
           });
         }
       });
@@ -144,7 +147,7 @@ joingame.addEventListener("click", function () {
       if (msg == 'joined') {
         console.log('joined')
         socket.room = roomnum;
-        begingame(socket);
+        begingame();
       }
     });
   }
