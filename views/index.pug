@@ -24,23 +24,23 @@ mixin shape3d(n = 8, hm = 2, typ = 0)
 
 doctype html
 head
-  title Cylinder Chess
-  link(rel='stylesheet' href='styles.css')
+	title Cylinder Chess
+	link(rel='stylesheet' href='styles.css')
 h1 Cylinder Chess
 p Click start to init new game, or type in room num and join.
 #startgame.postbutton Start Game
 input#roomnum(placeholder='#ROOM')
 #joingame.postbutton Join Game
 #waitingarea(style='display:none;width:400px;height:400px;border:black 1px solid;')
-  | Waiting AREA
-  h2.room
-  #closegame.postbutton close
+	| Waiting AREA
+	h2.room
+	#closegame.postbutton close
 #gamearea(style='display:none;width:400px;height:400px;border:black 1px solid;')
-  | Game AREA
-  h2.room
-  h3#movemade
-  h3#mytime
-  h3#opponenttime(style='display:inline;')
-    +shape3d(8, 2, 0)
+	| Game AREA
+	h2.room
+	h3#movemade
+	h3#mytime
+	h3#opponenttime(style='display:inline;')
+		+shape3d(8, 2, 0)
 script(src='/socket.io/socket.io.js')
 script(type='module' src='script.mjs')
