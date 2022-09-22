@@ -11,7 +11,8 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-app.use(express.static('public'))
+app.set('view engine', 'pug');
+app.use(express.static('public'));
 
 app.get('/favicon', (req, res) => {
     res.sendFile('favicon.ico');
