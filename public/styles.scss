@@ -1,0 +1,68 @@
+.postbutton {
+    border: black 1px solid;
+    width: 200px;
+    height: 100px;
+    cursor: pointer;
+}
+
+$g: 1em;
+$rc: 6em;
+$b: .2;
+$t: 12s;
+
+body, section, div { display: grid }
+
+body {
+	box-sizing: border-box;
+	grid-gap: $g;
+	margin: 0;
+	padding: $g;
+	min-height: 100vh;
+	background: #333
+}
+
+div { place-self: center }
+
+.scene {
+	min-height: calc(2*var(--rfh)*#{$rc});
+	perspective: 35em;
+	box-shadow: 2px 2px 5px;
+	background: #222
+}
+
+.s3d {
+	transform-style: preserve-3d;
+	animation: rot-y $t linear infinite
+}
+
+@keyframes rot-y { to { transform: rotatey(1turn) } }
+
+.face {
+	grid-area: 1/ 1;
+	background: linear-gradient(0deg, deeppink calc(var(--k, 0)*100%), gold calc(var(--k, 1)*100%));
+	clip-path: polygon(var(--vx))
+}
+
+.lat {
+	width: calc(var(--rbe)*#{$rc});
+	height: calc(var(--rfh)*#{$rc});
+	transform-origin: 50% 100%;
+	transform: 
+		rotatey(calc(var(--j)*1turn)) 
+		translatez(calc(var(--rri)*#{$rc})) 
+		rotatex(var(--ax)) 
+		scalex(1.01);
+	--vx: calc(var(--typ)*50%) 0, calc(100% - var(--typ)*50%) 0, 100% 100%, 0 100%;
+	animation: shade .5*$t ease-in-out calc(var(--j)*#{-$t}) infinite alternate
+}
+
+@keyframes shade { to { filter: brightness($b) } }
+
+.base {
+	padding: $rc;
+	transform: 
+		rotatex(calc((1 - 2*var(--k))*90deg)) 
+		translatez(calc(.5*var(--rfh)*#{$rc})) 
+		rotate(calc(var(--k)*.5turn));
+	filter: brightness(calc(#{1 - $b}*(1 - .5*var(--k))))
+}
