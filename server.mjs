@@ -4,6 +4,12 @@ import { TimeFormat, printTimeFormat } from './public/time.mjs';
 import { createRequire } from 'module'
 const require = createRequire(import.meta.url)
 
+var gameid = 1000;
+var gamehost = {};
+var numplayers = {};
+var roomsockets = {};
+var roomtimes = {};
+
 const express = require('express')
 const app = express()
 const http = require('http');
@@ -11,18 +17,18 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-app.set('view engine', 'pug');
 app.use(express.static('public'));
+
+app.set('views', './views')
+app.set('view engine', 'pug');
 
 app.get('/favicon', (req, res) => {
     res.sendFile('favicon.ico');
 })
 
-var gameid = 1000;
-var gamehost = {};
-var numplayers = {};
-var roomsockets = {};
-var roomtimes = {};
+app.get('/', (req, res) => {
+    res.render('index');
+})
 
 app.post('/game_init', (req, res) => {
     const { headers, method, url } = req;
