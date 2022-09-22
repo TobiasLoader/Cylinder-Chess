@@ -17,6 +17,9 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
+var sass = require('node-sass');
+sass.render({file: './public/styles.scss'});
+
 app.use(express.static('public'));
 
 app.set('views', './views')
