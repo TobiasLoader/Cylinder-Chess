@@ -10,14 +10,16 @@ $rc: 6em;
 $b: .2;
 $t: 12s;
 
+
 .scene {
+	display: grid;
 	min-height: calc(2*var(--rfh)*#{$rc});
 	perspective: 35em;
 	box-shadow: 2px 2px 5px;
 	background: #222
 }
 
-.scene div  { place-self: center }
+.scene div  { display: grid; place-self: center; }
 
 .s3d {
 	transform-style: preserve-3d;
