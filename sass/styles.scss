@@ -10,16 +10,25 @@ $rc: 6em;
 $b: .2;
 $t: 12s;
 
+body, section, div { display: grid }
+
+body {
+	box-sizing: border-box;
+	grid-gap: $g;
+	margin: 0;
+	padding: $g;
+	min-height: 100vh;
+	background: #333
+}
+
+div { place-self: center }
 
 .scene {
-	display: grid;
 	min-height: calc(2*var(--rfh)*#{$rc});
 	perspective: 35em;
 	box-shadow: 2px 2px 5px;
-	background: #222
+	background: #111
 }
-
-.scene div  { display: grid; place-self: center; }
 
 .s3d {
 	transform-style: preserve-3d;
@@ -30,8 +39,13 @@ $t: 12s;
 
 .face {
 	grid-area: 1/ 1;
-	background: linear-gradient(0deg, deeppink calc(var(--k, 0)*100%), gold calc(var(--k, 1)*100%));
-	clip-path: polygon(var(--vx))
+	clip-path: polygon(var(--vx));
+}
+.face:nth-child(even) {
+	background: rgba(200,200,200,0.8);
+}
+.face:nth-child(odd) {
+	background: rgba(100, 158, 141,0.8);
 }
 
 .lat {
@@ -40,8 +54,8 @@ $t: 12s;
 	transform-origin: 50% 100%;
 	transform: 
 		rotatey(calc(var(--j)*1turn)) 
-		translatez(calc(var(--rri)*#{$rc})) 
-		rotatex(var(--ax)) 
+		translatez(calc(var(--rri)*#{$rc}))
+		translatey(calc(var(--i)*var(--rfh)*#{$rc}))
 		scalex(1.01);
 	--vx: calc(var(--typ)*50%) 0, calc(100% - var(--typ)*50%) 0, 100% 100%, 0 100%;
 	animation: shade .5*$t ease-in-out calc(var(--j)*#{-$t}) infinite alternate
