@@ -10,20 +10,10 @@ $rc: 6em;
 $b: .2;
 $t: 12s;
 
-body, section, div { display: grid }
-
-body {
-	box-sizing: border-box;
-	grid-gap: $g;
-	margin: 0;
-	padding: $g;
-	min-height: 100vh;
-	background: #333
-}
-
-div { place-self: center }
+div { place-self: center; display: grid; }
 
 .scene {
+	display: grid;
 	min-height: calc(2*var(--rfh)*#{$rc});
 	perspective: 35em;
 	box-shadow: 2px 2px 5px;
