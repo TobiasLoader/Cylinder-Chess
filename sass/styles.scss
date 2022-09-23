@@ -21,7 +21,7 @@ $t: 12s;
 	place-self: center;
 	display: grid;
 	transform-style: preserve-3d;
-	// animation: rot-y $t linear infinite
+	animation: rot-y $t linear infinite
 }
 
 @keyframes rot-y { to { transform: rotatey(1turn) } }
@@ -37,7 +37,7 @@ $t: 12s;
 		rotatey(calc(var(--j)*1turn)) 
 		translatez(calc(var(--rri)*#{$rc}))
 		scalex(1.01);
-	// animation: shade .5*$t ease-in-out calc(var(--j)*#{-$t}) infinite alternate;
+	animation: shade .5*$t ease-in-out calc(var(--j)*#{-$t}) infinite alternate;
 }
 
 @keyframes shade { to { filter: brightness($b) } }
