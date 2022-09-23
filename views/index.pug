@@ -15,7 +15,8 @@ mixin shape3d(n = 8, hm = 1)
 			- for(let x = 0; x < n; x++)
 				.col(style=`--j: ${(x/n).toFixed(3)};`)
 					- for(let y = 0; y < 8; y++)
-						.cell(style=`--i: ${((x%2)+y)%8-3.5};`)
+						//- .cell(style=`--i: ${((x%2)+y)%8-3.5};`)
+						.cell
 
 doctype html
 head

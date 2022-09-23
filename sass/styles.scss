@@ -18,7 +18,6 @@ $t: 12s;
 }
 
 .s3d {
-	grid-area: 1/ 1;
 	place-self: center;
 	display: grid;
 	transform-style: preserve-3d;
@@ -29,6 +28,8 @@ $t: 12s;
 
 
 .col {
+	display: grid;
+	grid-area: 1/ 1;
 	width: calc(var(--rbe)*#{$rc});
 	height: calc(8*var(--rfh)*#{$rc});
 	transform-origin: 50% 100%;
@@ -42,11 +43,11 @@ $t: 12s;
 @keyframes shade { to { filter: brightness($b) } }
 
 .cell {
-	place-self: center;
+	// place-self: center;
 	width: calc(var(--rbe)*#{$rc});
 	height: calc(var(--rfh)*#{$rc});
-	grid-area: 1/ 1;
-	transform: translatey(calc(var(--i)*var(--rfh)*#{$rc}));
+	// grid-area: 1/ 1;
+	// transform: translatey(calc(var(--i)*var(--rfh)*#{$rc}));
 }
 
 .cell {background: rgba(200,200,200,1);}
