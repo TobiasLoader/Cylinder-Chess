@@ -1,5 +1,3 @@
-//- n is the number of base edges
-//- hm is the height multiplier relative to base circumradius
 mixin shape3d(n = 8, hm = 1)
 	- let ba = 2*Math.PI/n; // base angle
 	- let rri = Math.cos(.5*ba);
@@ -14,9 +12,10 @@ mixin shape3d(n = 8, hm = 1)
 	section.scene(style=`--typ: ${typ}; --rri: ${+rri.toFixed(3)}; --rbe: ${rbe};
 											 --rfh: ${rfh};  --vx: ${vx}`)
 		.s3d
-			- for(let i = 0; i < 8; i++)
-				- for(let j = 0; j < n; j++)
-					.face.lat(style=`--j: ${+((j + i%2)/n).toFixed(3)}; --i: ${i-3.5};`)
+			- for(let x = 0; x < n; x++)
+				.col(style=`--j: ${(x/n).toFixed(3)};`)
+					- for(let y = 0; y < 8; y++)
+						.cell(style=`--i: ${((x%2)+y)%8-3.5};`)
 
 doctype html
 head
