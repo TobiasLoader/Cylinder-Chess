@@ -1,0 +1,43 @@
+.postbutton {
+  border: black 1px solid;
+  width: 200px;
+  height: 100px;
+  cursor: pointer; }
+
+#cylinderarea {
+  display: grid;
+  perspective: 35em;
+  box-shadow: 2px 2px 5px;
+  place-self: center; }
+
+#cylinder {
+  place-self: center;
+  display: grid;
+  transform-style: preserve-3d; }
+
+@keyframes rot-y {
+  to {
+    transform: rotatey(1turn); } }
+
+#cylinder .col {
+  display: grid;
+  grid-area: 1/ 1;
+  width: calc(var(--rbe)*6em);
+  height: calc(8*var(--rfh)*6em);
+  transform-origin: 50% 100%;
+  transform: rotatey(calc(var(--j)*1turn)) translatez(calc(var(--rri)*6em)) scalex(1.01); }
+
+@keyframes shade {
+  to {
+    filter: brightness(0.3); } }
+
+#cylinder .cell {
+  width: calc(var(--rbe)*6em);
+  height: calc(var(--rfh)*6em); }
+
+#cylinder .cell {
+  background: #c8c8c8; }
+
+#cylinder .col:nth-child(even) .cell:nth-child(even),
+#cylinder .col:nth-child(odd) .cell:nth-child(odd) {
+  background: #649e8d; }
