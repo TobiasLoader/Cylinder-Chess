@@ -19,11 +19,11 @@ p Click start to init new game, or type in room num and join.
 #startgame.postbutton Start Game
 input#roomnum(placeholder='#ROOM')
 #joingame.postbutton Join Game
-#waitingarea(style='display:none;width:400px;height:400px;border:black 1px solid;')
+#waitingarea
 	| Waiting AREA
 	h2.room
 	#closegame.postbutton close
-#gamearea(style='display:none;width:400px;height:400px;border:black 1px solid;')
+#gamearea
 	| Game AREA
 	h2.room
 	h3#movemade

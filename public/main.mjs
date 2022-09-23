@@ -1,4 +1,5 @@
 import { TimeFormat, strPrettyTimeFormat, updateTimeTimeFormat } from './time.mjs';
+import {cylinderGame} from './game.mjs';
 
 var socket;
 var mymove = false;
@@ -65,6 +66,8 @@ function begingame() {
     updatetime();
     gameplay(socket);
   });
+
+  cylinderGame();
 }
 
 function gameplay() {

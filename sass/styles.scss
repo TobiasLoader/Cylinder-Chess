@@ -1,8 +1,29 @@
+
+html, body {
+	height: 100%;
+	overflow: hidden;
+}
+
 .postbutton {
     border: black 1px solid;
     width: 200px;
     height: 100px;
     cursor: pointer;
+}
+
+#waitingarea {
+	display:none;
+	width:400px;
+	height:400px;
+	border:black 1px solid;
+	padding:10px;
+}
+
+#gamearea {
+	display:none;
+	width:400px;
+	border:black 1px solid;
+	padding:10px;
 }
 
 $g: 1em;
@@ -13,19 +34,13 @@ $t: 12s;
 #cylinderarea {
 	display: grid;
 	perspective: 35em;
-	box-shadow: 2px 2px 5px;
-	place-self: center;
 }
 
 #cylinder {
 	place-self: center;
 	display: grid;
 	transform-style: preserve-3d;
-	// animation: rot-y $t linear infinite
 }
-
-@keyframes rot-y { to { transform: rotatey(1turn) } }
-
 
 #cylinder .col {
 	display: grid;
@@ -37,10 +52,7 @@ $t: 12s;
 		rotatey(calc(var(--j)*1turn)) 
 		translatez(calc(var(--rri)*#{$rc}))
 		scalex(1.01);
-	// animation: shade .5*$t ease-in-out calc(var(--j)*#{-$t}) infinite alternate;
 }
-
-@keyframes shade { to { filter: brightness($b) } }
 
 #cylinder .cell {
 	width: calc(var(--rbe)*#{$rc});
