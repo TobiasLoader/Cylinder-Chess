@@ -18,6 +18,9 @@ $t: 12s;
 }
 
 .s3d {
+	grid-area: 1/ 1;
+	place-self: center;
+	display: grid;
 	transform-style: preserve-3d;
 	// animation: rot-y $t linear infinite
 }
@@ -45,9 +48,9 @@ $t: 12s;
 	grid-area: 1/ 1;
 	transform: translatey(calc(var(--i)*var(--rfh)*#{$rc}));
 }
-.cell:nth-child(even) {
-	background: rgba(200,200,200,1);
-}
-.cell:nth-child(odd) {
+
+.cell {background: rgba(200,200,200,1);}
+.col:nth-child(even) .cell:nth-child(even),
+.col:nth-child(odd) .cell:nth-child(odd) {
 	background: rgba(100, 158, 141,1);
 }
