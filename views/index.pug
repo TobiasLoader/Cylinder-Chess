@@ -1,21 +1,13 @@
-mixin shape3d(n = 8, hm = 1)
-	- let ba = 2*Math.PI/n; // base angle
-	- let rri = Math.cos(.5*ba);
-	- let rbe = +(2*Math.sin(.5*ba)).toFixed(3);
-	- let rfh = hm*Math.sqrt(2-Math.sqrt(2));
-	- let nb = 2, vx = [], oa = .5*(((n - 1)%2)*ba - Math.PI);
-	- for(let i = 0; i < n; i++) {
-		- let ca = oa + i*ba;
-		- vx.push([50*(1 + Math.cos(ca)), 50*(1 + Math.sin(ca))])
-	- }
-	- vx = vx.map(c => c.map(k => `${+k.toFixed(2)}%`).join(' '));
-	section.scene(style=`--typ: ${typ}; --rri: ${+rri.toFixed(3)}; --rbe: ${rbe};
-											 --rfh: ${rfh};  --vx: ${vx}`)
-		.s3d
-			- for(let x = 0; x < n; x++)
-				.col(style=`--j: ${(x/n).toFixed(3)};`)
+mixin cylinder()
+	- let ba = 2*Math.PI/8; // base angle
+	- let rri = Math.cos(ba/2);
+	- let rbe = 2*Math.sin(ba/2);
+	- let rfh = Math.sqrt(2-Math.sqrt(2));
+	#cylinderarea(style=`--rri: ${rri}; --rbe: ${rbe}; --rfh: ${rfh};`)
+		#cylinder
+			- for(let x = 0; x < 8; x++)
+				.col(style=`--j: ${x/8};`)
 					- for(let y = 0; y < 8; y++)
-						//- .cell(style=`--i: ${((x%2)+y)%8-3.5};`)
 						.cell
 
 doctype html
@@ -37,6 +29,7 @@ input#roomnum(placeholder='#ROOM')
 	h3#movemade
 	h3#mytime
 	h3#opponenttime(style='display:inline;')
-	+shape3d(8, 1)
+	+cylinder()
 script(src='/socket.io/socket.io.js')
-script(type='module' src='script.mjs')
+script(type='module' src='main.mjs')
+script(type='module' src='game.mjs')

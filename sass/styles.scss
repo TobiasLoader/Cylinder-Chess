@@ -7,27 +7,27 @@
 
 $g: 1em;
 $rc: 6em;
-$b: .2;
+$b: .3;
 $t: 12s;
 
-.scene {
+#cylinderarea {
 	display: grid;
 	perspective: 35em;
 	box-shadow: 2px 2px 5px;
 	place-self: center;
 }
 
-.s3d {
+#cylinder {
 	place-self: center;
 	display: grid;
 	transform-style: preserve-3d;
-	animation: rot-y $t linear infinite
+	// animation: rot-y $t linear infinite
 }
 
 @keyframes rot-y { to { transform: rotatey(1turn) } }
 
 
-.col {
+#cylinder .col {
 	display: grid;
 	grid-area: 1/ 1;
 	width: calc(var(--rbe)*#{$rc});
@@ -37,21 +37,18 @@ $t: 12s;
 		rotatey(calc(var(--j)*1turn)) 
 		translatez(calc(var(--rri)*#{$rc}))
 		scalex(1.01);
-	animation: shade .5*$t ease-in-out calc(var(--j)*#{-$t}) infinite alternate;
+	// animation: shade .5*$t ease-in-out calc(var(--j)*#{-$t}) infinite alternate;
 }
 
 @keyframes shade { to { filter: brightness($b) } }
 
-.cell {
-	// place-self: center;
+#cylinder .cell {
 	width: calc(var(--rbe)*#{$rc});
 	height: calc(var(--rfh)*#{$rc});
-	// grid-area: 1/ 1;
-	// transform: translatey(calc(var(--i)*var(--rfh)*#{$rc}));
 }
 
-.cell {background: rgba(200,200,200,1);}
-.col:nth-child(even) .cell:nth-child(even),
-.col:nth-child(odd) .cell:nth-child(odd) {
+#cylinder .cell {background: rgba(200,200,200,1);}
+#cylinder .col:nth-child(even) .cell:nth-child(even),
+#cylinder .col:nth-child(odd) .cell:nth-child(odd) {
 	background: rgba(100, 158, 141,1);
 }
