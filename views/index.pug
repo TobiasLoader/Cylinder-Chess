@@ -1,14 +1,21 @@
+
 mixin cylinder()
+	- let chessfiles = ['A','B','C','D','E','F','G','H'];
 	- let ba = 2*Math.PI/8; // base angle
 	- let rri = Math.cos(ba/2);
 	- let rbe = 2*Math.sin(ba/2);
 	- let rfh = Math.sqrt(2-Math.sqrt(2));
 	#cylinderarea(style=`--rri: ${rri}; --rbe: ${rbe}; --rfh: ${rfh};`)
 		#cylinder
-			- for(let x = 0; x < 8; x++)
+			- for(let x = 0; x < 8; x+=1)
 				.col(style=`--j: ${x/8};`)
-					- for(let y = 0; y < 8; y++)
-						.cell
+					- for(let y = 0; y < 8; y+=1)
+						.cell(id=chessfiles[x]+(8-y).toString())
+							if (x==0)
+								p.rankid !{(8-y)}								
+							if (y==7)
+								p.fileid !{chessfiles[x]}
+
 
 doctype html
 head
