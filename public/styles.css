@@ -48,3 +48,19 @@ html, body {
 #cylinder .col:nth-child(even) .cell:nth-child(even),
 #cylinder .col:nth-child(odd) .cell:nth-child(odd) {
   background: #649e8d; }
+
+.piece {
+  width: 4em;
+  display: inline;
+  position: absolute;
+  padding: 6px; }
+
+.rankid {
+  display: inline;
+  position: absolute;
+  margin: 0; }
+
+.fileid {
+  position: absolute;
+  display: inline;
+  margin-top: 15px; }

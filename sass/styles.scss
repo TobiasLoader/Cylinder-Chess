@@ -64,3 +64,22 @@ $t: 12s;
 #cylinder .col:nth-child(odd) .cell:nth-child(odd) {
 	background: rgba(100, 158, 141,1);
 }
+
+.piece {
+  width: 4em;
+  display: inline;
+  position: absolute;
+  padding: 6px;
+}
+
+.rankid {
+	display: inline;
+	position: absolute;
+	margin: 0;
+}
+
+.fileid {
+	position: absolute;
+	display: inline;
+	margin-top: 15px;
+}
