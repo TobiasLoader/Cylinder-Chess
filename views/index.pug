@@ -36,7 +36,11 @@ input#roomnum(placeholder='#ROOM')
 	h3#movemade
 	h3#mytime
 	h3#opponenttime(style='display:inline;')
+	#wcapture
+	#bcapture
 	+cylinder()
+script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js')
 script(src='/socket.io/socket.io.js')
 script(type='module' src='main.mjs')
+script(type='module' src='chess.mjs')
 script(type='module' src='game.mjs')

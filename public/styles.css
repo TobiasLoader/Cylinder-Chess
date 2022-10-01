@@ -64,3 +64,9 @@ html, body {
   position: absolute;
   display: inline;
   margin-top: 15px; }
+
+.piecechosen {
+  background: #c7f6e8 !important; }
+
+.candidatemove {
+  background: black !important; }

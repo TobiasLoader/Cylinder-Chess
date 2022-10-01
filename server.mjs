@@ -80,8 +80,8 @@ io.sockets.on('connection', function (socket) {
                 socket.emit('status', 'joined');
                 if (numplayers[room] == 2) {
                     io.sockets.in(room).emit('status', 'full');
-                    roomsockets[room][1].emit('setup', 1, roomtimes[room]);
-                    roomsockets[room][2].emit('setup', 2, roomtimes[room]);
+                    roomsockets[room][1].emit('setup', 1, 'w', roomtimes[room]);
+                    roomsockets[room][2].emit('setup', 2, 'b', roomtimes[room]);
                     roomsockets[room][1].emit('play');
                 }
             } else {
@@ -96,6 +96,7 @@ io.sockets.on('connection', function (socket) {
         printTimeFormat(roomtimes[room][2]);
         console.log('move', move, room, player);
         io.sockets.in(room).emit('boardmove', move, roomtimes[room]);
+        console.log(player);
         roomsockets[room][3 - player].emit('play');
         console.log('play command sent');
     });

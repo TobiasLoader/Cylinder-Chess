@@ -1,5 +1,5 @@
-import { TimeFormat, strPrettyTimeFormat, updateTimeTimeFormat } from './time.mjs';
-import {cylinderGame} from './game.mjs';
+import {strPrettyTimeFormat, updateTimeTimeFormat } from './time.mjs';
+import {cylinderGame, initNextMove, moveMade, resultMovePieces} from './game.mjs';
 
 var socket;
 var mymove = false;
@@ -10,16 +10,17 @@ var mytime;
 var opponenttime;
 var mymovemillis = 0;
 var movehistory = [];
+var mycolour = '';
 
-const startgame = document.getElementById("startgame");
-const joingame = document.getElementById("joingame");
-const gamearea = document.getElementById("gamearea");
-const mytimeel = document.getElementById("mytime");
-const opponenttimeel = document.getElementById("opponenttime");
-const closegame = document.getElementById("closegame");
+const startgame = $("#startgame");
+const joingame = $("#joingame");
+const gamearea = $("#gamearea");
+const mytimeel = $("#mytime");
+const opponenttimeel = $("#opponenttime");
+const closegame = $("#closegame");
 
 function updateroomnumber() {
-  const rooms = document.getElementsByClassName("room");
+  const rooms = $(".room");
   for (var i = 0; i < rooms.length; i += 1) {
     rooms[i].innerText = "ROOM ID: " + myroom.toString();
   }
@@ -40,34 +41,35 @@ function waitingroom() {
   myroom = socket.room;
   updateroomnumber();
   console.log('waiting room is joined');
-  startgame.style.display = 'none';
-  joingame.style.display = 'none';
-  document.getElementById("roomnum").style.display = 'none';
-  document.getElementById("waitingarea").style.display = 'block';
-  gamearea.style.display = 'none';
+  startgame.css('display','none');
+  joingame.css('display','none');
+  $("#roomnum").css('display','none');
+  $("#waitingarea").css('display','block');
+  gamearea.css('display','none');
 }
 
 function begingame() {
   myroom = socket.room;
   updateroomnumber();
   console.log('game is joined');
-  startgame.style.display = 'none';
-  joingame.style.display = 'none';
-  document.getElementById("roomnum").style.display = 'none';
-  document.getElementById("waitingarea").style.display = 'none';
-  gamearea.style.display = 'block';
+  startgame.css('display','none');
+  joingame.css('display','none');
+  $("#roomnum").css('display','none');
+  $("#waitingarea").css('display','none');
+  gamearea.css('display','block');
 
-  socket.on('setup', (id, time) => {
+  socket.on('setup', (id, col, time) => {
     myplayerid = id;
     opponentid = 3 - id;
+    mycolour = col;
+    console.log(mycolour)
     console.log('my player id: ' + id);
     mytime = time[myplayerid];
     opponenttime = time[opponentid];
     updatetime();
     gameplay(socket);
+    cylinderGame(mycolour);
   });
-
-  cylinderGame();
 }
 
 function gameplay() {
@@ -77,10 +79,12 @@ function gameplay() {
     onmymove();
   });
   socket.on('boardmove', function (move, time) {
+    console.log(move);
+    resultMovePieces(move);
     mytime = time[myplayerid];
     opponenttime = time[opponentid];
     updatetime();
-    document.getElementById('movemade').innerText = 'move: ' + move.toString();
+    $('#movemade').text('move: ' + move.toString());
     movehistory.push(move.toString());
     console.log('move played on board', move);
     console.log(strPrettyTimeFormat(time[myplayerid]), strPrettyTimeFormat(time[opponentid]));
@@ -89,28 +93,32 @@ function gameplay() {
 }
 
 function onmymove() {
+  initNextMove();
   mymove = true;
-  gamearea.style.background = 'rgb(200, 100, 100)';
-  gamearea.style.color = 'rgb(255, 255, 255)';
+  gamearea.css('background','rgb(200, 100, 100)');
+  gamearea.css('color','rgb(255, 255, 255)');
   mymovemillis = Date.now();
+  listenMoveMade();
 }
 function offmymove() {
+  $('.mypiece').off('click');
   mymove = false;
-  gamearea.style.background = 'rgb(255, 255, 255)';
-  gamearea.style.color = 'rgb(0, 0, 0)';
+  gamearea.css('background','rgb(255, 255, 255)');
+  gamearea.css('color','rgb(0, 0, 0)');
+  initNextMove();
 }
 
 function closeaction() {
   console.log('game to be/is closed');
-  startgame.style.display = 'block';
-  joingame.style.display = 'block';
-  document.getElementById("roomnum").style.display = 'block';
-  document.getElementById("waitingarea").style.display = 'none';
-  gamearea.style.display = 'none';
+  startgame.css('display','block');
+  joingame.css('display','block');
+  $("#roomnum").css('display','block');
+  $("#waitingarea").css('display','none');
+  gamearea.css('display','none');
 }
 
 
-startgame.addEventListener("click", function () {
+startgame.click(function () {
   fetch("/game_init", {
     method: "POST",
     headers: { 'Content-Type': 'application/json' },
@@ -140,7 +148,7 @@ startgame.addEventListener("click", function () {
   });
 });
 
-joingame.addEventListener("click", function () {
+joingame.click(function () {
   if (socket == undefined) {
     socket = io();
     var roomnum = Number.parseInt(document.getElementById('roomnum').value);
@@ -156,21 +164,40 @@ joingame.addEventListener("click", function () {
   }
 });
 
-gamearea.addEventListener("click", function () {
-  console.log('my move: ' + mymove.toString())
-  if (mymove) {
-    console.log('move made by me');
-    const movetime = Date.now() - mymovemillis;
-    updateTimeTimeFormat(mytime, movetime);
-    const newtimeobject = {};
-    newtimeobject[myplayerid] = mytime;
-    newtimeobject[opponentid] = opponenttime;
-    socket.emit('move', Math.random(), myroom, myplayerid, newtimeobject);
-    offmymove();
-  }
-});
+function getPromiseFromEvent(item, event) {
+  return new Promise((resolve) => {
+    const listener = () => {
+      item.removeEventListener(event, listener);
+      resolve();
+    }
+    item.addEventListener(event, listener);
+  })
+}
 
-closegame.addEventListener("click", function () {
+function listenMoveMade(){
+  $('.mypiece').click(function () {
+    console.log('is my move?', mymove)
+    if (mymove) {
+      console.log('move from ',$(this).attr('id'))
+      makeMove($(this).attr('id'));
+    }
+  });
+}
+
+async function makeMove(frompos){
+  var m = '';
+  await moveMade(frompos).then((move)=>{m = move});
+  console.log('move to be made by me');
+  const movetime = Date.now() - mymovemillis;
+  updateTimeTimeFormat(mytime, movetime);
+  const newtimeobject = {};
+  newtimeobject[myplayerid] = mytime;
+  newtimeobject[opponentid] = opponenttime;
+  socket.emit('move', m, myroom, myplayerid, newtimeobject);
+  offmymove();
+}
+
+closegame.click(function () {
   socket.emit('end');
   closeaction();
 });

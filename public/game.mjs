@@ -1,16 +1,39 @@
+import {Pawn} from './chess.mjs';
+
 const cylinderarea = document.getElementById("cylinderarea");
-const cylinder = document.getElementById("cylinder");
-const cols = document.getElementsByClassName("col");
+const cylinder = $("#cylinder");
+const cols = $(".col");
 var cylinderroty = 0;
 
-export function cylinderGame(){
-  startingChessPieces();
+var movenum = 0;
+
+export const boardpiecemap = {
+  'A2': new Pawn('8','w','A2'),
+  'B2': new Pawn('9','w','B2'), 
+  'C2': new Pawn('10','w','C2'), 
+  'D2': new Pawn('11','w','D2'), 
+  'E2': new Pawn('12','w','E2'), 
+  'F2': new Pawn('13','w','F2'), 
+  'G2': new Pawn('14','w','G2'), 
+  'H2': new Pawn('15','w','H2'), 
+  'A7': new Pawn('24','b','A7'),
+  'B7': new Pawn('25','b','B7'), 
+  'C7': new Pawn('26','b','C7'), 
+  'D7': new Pawn('27','b','D7'), 
+  'E7': new Pawn('28','b','E7'), 
+  'F7': new Pawn('29','b','F7'), 
+  'G7': new Pawn('30','b','G7'), 
+  'H7': new Pawn('31','b','H7'), 
+};
+
+export function cylinderGame(mycolour){
+  startingChessPieces(mycolour);
   applyCylinderShadow();
-  cylinderarea.addEventListener("wheel", function (e) {
+  cylinderarea.addEventListener('wheel', function (e) {
     cylinderroty += e.deltaY/10;
-    cylinder.style.transform = 'rotateY('+cylinderroty.toString()+'deg)';
+    cylinder.css('transform','rotateY('+cylinderroty.toString()+'deg)');
     applyCylinderShadow();
-  });
+  });//, {passive: true}
 }
 
 function applyCylinderShadow(){
@@ -21,38 +44,57 @@ function applyCylinderShadow(){
   }
 }
 
-function startingChessPieces(){
-  document.getElementById('A1').insertAdjacentHTML('beforeend', '<img class="white rook piece" src="assets/pieces/w/rook.svg" alt="rook">');
-  document.getElementById('B1').insertAdjacentHTML('beforeend', '<img class="white knight piece" src="assets/pieces/w/knight.svg" alt="rook">');
-  document.getElementById('C1').insertAdjacentHTML('beforeend', '<img class="white bishop piece" src="assets/pieces/w/bishop.svg" alt="bishop">');
-  document.getElementById('D1').insertAdjacentHTML('beforeend', '<img class="white queen piece" src="assets/pieces/w/queen.svg" alt="queen">');
-  document.getElementById('E1').insertAdjacentHTML('beforeend', '<img class="white king piece" src="assets/pieces/w/king.svg" alt="king">');
-  document.getElementById('F1').insertAdjacentHTML('beforeend', '<img class="white bishop piece" src="assets/pieces/w/bishop.svg" alt="bishop">');
-  document.getElementById('G1').insertAdjacentHTML('beforeend', '<img class="white knight piece" src="assets/pieces/w/knight.svg" alt="knight">');
-  document.getElementById('H1').insertAdjacentHTML('beforeend', '<img class="white rook piece" src="assets/pieces/w/rook.svg" alt="rook">');
-  document.getElementById('A2').insertAdjacentHTML('beforeend', '<img class="white pawn piece" src="assets/pieces/w/pawn.svg" alt="pawn">');
-  document.getElementById('B2').insertAdjacentHTML('beforeend', '<img class="white pawn piece" src="assets/pieces/w/pawn.svg" alt="pawn">');
-  document.getElementById('C2').insertAdjacentHTML('beforeend', '<img class="white pawn piece" src="assets/pieces/w/pawn.svg" alt="pawn">');
-  document.getElementById('D2').insertAdjacentHTML('beforeend', '<img class="white pawn piece" src="assets/pieces/w/pawn.svg" alt="pawn">');
-  document.getElementById('E2').insertAdjacentHTML('beforeend', '<img class="white pawn piece" src="assets/pieces/w/pawn.svg" alt="pawn">');
-  document.getElementById('F2').insertAdjacentHTML('beforeend', '<img class="white pawn piece" src="assets/pieces/w/pawn.svg" alt="pawn">');
-  document.getElementById('G2').insertAdjacentHTML('beforeend', '<img class="white pawn piece" src="assets/pieces/w/pawn.svg" alt="pawn">');
-  document.getElementById('H2').insertAdjacentHTML('beforeend', '<img class="white pawn piece" src="assets/pieces/w/pawn.svg" alt="pawn">');
+function startingChessPieces(mycolour){
+  for (const [position, piece] of Object.entries(boardpiecemap)){
+    piece.placePiece(mycolour);
+  }
+}
 
-  document.getElementById('A8').insertAdjacentHTML('beforeend', '<img class="black rook piece" src="assets/pieces/b/rook.svg" alt="rook">');
-  document.getElementById('B8').insertAdjacentHTML('beforeend', '<img class="black knight piece" src="assets/pieces/b/knight.svg" alt="rook">');
-  document.getElementById('C8').insertAdjacentHTML('beforeend', '<img class="black bishop piece" src="assets/pieces/b/bishop.svg" alt="bishop">');
-  document.getElementById('D8').insertAdjacentHTML('beforeend', '<img class="black queen piece" src="assets/pieces/b/queen.svg" alt="queen">');
-  document.getElementById('E8').insertAdjacentHTML('beforeend', '<img class="black king piece" src="assets/pieces/b/king.svg" alt="king">');
-  document.getElementById('F8').insertAdjacentHTML('beforeend', '<img class="black bishop piece" src="assets/pieces/b/bishop.svg" alt="bishop">');
-  document.getElementById('G8').insertAdjacentHTML('beforeend', '<img class="black knight piece" src="assets/pieces/b/knight.svg" alt="knight">');
-  document.getElementById('H8').insertAdjacentHTML('beforeend', '<img class="black rook piece" src="assets/pieces/b/rook.svg" alt="rook">');
-  document.getElementById('A7').insertAdjacentHTML('beforeend', '<img class="black pawn piece" src="assets/pieces/b/pawn.svg" alt="pawn">');
-  document.getElementById('B7').insertAdjacentHTML('beforeend', '<img class="black pawn piece" src="assets/pieces/b/pawn.svg" alt="pawn">');
-  document.getElementById('C7').insertAdjacentHTML('beforeend', '<img class="black pawn piece" src="assets/pieces/b/pawn.svg" alt="pawn">');
-  document.getElementById('D7').insertAdjacentHTML('beforeend', '<img class="black pawn piece" src="assets/pieces/b/pawn.svg" alt="pawn">');
-  document.getElementById('E7').insertAdjacentHTML('beforeend', '<img class="black pawn piece" src="assets/pieces/b/pawn.svg" alt="pawn">');
-  document.getElementById('F7').insertAdjacentHTML('beforeend', '<img class="black pawn piece" src="assets/pieces/b/pawn.svg" alt="pawn">');
-  document.getElementById('G7').insertAdjacentHTML('beforeend', '<img class="black pawn piece" src="assets/pieces/b/pawn.svg" alt="pawn">');
-  document.getElementById('H7').insertAdjacentHTML('beforeend', '<img class="black pawn piece" src="assets/pieces/b/pawn.svg" alt="pawn">');
+export function resultMovePieces(moveresult){
+  // for (const [position, piece] of Object.entries(boardpiecemap)){
+  //   $('#'+position).off("click");
+  // }
+  boardpiecemap[moveresult['from']].move(moveresult['to']);
+  boardpiecemap[moveresult['to']] = boardpiecemap[moveresult['from']];
+  delete boardpiecemap[moveresult['from']];
+  console.log('movetriggered',boardpiecemap);
+  // $('.candidatemove').off( "click");
+  // addClickToPieces();
+}
+
+// function addClickToPieces(){
+//   console.log(movenum)
+//   for (const [position, piece] of Object.entries(boardpiecemap)){
+//     console.log(movenum);
+//     if ((piece.colour=='w' && movenum%2==0) || (piece.colour=='b' && movenum%2==1)) {
+//       $('#'+position).click(function () {
+//         console.log('pp',piece,position);
+//         chooseGivenPiece(piece,position);
+//       });
+//     }
+//   }
+// }
+
+// addClickToPieces();
+
+export function initNextMove(){
+  movenum += 1;
+  console.log(movenum);
+}
+
+export async function moveMade(pos){
+  console.log(pos)
+  const piece = boardpiecemap[pos];
+  $('#'+pos).addClass('piecechosen');
+  console.log(pos,piece.candidateMoves())
+  piece.candidateMoves().forEach(movedata => console.log(movedata));
+  piece.candidateMoves().forEach(movedata => $('#'+movedata.move).addClass('candidatemove'));
+  return new Promise((resolve) => {
+    $('.candidatemove').click(function () {
+      $('.candidatemove').off( "click");
+      $('.piecechosen').removeClass('piecechosen');
+      $('.candidatemove').removeClass('candidatemove');
+      resolve({'from':pos,'to':$(this).attr('id')});
+    });
+  });
 }
