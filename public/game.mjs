@@ -1,4 +1,4 @@
-import {Pawn} from './chess.mjs';
+import {Pawn, Rook, Knight, Bishop, Queen} from './chess.mjs';
 
 const cylinderarea = document.getElementById("cylinderarea");
 const cylinder = $("#cylinder");
@@ -8,6 +8,15 @@ var cylinderroty = 0;
 var movenum = 0;
 
 export const boardpiecemap = {
+  'A1': new Rook('0','w','A1'), 
+  'B1': new Knight('1','w','B1'), 
+  'C1': new Bishop('2','w','C1'), 
+  'D1': new Queen('3','w','D1'), 
+
+  'F1': new Bishop('5','w','F1'),
+  'G1': new Knight('6','w','G1'), 
+  'H1': new Rook('7','w','H1'), 
+
   'A2': new Pawn('8','w','A2'),
   'B2': new Pawn('9','w','B2'), 
   'C2': new Pawn('10','w','C2'), 
@@ -15,7 +24,17 @@ export const boardpiecemap = {
   'E2': new Pawn('12','w','E2'), 
   'F2': new Pawn('13','w','F2'), 
   'G2': new Pawn('14','w','G2'), 
-  'H2': new Pawn('15','w','H2'), 
+  'H2': new Pawn('15','w','H2'),
+
+  'A8': new Rook('16','b','A8'), 
+  'B8': new Knight('17','b','B8'), 
+  'C8': new Bishop('18','b','C8'),
+  'D8': new Queen('19','b','D8'), 
+
+  'F8': new Bishop('21','b','F8'),
+  'G8': new Knight('22','b','G8'), 
+  'H8': new Rook('23','b','H8'), 
+
   'A7': new Pawn('24','b','A7'),
   'B7': new Pawn('25','b','B7'), 
   'C7': new Pawn('26','b','C7'), 
@@ -58,7 +77,8 @@ export function initNextMove(){
 export async function moveMade(pos){
   const piece = boardpiecemap[pos];
   $('#'+pos).addClass('piecechosen');
-  piece.candidateMoves().forEach(function (movedata){
+  const candidates = piece.candidateMoves();
+  candidates.forEach(function (movedata){
     $('#'+movedata.move).addClass('candidatemove');
     if (movedata.status=='attack') $('#'+movedata.move).addClass('tocapture-'+movedata['capture']);
   });

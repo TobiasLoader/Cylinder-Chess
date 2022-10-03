@@ -9,7 +9,7 @@ function fileToInt(f){
 
 function intToFile(i){
   if (i%8==0) return 'H';
-  else return String.fromCharCode(i%8+64);
+  else return String.fromCharCode((i+8)%8+64);
 }
 
 export class Piece {
@@ -69,6 +69,7 @@ export class Piece {
     this.pos = newpos;
     this.hasmoved = true;
     this.placePiece(playercolour);
+    this.playedlastmove = true;
   }
 
   capture(piece){
@@ -89,7 +90,7 @@ export class Piece {
       currentabsmovegroups[movegroup] = [];
       for (const relativemove of this.relativemovegroups[movegroup]){
         const abspos = this.relativeMoveToPos(relativemove);
-        if (abspos!='')
+        if (abspos!='' && !(abspos in currentabsmovegroups[movegroup]))
           currentabsmovegroups[movegroup].push(abspos);
       }
     }
@@ -145,23 +146,28 @@ export class Piece {
       if (posUnique) arrayToAddTo.push(movedata);
     }
   }
+
+  resetLastPlayedMoveFlag(){
+    this.playedlastmove = false;
+  }
 }
 
 export class Pawn extends Piece {
   constructor(id,colour,pos) {
     super(id,'pawn',colour,pos);
-    // if (this.colour=='w') this.startRank = '1';
-    // else if (this.colour=='b') this.startRank = '8';
     var mult = 1;
     if (this.colour=='b') mult = -1;
     const m1 = {x:0,y:mult};
     const m2 = {x:0,y:2*mult};
     const m3 = {x:-1,y:mult};
     const m4 = {x:1,y:mult};
+    const m5 = {x:-1,y:0};
+    const m6 = {x:1,y:0};
     this.relativemovegroups = {
       'fromstart': [m1,m2],
       'standard': [m1],
       'attack': [m3,m4],
+      'enpassant-captures': [m5,m6]
     }
     this.madesinglemove = false;
   }
@@ -170,8 +176,8 @@ export class Pawn extends Piece {
     var ms = [];
     if ((this.colour=='w' && this.rank()=='5') || (this.colour=='b' && this.rank()=='4')) {
       const absposmoves = [
-        {'move':this.relativeMoveToPos({x:-1,y:1}),'capture':this.relativeMoveToPos({x:-1,y:0})},
-        {'move':this.relativeMoveToPos({x:1,y:1}),'capture':this.relativeMoveToPos({x:1,y:0})}
+        {'move':this.absolutemovegroups['attack'][0],'capture':this.absolutemovegroups['enpassant-captures'][0]},
+        {'move':this.absolutemovegroups['attack'][1],'capture':this.absolutemovegroups['enpassant-captures'][1]}
       ];
       for (var movepackage of absposmoves){
         if (!(movepackage['move'] in boardpiecemap) && (movepackage['capture'] in boardpiecemap)){
@@ -194,21 +200,102 @@ export class Pawn extends Piece {
     this.addMoveDataIfUnique(this.filterAbsoluteMovesForNotAttack(this.absolutemovegroups['standard'],false),possiblemoves);
     this.addMoveDataIfUnique(this.filterAbsoluteMovesForAttack(this.absolutemovegroups['attack'],false),possiblemoves);
     this.addMoveDataIfUnique(this.enPassantMoves(),possiblemoves);
-    // console.log('candidate moves: ');
-    // for (var p of possiblemoves){
-    //   console.log(p)
-    // }
     return possiblemoves;
-  }
-
-  resetLastPlayedMoveFlag(){
-    this.playedlastmove = false;
   }
 
   move(playercolour,newpos){
     if (!this.hasmoved) this.madesinglemove = true;
     else if (this.madesinglemove) this.madesinglemove = false;
     super.move(playercolour,newpos);
-    this.playedlastmove = true;
+  }
+}
+
+export class Queen extends Piece {
+  constructor(id,colour,pos) {
+    super(id,'queen',colour,pos);
+    this.relativemovegroups = {
+      'north': [...Array(7).keys()].map(i => ({x:0, y:1+i})),
+      'northeast': [...Array(7).keys()].map(i => ({x:1+i, y:1+i})),
+      'east': [...Array(7).keys()].map(i => ({x:1+i, y:0})),
+      'southeast': [...Array(7).keys()].map(i => ({x:1+i, y:-1-i})),
+      'south':[...Array(7).keys()].map(i => ({x:0, y:-1-i})),
+      'southwest':[...Array(7).keys()].map(i => ({x:-1-i, y:-1-i})),
+      'west':[...Array(7).keys()].map(i => ({x:-1-i, y:0})),
+      'northwest':[...Array(7).keys()].map(i => ({x:-1-i, y:1+i})),
+    }
+  }
+
+  candidateMoves(){
+    this.generateAbsoluteMoves();
+    var possiblemoves = [];
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['north'],true),possiblemoves);
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['northeast'],true),possiblemoves);
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['east'],true),possiblemoves);
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['southeast'],true),possiblemoves);
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['south'],true),possiblemoves);
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['southwest'],true),possiblemoves);
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['west'],true),possiblemoves);
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['northwest'],true),possiblemoves);
+    return possiblemoves;
+  }
+}
+
+export class Rook extends Piece {
+  constructor(id,colour,pos) {
+    super(id,'rook',colour,pos);
+    this.relativemovegroups = {
+      'north': [...Array(7).keys()].map(i => ({x:0, y:1+i})),
+      'east': [...Array(7).keys()].map(i => ({x:1+i, y:0})),
+      'south':[...Array(7).keys()].map(i => ({x:0, y:-1-i})),
+      'west':[...Array(7).keys()].map(i => ({x:-1-i, y:0})),
+    }
+  }
+
+  candidateMoves(){
+    this.generateAbsoluteMoves();
+    var possiblemoves = [];
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['north'],true),possiblemoves);
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['east'],true),possiblemoves);
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['south'],true),possiblemoves);
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['west'],true),possiblemoves);
+    return possiblemoves;
+  }
+}
+
+export class Knight extends Piece {
+  constructor(id,colour,pos) {
+    super(id,'knight',colour,pos);
+    this.relativemovegroups = {
+      'jumps': [{x:1,y:2},{x:2,y:1},{x:2,y:-1},{x:1,y:-2},{x:-1,y:-2},{x:-2,y:-1},{x:-2,y:1},{x:-1,y:2}],
+    }
+  }
+
+  candidateMoves(){
+    this.generateAbsoluteMoves();
+    var possiblemoves = [];
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['jumps'],false),possiblemoves);
+    return possiblemoves;
+  }
+}
+
+export class Bishop extends Piece {
+  constructor(id,colour,pos) {
+    super(id,'bishop',colour,pos);
+    this.relativemovegroups = {
+      'northeast': [...Array(7).keys()].map(i => ({x:1+i, y:1+i})),
+      'southeast': [...Array(7).keys()].map(i => ({x:1+i, y:-1-i})),
+      'southwest':[...Array(7).keys()].map(i => ({x:-1-i, y:-1-i})),
+      'northwest':[...Array(7).keys()].map(i => ({x:-1-i, y:1+i})),
+    }
+  }
+
+  candidateMoves(){
+    this.generateAbsoluteMoves();
+    var possiblemoves = [];
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['northeast'],true),possiblemoves);
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['southeast'],true),possiblemoves);
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['southwest'],true),possiblemoves);
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['northwest'],true),possiblemoves);
+    return possiblemoves;
   }
 }
