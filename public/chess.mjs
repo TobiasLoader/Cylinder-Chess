@@ -39,7 +39,10 @@ export class Piece {
   }
 
   relativeMoveToPos(move){
-    return intToFile((fileToInt(this.file())+move.x)%8).toString()+(parseInt(this.rank())+move.y).toString()
+    const f = intToFile((fileToInt(this.file())+move.x)%8);
+    const r = parseInt(this.rank())+move.y;
+    if (0<r && r<9) return f.toString()+r.toString();
+    else return '';
   }
 
   placePiece(playercolour){
@@ -85,7 +88,9 @@ export class Piece {
     for (const movegroup in this.relativemovegroups) {
       currentabsmovegroups[movegroup] = [];
       for (const relativemove of this.relativemovegroups[movegroup]){
-        currentabsmovegroups[movegroup].push(this.relativeMoveToPos(relativemove));
+        const abspos = this.relativeMoveToPos(relativemove);
+        if (abspos!='')
+          currentabsmovegroups[movegroup].push(abspos);
       }
     }
     this.absolutemovegroups = currentabsmovegroups;

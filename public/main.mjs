@@ -168,6 +168,12 @@ function listenMoveMade(){
   $('.mypiece').click(function () {
     console.log('is my move?', mymove)
     if (mymove) {
+      $('.candidatemove').off( "click");
+      $('.piecechosen').removeClass('piecechosen');
+      $('.candidatemove').removeClass('candidatemove');
+      $('*[class^="tocapture-"]').removeClass (function (index, className) {
+        return (className.match ('/(^|\s)tocapture-\S+/g') || '');
+      });
       currentpiece = $(this).attr('id');
       console.log('move from ',currentpiece)
       var selectednum = 1;
