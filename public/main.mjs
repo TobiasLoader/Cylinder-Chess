@@ -11,6 +11,8 @@ var opponenttime;
 var mymovemillis = 0;
 var movehistory = [];
 var mycolour = '';
+var currentpiece = '';
+var startedmove = false;
 
 const startgame = $("#startgame");
 const joingame = $("#joingame");
@@ -78,15 +80,14 @@ function gameplay() {
     console.log('received play command');
     onmymove();
   });
-  socket.on('boardmove', function (move, time) {
-    console.log(move);
-    resultMovePieces(move);
+  socket.on('boardmove', function (movedata, time) {
+    resultMovePieces(mycolour,movedata);
     mytime = time[myplayerid];
     opponenttime = time[opponentid];
     updatetime();
-    $('#movemade').text('move: ' + move.toString());
-    movehistory.push(move.toString());
-    console.log('move played on board', move);
+    $('#movemade').text('move: from ' + movedata['from'] + ', to ' + movedata['to']);
+    movehistory.push(movedata);
+    console.log('move played on board', movedata);
     console.log(strPrettyTimeFormat(time[myplayerid]), strPrettyTimeFormat(time[opponentid]));
     console.log('-----');
   });
@@ -116,7 +117,6 @@ function closeaction() {
   $("#waitingarea").css('display','none');
   gamearea.css('display','none');
 }
-
 
 startgame.click(function () {
   fetch("/game_init", {
@@ -164,29 +164,22 @@ joingame.click(function () {
   }
 });
 
-function getPromiseFromEvent(item, event) {
-  return new Promise((resolve) => {
-    const listener = () => {
-      item.removeEventListener(event, listener);
-      resolve();
-    }
-    item.addEventListener(event, listener);
-  })
-}
-
 function listenMoveMade(){
   $('.mypiece').click(function () {
     console.log('is my move?', mymove)
     if (mymove) {
-      console.log('move from ',$(this).attr('id'))
-      makeMove($(this).attr('id'));
+      currentpiece = $(this).attr('id');
+      console.log('move from ',currentpiece)
+      var selectednum = 1;
+      makeMove(currentpiece);
     }
   });
 }
 
 async function makeMove(frompos){
-  var m = '';
-  await moveMade(frompos).then((move)=>{m = move});
+  var m = {};
+  startedmove = true;
+  await moveMade(frompos).then((movedata)=>{m = movedata});
   console.log('move to be made by me');
   const movetime = Date.now() - mymovemillis;
   updateTimeTimeFormat(mytime, movetime);
@@ -197,7 +190,28 @@ async function makeMove(frompos){
   offmymove();
 }
 
+// function cancelMakeMove(frompos){
+//   startedmove = false;
+//   currentpiece = '';
+//   $('.candidatemove').off('click');
+//   $('.piecechosen').off('click');
+//   $('.piecechosen').removeClass('piecechosen');
+//   $('.candidatemove').removeClass('candidatemove');
+//   $('.tocapture').removeClass('tocapture');
+// }
+
 closegame.click(function () {
   socket.emit('end');
   closeaction();
 });
+
+// $(document).click(function(e){
+//   console.log(currentpiece)
+//   if (startedmove){
+//     if ($(e.target).closest(".candidatemove").length === 0 && $(e.target).closest(".piecechosen").length){
+//       console.log('canceled');
+//       cancelMakeMove(currentpiece);
+//       listenMoveMade();
+//     }
+//   }
+// });

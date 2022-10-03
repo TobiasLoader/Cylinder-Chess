@@ -90,12 +90,12 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
-    socket.on('move', function (move, room, player, time) {
+    socket.on('move', function (movedata, room, player, time) {
         roomtimes[room] = time;
         printTimeFormat(roomtimes[room][1]);
         printTimeFormat(roomtimes[room][2]);
-        console.log('move', move, room, player);
-        io.sockets.in(room).emit('boardmove', move, roomtimes[room]);
+        console.log('move', movedata, room, player);
+        io.sockets.in(room).emit('boardmove', movedata, roomtimes[room]);
         console.log(player);
         roomsockets[room][3 - player].emit('play');
         console.log('play command sent');

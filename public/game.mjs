@@ -50,51 +50,58 @@ function startingChessPieces(mycolour){
   }
 }
 
-export function resultMovePieces(moveresult){
-  // for (const [position, piece] of Object.entries(boardpiecemap)){
-  //   $('#'+position).off("click");
-  // }
-  boardpiecemap[moveresult['from']].move(moveresult['to']);
-  boardpiecemap[moveresult['to']] = boardpiecemap[moveresult['from']];
-  delete boardpiecemap[moveresult['from']];
-  console.log('movetriggered',boardpiecemap);
-  // $('.candidatemove').off( "click");
-  // addClickToPieces();
-}
-
-// function addClickToPieces(){
-//   console.log(movenum)
-//   for (const [position, piece] of Object.entries(boardpiecemap)){
-//     console.log(movenum);
-//     if ((piece.colour=='w' && movenum%2==0) || (piece.colour=='b' && movenum%2==1)) {
-//       $('#'+position).click(function () {
-//         console.log('pp',piece,position);
-//         chooseGivenPiece(piece,position);
-//       });
-//     }
-//   }
-// }
-
-// addClickToPieces();
-
 export function initNextMove(){
   movenum += 1;
   console.log(movenum);
 }
 
 export async function moveMade(pos){
-  console.log(pos)
   const piece = boardpiecemap[pos];
   $('#'+pos).addClass('piecechosen');
-  console.log(pos,piece.candidateMoves())
-  piece.candidateMoves().forEach(movedata => console.log(movedata));
-  piece.candidateMoves().forEach(movedata => $('#'+movedata.move).addClass('candidatemove'));
+  piece.candidateMoves().forEach(function (movedata){
+    $('#'+movedata.move).addClass('candidatemove');
+    if (movedata.status=='attack') $('#'+movedata.move).addClass('tocapture-'+movedata['capture']);
+  });
   return new Promise((resolve) => {
     $('.candidatemove').click(function () {
       $('.candidatemove').off( "click");
-      $('.piecechosen').removeClass('piecechosen');
-      $('.candidatemove').removeClass('candidatemove');
-      resolve({'from':pos,'to':$(this).attr('id')});
+      const classes = $(this).attr('class').split(' ');
+      var capturepos = '';
+      for (const theclass of classes){
+        if (theclass.length == 12 && theclass.substring(0,10)=='tocapture-'){
+          capturepos = theclass.substring(10,12)
+          break;
+        }
+      }
+      resolve({'from':pos,'to':$(this).attr('id'),'capture':capturepos});
     });
   });
+}
+
+
+export function resultMovePieces(playercolour,moveresult){
+  // for (const [position, piece] of Object.entries(boardpiecemap)){
+  //   $('#'+position).off("click");
+  // }
+  resetPlayedLastMovedFlags(playercolour);
+  if (moveresult['capture']!='') boardpiecemap[moveresult['from']].capture(boardpiecemap[moveresult['capture']]);
+  boardpiecemap[moveresult['from']].move(playercolour,moveresult['to']);
+  boardpiecemap[moveresult['to']] = boardpiecemap[moveresult['from']];
+  delete boardpiecemap[moveresult['from']];
+  $('.piecechosen').removeClass('piecechosen');
+  $('.candidatemove').removeClass('candidatemove');
+  $('*[class^="tocapture-"]').removeClass (function (index, className) {
+    return (className.match ('/(^|\s)tocapture-\S+/g') || '');
+  });
+  console.log('board state after: ',boardpiecemap);
+  // $('.candidatemove').off( "click");
+  // addClickToPieces();
+}
+
+
+function resetPlayedLastMovedFlags(col) {
+  for (const [pos,piece] of Object.entries(boardpiecemap)){
+    // console.log(piece,piece.colour==col,piece.playedlastmove)
+    if (piece.enemycolour == col) piece.resetLastPlayedMoveFlag();
+  }
 }

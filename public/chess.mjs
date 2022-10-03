@@ -8,7 +8,7 @@ function fileToInt(f){
 }
 
 function intToFile(i){
-  if (i==8) return 'H';
+  if (i%8==0) return 'H';
   else return String.fromCharCode(i%8+64);
 }
 
@@ -27,6 +27,7 @@ export class Piece {
     this.iscaptured = false;
     this.relativemovegroups = {};
     this.absolutemovegroups = {};
+    this.playedlastmove = false;
   }
 
   file(){
@@ -51,25 +52,32 @@ export class Piece {
     $('#'+this.id).remove();
   }
   addToCapturedPieces(){
+    console.log('add to capture pieces')
     $('#'+this.enemycolour+'capture').append('<img id="'+this.id+'" class="captured '+colourname[this.colour]+' '+this.name+' piece" src="'+this.src+'" alt="'+this.name+'">');
   }
 
+  move(playercolour,newpos){
+    this.removePiece();
+    // console.log('classes', $('#'+newpos).attr("class"))
+    // console.log('has to capture?',newpos,$('#'+newpos).hasClass('tocapture'));
+    if ($('#'+newpos).hasClass('tocapture')) {
+      this.capture(boardpiecemap[newpos]);
+    }
+    this.pos = newpos;
+    this.hasmoved = true;
+    this.placePiece(playercolour);
+  }
+
+  capture(piece){
+    console.log(this.id + ' has captured ' + piece.id);
+    piece.beCaptured();
+  }
+
   beCaptured(){
+    console.log('capture ' + this.pos + this.id)
     this.iscaptured = true;
     this.removePiece();
     this.addToCapturedPieces();
-  }
-
-  move(newpos){
-    console.log(newpos)
-    this.pos = newpos;
-    this.removePiece();
-    this.placePiece(this.colour);
-  }
-
-  capture(id){
-    console.log(this.id + ' has captured ' + id);
-    pieceidmap[id].beCaptured();
   }
 
   generateAbsoluteMoves(){
@@ -86,12 +94,13 @@ export class Piece {
   filterAbsoluteMoves(moves,cumul){
     var ms = [];
     for (const move of moves) {
+      // console.log(move,boardpiecemap,move in boardpiecemap)
       if (move in boardpiecemap) {
-        if (boardpiecemap[move].colour != this.colour) ms.push({'status':'attack','move':move,'capture':move});
+        if (boardpiecemap[move].enemycolour == this.colour) ms.push({'status':'attack','move':move,'capture':move});
         if (cumul) break;
       }
       else {
-        ms.push({'status':'move','move':move,'capture':{}});
+        ms.push({'status':'move','move':move,'capture':''});
       }
     }
     return ms;
@@ -100,9 +109,19 @@ export class Piece {
   filterAbsoluteMovesForAttack(moves,cumul){
     var filteredmoves = this.filterAbsoluteMoves(moves,cumul);
     var ms = [];
-    for (const fmoves in filteredmoves){
+    for (const fmoves of filteredmoves){
       if (fmoves['status']=='attack') ms.push(fmoves);
     }
+    return ms;
+  }
+
+  filterAbsoluteMovesForNotAttack(moves,cumul){
+    var filteredmoves = this.filterAbsoluteMoves(moves,cumul);
+    var ms = [];
+    for (const fmoves of filteredmoves){
+      if (fmoves['status']!='attack') ms.push(fmoves);
+    }
+    return ms;
   }
   
   candidateMoves(){
@@ -149,14 +168,17 @@ export class Pawn extends Piece {
         {'move':this.relativeMoveToPos({x:-1,y:1}),'capture':this.relativeMoveToPos({x:-1,y:0})},
         {'move':this.relativeMoveToPos({x:1,y:1}),'capture':this.relativeMoveToPos({x:1,y:0})}
       ];
-      for (var movepackage in absposmoves){
-        if (movepackage['move'] in boardpiecemap){
-          if (boardpiecemap[movepackage['move']].name == 'pawn' && boardpiecemap[movepackage['move']].colour == this.enemycolour && boardpiecemap[movepackage['move']].madesinglemove){
+      for (var movepackage of absposmoves){
+        if (!(movepackage['move'] in boardpiecemap) && (movepackage['capture'] in boardpiecemap)){
+          const piecetocap = boardpiecemap[movepackage['capture']];
+          console.log(piecetocap)
+          if (piecetocap.name == 'pawn' && piecetocap.colour == this.enemycolour && piecetocap.madesinglemove && piecetocap.playedlastmove){
             ms.push({'status':'attack','move':movepackage['move'],'capture':movepackage['capture']});
           }
         }
       }
     }
+    console.log('en passant result', ms)
     return ms;
   }
 
@@ -164,14 +186,24 @@ export class Pawn extends Piece {
     this.generateAbsoluteMoves();
     var possiblemoves = [];
     if (!this.hasmoved) this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['fromstart'],true),possiblemoves);
-    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['standard'],false),possiblemoves);
+    this.addMoveDataIfUnique(this.filterAbsoluteMovesForNotAttack(this.absolutemovegroups['standard'],false),possiblemoves);
+    this.addMoveDataIfUnique(this.filterAbsoluteMovesForAttack(this.absolutemovegroups['attack'],false),possiblemoves);
     this.addMoveDataIfUnique(this.enPassantMoves(),possiblemoves);
+    // console.log('candidate moves: ');
+    // for (var p of possiblemoves){
+    //   console.log(p)
+    // }
     return possiblemoves;
   }
 
-  move(newpos){
-    super.move(newpos);
+  resetLastPlayedMoveFlag(){
+    this.playedlastmove = false;
+  }
+
+  move(playercolour,newpos){
     if (!this.hasmoved) this.madesinglemove = true;
     else if (this.madesinglemove) this.madesinglemove = false;
+    super.move(playercolour,newpos);
+    this.playedlastmove = true;
   }
 }

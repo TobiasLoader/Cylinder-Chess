@@ -70,3 +70,14 @@ html, body {
 
 .candidatemove {
   background: black !important; }
+
+.mypiece {
+  background: blue !important; }
+
+#wcapture {
+  height: 100px;
+  float: left; }
+
+#bcapture {
+  height: 100px;
+  float: right; }

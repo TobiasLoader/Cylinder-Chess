@@ -91,3 +91,17 @@ $t: 12s;
 .candidatemove {
 	background: rgb(0,0,0) !important;
 }
+
+.mypiece {
+	background: blue !important;
+}
+
+#wcapture {
+	height: 100px;
+	float: left;
+}
+
+#bcapture {
+	height: 100px;
+	float: right;
+}
