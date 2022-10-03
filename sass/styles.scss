@@ -59,17 +59,17 @@ $t: 12s;
 	height: calc(var(--rfh)*#{$rc});
 }
 
-#cylinder .cell {background: rgba(200,200,200,1);}
-#cylinder .col:nth-child(even) .cell:nth-child(even),
-#cylinder .col:nth-child(odd) .cell:nth-child(odd) {
+.cell {background: rgba(200,200,200,1);}
+.col:nth-child(even) .cell:nth-child(even),
+.col:nth-child(odd) .cell:nth-child(odd) {
 	background: rgba(100, 158, 141,1);
 }
 
 .piece {
-  width: 4em;
-  display: inline;
-  position: absolute;
-  padding: 6px;
+	width: 4em;
+	display: inline;
+	position: absolute;
+	margin: 0.5em 0.5em;
 }
 
 .rankid {
@@ -109,4 +109,19 @@ $t: 12s;
 .captured {
 	display: block;
 	position: relative;
+}
+
+#board {
+	flex-direction: row;
+	display: flex;
+}
+
+#board .col {
+	flex-direction: column;
+	display: flex;
+}
+
+#board .cell {
+	height: 5em;
+	width: 5em;
 }

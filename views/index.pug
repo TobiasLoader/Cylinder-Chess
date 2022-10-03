@@ -1,4 +1,3 @@
-
 mixin cylinder()
 	- let chessfiles = ['A','B','C','D','E','F','G','H'];
 	- let ba = 2*Math.PI/8; // base angle
@@ -16,6 +15,18 @@ mixin cylinder()
 							if (y==7)
 								p.fileid !{chessfiles[x]}
 
+mixin squareboard()
+	- let chessfiles = ['A','B','C','D','E','F','G','H'];
+	#boardarea
+		#board
+			- for(let x = 0; x < 8; x+=1)
+				.col
+					- for(let y = 0; y < 8; y+=1)
+						.cell(id=chessfiles[x]+(8-y).toString())
+							if (x==0)
+								p.rankid !{(8-y)}								
+							if (y==7)
+								p.fileid !{chessfiles[x]}
 
 doctype html
 head
@@ -37,6 +48,7 @@ input#roomnum(placeholder='#ROOM')
 	h3#mytime
 	h3#opponenttime(style='display:inline;')
 	+cylinder()
+	//- +squareboard()
 	#wcapture
 	#bcapture
 script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js')

@@ -55,6 +55,11 @@ export function cylinderGame(mycolour){
   });//, {passive: true}
 }
 
+export function squareBoardGame(mycolour){
+  startingChessPieces(mycolour);
+}
+
+
 function applyCylinderShadow(){
   var i=0;
   for (var col of cols) {

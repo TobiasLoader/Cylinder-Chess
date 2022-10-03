@@ -1,5 +1,5 @@
 import {strPrettyTimeFormat, updateTimeTimeFormat } from './time.mjs';
-import {cylinderGame, initNextMove, moveMade, resultMovePieces} from './game.mjs';
+import {cylinderGame, squareBoardGame, initNextMove, moveMade, resultMovePieces} from './game.mjs';
 
 var socket;
 var mymove = false;
@@ -70,6 +70,7 @@ function begingame() {
     opponenttime = time[opponentid];
     updatetime();
     gameplay(socket);
+    // squareBoardGame(mycolour);
     cylinderGame(mycolour);
   });
 }
