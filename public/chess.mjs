@@ -61,11 +61,6 @@ export class Piece {
 
   move(playercolour,newpos){
     this.removePiece();
-    // console.log('classes', $('#'+newpos).attr("class"))
-    // console.log('has to capture?',newpos,$('#'+newpos).hasClass('tocapture'));
-    if ($('#'+newpos).hasClass('tocapture')) {
-      this.capture(boardpiecemap[newpos]);
-    }
     this.pos = newpos;
     this.hasmoved = true;
     this.placePiece(playercolour);

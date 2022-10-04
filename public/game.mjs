@@ -105,11 +105,12 @@ export async function moveMade(pos){
 
 
 export function resultMovePieces(playercolour,moveresult){
-  // for (const [position, piece] of Object.entries(boardpiecemap)){
-  //   $('#'+position).off("click");
-  // }
   resetPlayedLastMovedFlags(playercolour);
-  if (moveresult['capture']!='') boardpiecemap[moveresult['from']].capture(boardpiecemap[moveresult['capture']]);
+  if (moveresult['capture']!='') {
+    boardpiecemap[moveresult['from']].capture(boardpiecemap[moveresult['capture']]);
+    delete boardpiecemap[moveresult['capture']];
+  }
+  console.log('reached here')
   boardpiecemap[moveresult['from']].move(playercolour,moveresult['to']);
   boardpiecemap[moveresult['to']] = boardpiecemap[moveresult['from']];
   delete boardpiecemap[moveresult['from']];
@@ -119,14 +120,11 @@ export function resultMovePieces(playercolour,moveresult){
     return (className.match ('/(^|\s)tocapture-\S+/g') || '');
   });
   console.log('board state after: ',boardpiecemap);
-  // $('.candidatemove').off( "click");
-  // addClickToPieces();
 }
 
 
 function resetPlayedLastMovedFlags(col) {
   for (const [pos,piece] of Object.entries(boardpiecemap)){
-    // console.log(piece,piece.colour==col,piece.playedlastmove)
     if (piece.enemycolour == col) piece.resetLastPlayedMoveFlag();
   }
 }
