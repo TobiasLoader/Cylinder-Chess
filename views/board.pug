@@ -1,0 +1,41 @@
+- function colourchangeyindex(col,y) {if (col=='w') return 8-y; else return y+1;}
+- function colourchangexindex(col,x) {if (col=='w') return x; else return 7-x;}
+
+mixin cylinderboard(mycolour)
+	- let chessfiles = ['A','B','C','D','E','F','G','H'];
+	- let ba = 2*Math.PI/8; // base angle
+	- let rri = Math.cos(ba/2);
+	- let rbe = 2*Math.sin(ba/2);
+	- let rfh = Math.sqrt(2-Math.sqrt(2));
+	#cylinderarea(style=`--rri: ${rri}; --rbe: ${rbe}; --rfh: ${rfh};`)
+		#cylinder
+			- for(let x = 0; x < 8; x+=1)
+				- let endx = colourchangexindex(mycolour,x);
+				.col(style=`--j: ${x/8};`)
+					- for(let y = 0; y < 8; y+=1)
+						- let endy = colourchangeyindex(mycolour,y);
+						.cell(id=chessfiles[endx]+endy.toString())
+							if (x==0)
+								p.rankid !{endy}								
+							if (y==7)
+								p.fileid !{chessfiles[endx]}
+
+mixin squareboard(mycolour)
+	- let chessfiles = ['A','B','C','D','E','F','G','H'];
+	#boardarea
+		#board
+			- for(let x = 0; x < 8; x+=1)
+				- let endx = colourchangexindex(mycolour,x);
+				.col
+					- for(let y = 0; y < 8; y+=1)
+						- let endy = colourchangeyindex(mycolour,y);
+						.cell(id=chessfiles[endx]+endy.toString())
+							if (x==0)
+								p.rankid !{endy}								
+							if (y==7)
+								p.fileid !{chessfiles[endx]}
+
+if (boardtype == 'cylinder')
+	+cylinderboard(colour)
+if (boardtype == 'square')
+	+squareboard(colour)

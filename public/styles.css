@@ -16,10 +16,14 @@ html, body {
   padding: 10px; }
 
 #gamearea {
+  background: white;
   display: none;
   width: 400px;
   border: black 1px solid;
   padding: 10px; }
+
+#gamearea.mymove {
+  background: #c86464; }
 
 #cylinderarea {
   display: grid;
@@ -68,8 +72,12 @@ html, body {
 .piecechosen {
   background: #c7f6e8 !important; }
 
-.candidatemove {
+.mymove .candidatemove {
+  cursor: pointer;
   background: #ec9f9f !important; }
+
+.mymove .mypiece {
+  cursor: pointer; }
 
 #wcapture {
   height: 100px;

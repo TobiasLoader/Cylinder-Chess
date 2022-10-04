@@ -20,10 +20,15 @@ html, body {
 }
 
 #gamearea {
+	background: rgb(255, 255, 255);
 	display:none;
 	width:400px;
 	border:black 1px solid;
 	padding:10px;
+}
+
+#gamearea.mymove {
+	background:rgb(200, 100, 100);
 }
 
 $g: 1em;
@@ -88,13 +93,14 @@ $t: 12s;
 	background: rgb(199, 246, 232) !important;
 }
 
-.candidatemove {
+.mymove .candidatemove {
+	cursor: pointer;
 	background: rgb(236, 159, 159) !important;
 }
 
-// .mypiece {
-// 	// background: blue !important;
-// }
+.mymove .mypiece {
+	cursor: pointer;
+}
 
 #wcapture {
 	height: 100px;

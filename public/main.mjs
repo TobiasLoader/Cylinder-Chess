@@ -1,9 +1,10 @@
 import {strPrettyTimeFormat, updateTimeTimeFormat } from './time.mjs';
-import {cylinderGame, squareBoardGame, initNextMove, moveMade, resultMovePieces} from './game.mjs';
+import {initBoard, initNextMove, moveMade, resultMovePieces} from './game.mjs';
 
 var socket;
 var mymove = false;
 var myroom = 0;
+var boardtype = '';
 var myplayerid = 0;
 var opponentid = 0;
 var mytime;
@@ -21,6 +22,17 @@ const mytimeel = $("#mytime");
 const opponenttimeel = $("#opponenttime");
 const closegame = $("#closegame");
 
+function fetchBoard(board,col,afterfetch) {
+  fetch('/game/'+board+'/'+col)
+  .then((response) => {
+    return response.text();
+  })
+  .then((html) => {
+    gamearea.append(html);
+    afterfetch();
+  });
+}
+
 function updateroomnumber() {
   const rooms = $(".room");
   for (var i = 0; i < rooms.length; i += 1) {
@@ -29,8 +41,8 @@ function updateroomnumber() {
 }
 
 function updatetime() {
-  mytimeel.innerText = "ME: " + strPrettyTimeFormat(mytime);
-  opponenttimeel.innerText = "OP: " + strPrettyTimeFormat(opponenttime);
+  mytimeel.text("ME: " + strPrettyTimeFormat(mytime));
+  opponenttimeel.text("OP: " + strPrettyTimeFormat(opponenttime));
 }
 
 function logsocketresponses() {
@@ -50,7 +62,7 @@ function waitingroom() {
   gamearea.css('display','none');
 }
 
-function begingame() {
+function setupgame() {
   myroom = socket.room;
   updateroomnumber();
   console.log('game is joined');
@@ -60,7 +72,8 @@ function begingame() {
   $("#waitingarea").css('display','none');
   gamearea.css('display','block');
 
-  socket.on('setup', (id, col, time) => {
+  socket.on('setup', (id, board, col, time) => {
+    boardtype = board;
     myplayerid = id;
     opponentid = 3 - id;
     mycolour = col;
@@ -68,10 +81,17 @@ function begingame() {
     console.log('my player id: ' + id);
     mytime = time[myplayerid];
     opponenttime = time[opponentid];
-    updatetime();
-    gameplay(socket);
-    // squareBoardGame(mycolour);
-    cylinderGame(mycolour);
+    fetchBoard(boardtype,mycolour,begingame);
+  });
+}
+
+function begingame(){
+  updatetime();
+  initBoard(boardtype,mycolour);
+  socket.emit('ready',myroom);
+  socket.on('roomready', function () {
+    console.log('room ready');
+    gameplay();
   });
 }
 
@@ -97,16 +117,14 @@ function gameplay() {
 function onmymove() {
   initNextMove();
   mymove = true;
-  gamearea.css('background','rgb(200, 100, 100)');
-  gamearea.css('color','rgb(255, 255, 255)');
+  gamearea.addClass('mymove');
   mymovemillis = Date.now();
   listenMoveMade();
 }
 function offmymove() {
   $('.mypiece').off('click');
   mymove = false;
-  gamearea.css('background','rgb(255, 255, 255)');
-  gamearea.css('color','rgb(0, 0, 0)');
+  gamearea.removeClass('mymove');
   initNextMove();
 }
 
@@ -132,7 +150,7 @@ startgame.click(function () {
     console.log(data);
     if (data['type'] == 'init') {
       if (socket == undefined) socket = io();
-      socket.emit('createroom', data['room'], 'user-1');
+      socket.emit('createroom', data['room'], 'user-1', 'w', 'cylinder');
       socket.emit('join', data['room']);
       logsocketresponses();
       socket.on('status', (msg) => {
@@ -141,7 +159,7 @@ startgame.click(function () {
           socket.room = data['room'];
           waitingroom();
           socket.on('status', (msg) => {
-            if (msg == 'full') begingame();
+            if (msg == 'full') setupgame();
           });
         }
       });
@@ -159,7 +177,7 @@ joingame.click(function () {
       if (msg == 'joined') {
         console.log('joined')
         socket.room = roomnum;
-        begingame();
+        setupgame();
       }
     });
   }

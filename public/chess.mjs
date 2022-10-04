@@ -294,3 +294,19 @@ export class Bishop extends Piece {
     return possiblemoves;
   }
 }
+
+export class King extends Piece {
+  constructor(id,colour,pos) {
+    super(id,'king',colour,pos);
+    this.relativemovegroups = {
+      'radius1': [{x:0, y:1},{x:1, y:1},{x:1, y:0},{x:1, y:-1},{x:0, y:-1},{x:-1, y:-1},{x:-1, y:0},{x:-1, y:1}],
+    }
+  }
+
+  candidateMoves(){
+    this.generateAbsoluteMoves();
+    var possiblemoves = [];
+    this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['radius1'],false),possiblemoves);
+    return possiblemoves;
+  }
+}

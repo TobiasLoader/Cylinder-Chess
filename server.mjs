@@ -9,6 +9,9 @@ var gamehost = {};
 var numplayers = {};
 var roomsockets = {};
 var roomtimes = {};
+var roomboardtype = {};
+var roomplayercolours = {};
+var roomready = {};
 
 const express = require('express')
 const app = express()
@@ -16,11 +19,19 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
+const pug = require('pug');
 
 app.use(express.static('public'));
 
 app.set('views', './views')
 app.set('view engine', 'pug');
+
+const boardfn = pug.compileFile('views/board.pug');
+// Render the function
+const htmlcylinderwhite = boardfn({ boardtype: 'cylinder', colour: 'w'});
+const htmlcylinderblack = boardfn({ boardtype: 'cylinder', colour: 'b'});
+const htmlsquarewhite = boardfn({ boardtype: 'square', colour: 'w'});
+const htmlsquareblack = boardfn({ boardtype: 'square', colour: 'b'});
 
 app.get('/favicon', (req, res) => {
     res.sendFile('favicon.ico');
@@ -28,6 +39,19 @@ app.get('/favicon', (req, res) => {
 
 app.get('/', (req, res) => {
     res.render('index');
+})
+
+app.get('/game/cylinder/w', (req, res) => {
+    res.send(htmlcylinderwhite);
+});
+app.get('/game/cylinder/b', (req, res) => {
+    res.send(htmlcylinderblack);
+})
+app.get('/game/square/w', (req, res) => {
+    res.send(htmlsquarewhite);
+})
+app.get('/game/square/b', (req, res) => {
+    res.send(htmlsquareblack);
 })
 
 app.post('/game_init', (req, res) => {
@@ -53,7 +77,7 @@ app.post('/game_init', (req, res) => {
 io.sockets.on('connection', function (socket) {
     console.log('socket initiated');
 
-    socket.on('createroom', function (room, user) {
+    socket.on('createroom', function (room, user, colour, boardtype) {
         console.log('room ' + room.toString() + ' created by ' + user);
         gamehost[room] = user;
         roomsockets[room] = {};
@@ -61,7 +85,11 @@ io.sockets.on('connection', function (socket) {
             1: new TimeFormat(5, 0, 0),
             2: new TimeFormat(5, 0, 0)
         };
+        roomboardtype[room] = boardtype;
+        if (colour=='w') roomplayercolours[room] = {1:'w',2:'b'};
+        else if (colour=='b') roomplayercolours[room] = {1:'b',2:'w'};
     });
+
     socket.on('join', function (room) {
         if (gamehost[room] == undefined) {
             socket.emit('error', 'game doesn\'t exist')
@@ -80,13 +108,22 @@ io.sockets.on('connection', function (socket) {
                 socket.emit('status', 'joined');
                 if (numplayers[room] == 2) {
                     io.sockets.in(room).emit('status', 'full');
-                    roomsockets[room][1].emit('setup', 1, 'w', roomtimes[room]);
-                    roomsockets[room][2].emit('setup', 2, 'b', roomtimes[room]);
-                    roomsockets[room][1].emit('play');
+                    roomready[room] = 0;
+                    for (var i=1; i<=2; i+=1)
+                        roomsockets[room][i].emit('setup', i, roomboardtype[room], roomplayercolours[room][i], roomtimes[room]);
                 }
             } else {
                 socket.emit('error', 'the room is already full, you cannot join')
             }
+        }
+    });
+
+    socket.on('ready', function (room) {
+        roomready[room] += 1;
+        if (roomready[room]==numplayers[room]) {
+            io.sockets.in(room).emit('roomready');
+            console.log('all players ready')
+            roomsockets[room][1].emit('play');
         }
     });
 

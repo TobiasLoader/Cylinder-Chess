@@ -1,9 +1,4 @@
-import {Pawn, Rook, Knight, Bishop, Queen} from './chess.mjs';
-
-const cylinderarea = document.getElementById("cylinderarea");
-const cylinder = $("#cylinder");
-const cols = $(".col");
-var cylinderroty = 0;
+import {Pawn,  Knight, Bishop, Rook, Queen, King} from './chess.mjs';
 
 var movenum = 0;
 
@@ -12,7 +7,7 @@ export const boardpiecemap = {
   'B1': new Knight('1','w','B1'), 
   'C1': new Bishop('2','w','C1'), 
   'D1': new Queen('3','w','D1'), 
-
+  'E1': new King('4','w','E1'), 
   'F1': new Bishop('5','w','F1'),
   'G1': new Knight('6','w','G1'), 
   'H1': new Rook('7','w','H1'), 
@@ -30,7 +25,7 @@ export const boardpiecemap = {
   'B8': new Knight('17','b','B8'), 
   'C8': new Bishop('18','b','C8'),
   'D8': new Queen('19','b','D8'), 
-
+  'E8': new King('20','b','E8'), 
   'F8': new Bishop('21','b','F8'),
   'G8': new Knight('22','b','G8'), 
   'H8': new Rook('23','b','H8'), 
@@ -45,23 +40,38 @@ export const boardpiecemap = {
   'H7': new Pawn('31','b','H7'), 
 };
 
-export function cylinderGame(mycolour){
+export function initBoard(boardtype,mycolour){
+  if (boardtype=='cylinder') {
+    cylinderBoardGame(mycolour);
+  }
+  if (boardtype=='square'){
+    squareBoardGame(mycolour);
+  }
+}
+
+function cylinderBoardGame(mycolour){
+  const cylinderarea = document.getElementById("cylinderarea");
+  const cylinder = $("#cylinder");
+  const cols = $(".col");
+  var cylinderroty = 202.5;
+  cylinder.css('transform','rotateY('+cylinderroty.toString()+'deg)');
   startingChessPieces(mycolour);
-  applyCylinderShadow();
+  applyCylinderShadow(cylinderroty,cols,mycolour);
   cylinderarea.addEventListener('wheel', function (e) {
     cylinderroty += e.deltaY/10;
     cylinder.css('transform','rotateY('+cylinderroty.toString()+'deg)');
-    applyCylinderShadow();
+    applyCylinderShadow(cylinderroty,cols);
   });//, {passive: true}
 }
 
-export function squareBoardGame(mycolour){
+function squareBoardGame(mycolour){
   startingChessPieces(mycolour);
 }
 
 
-function applyCylinderShadow(){
+function applyCylinderShadow(cylinderroty,cols,mycolour){    
   var i=0;
+  //((i)=>{if (mycolour=='b') return 8-i; else return i;})(i)
   for (var col of cols) {
     col.style.filter = 'brightness('+(0.5+Math.cos(2*Math.PI*(i/8 + cylinderroty/360))/2).toString()+')';
     i+=1;
