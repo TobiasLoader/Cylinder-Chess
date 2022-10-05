@@ -103,6 +103,7 @@ function gameplay() {
   });
   socket.on('boardmove', function (movedata, time) {
     resultMovePieces(mycolour,movedata);
+    resetClasses();
     mytime = time[myplayerid];
     opponenttime = time[opponentid];
     updatetime();
@@ -183,20 +184,29 @@ joingame.click(function () {
   }
 });
 
+function resetClasses(){
+  $('.candidatemove').off( "click");
+  $('.piecechosen').removeClass('piecechosen');
+  $('.candidatemove').removeClass('candidatemove');
+  for (var i=0; i<8; i+=1){
+    for (var j=0; j<8; j+=1){
+      const c = 'tocapture-'+String.fromCharCode(65+i)+(1+j).toString();
+      $('.'+c).removeClass(c);
+    }
+  }
+}
+
 function listenMoveMade(){
-  $('.mypiece').click(function () {
-    console.log('is my move?', mymove)
-    if (mymove) {
-      $('.candidatemove').off( "click");
-      $('.piecechosen').removeClass('piecechosen');
-      $('.candidatemove').removeClass('candidatemove');
-      $('*[class^="tocapture-"]').removeClass (function (index, className) {
-        return (className.match ('/(^|\s)tocapture-\S+/g') || '');
-      });
-      currentpiece = $(this).attr('id');
-      console.log('move from ',currentpiece)
-      var selectednum = 1;
-      makeMove(currentpiece);
+  $('.cell').click(function (e) {
+    e.stopPropagation();
+    resetClasses();
+    if ($(this).hasClass('mypiece')) {
+      console.log('is my move?', mymove)
+      if (mymove) {
+        currentpiece = $(this).attr('id');
+        console.log('move from ',currentpiece)
+        makeMove(currentpiece);
+      }
     }
   });
 }
@@ -214,16 +224,6 @@ async function makeMove(frompos){
   socket.emit('move', m, myroom, myplayerid, newtimeobject);
   offmymove();
 }
-
-// function cancelMakeMove(frompos){
-//   startedmove = false;
-//   currentpiece = '';
-//   $('.candidatemove').off('click');
-//   $('.piecechosen').off('click');
-//   $('.piecechosen').removeClass('piecechosen');
-//   $('.candidatemove').removeClass('candidatemove');
-//   $('.tocapture').removeClass('tocapture');
-// }
 
 closegame.click(function () {
   socket.emit('end');

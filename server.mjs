@@ -122,8 +122,9 @@ io.sockets.on('connection', function (socket) {
         roomready[room] += 1;
         if (roomready[room]==numplayers[room]) {
             io.sockets.in(room).emit('roomready');
-            console.log('all players ready')
-            roomsockets[room][1].emit('play');
+            console.log('all players ready');
+            if (roomplayercolours[room][1]=='w') roomsockets[room][1].emit('play');
+            if (roomplayercolours[room][2]=='w') roomsockets[room][2].emit('play');
         }
     });
 

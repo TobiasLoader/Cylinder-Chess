@@ -120,15 +120,9 @@ export function resultMovePieces(playercolour,moveresult){
     boardpiecemap[moveresult['from']].capture(boardpiecemap[moveresult['capture']]);
     delete boardpiecemap[moveresult['capture']];
   }
-  console.log('reached here')
   boardpiecemap[moveresult['from']].move(playercolour,moveresult['to']);
-  boardpiecemap[moveresult['to']] = boardpiecemap[moveresult['from']];
+  // boardpiecemap[moveresult['to']] = boardpiecemap[moveresult['from']];
   delete boardpiecemap[moveresult['from']];
-  $('.piecechosen').removeClass('piecechosen');
-  $('.candidatemove').removeClass('candidatemove');
-  $('*[class^="tocapture-"]').removeClass (function (index, className) {
-    return (className.match ('/(^|\s)tocapture-\S+/g') || '');
-  });
   console.log('board state after: ',boardpiecemap);
 }
 

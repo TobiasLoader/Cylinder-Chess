@@ -1,7 +1,6 @@
 import {boardpiecemap} from './game.mjs';
 
 const colourname = {'w':'white','b':'black'};
-const pieceidmap = {};
 
 function fileToInt(f){
   return f.charCodeAt() - 64;
@@ -184,25 +183,42 @@ export class Pawn extends Piece {
         }
       }
     }
-    console.log('en passant result', ms)
     return ms;
   }
 
   candidateMoves(){
     this.generateAbsoluteMoves();
     var possiblemoves = [];
-    if (!this.hasmoved) this.addMoveDataIfUnique(this.filterAbsoluteMoves(this.absolutemovegroups['fromstart'],true),possiblemoves);
+    if (!this.hasmoved) this.addMoveDataIfUnique(this.filterAbsoluteMovesForNotAttack(this.absolutemovegroups['fromstart'],true),possiblemoves);
     this.addMoveDataIfUnique(this.filterAbsoluteMovesForNotAttack(this.absolutemovegroups['standard'],false),possiblemoves);
     this.addMoveDataIfUnique(this.filterAbsoluteMovesForAttack(this.absolutemovegroups['attack'],false),possiblemoves);
     this.addMoveDataIfUnique(this.enPassantMoves(),possiblemoves);
+    console.log('possible moves ', possiblemoves);
     return possiblemoves;
+  }
+
+  queeningCheck(){
+    return (this.colour=='w' && this.rank()=='8') || (this.colour=='b' && this.rank()=='1');
   }
 
   move(playercolour,newpos){
     if (!this.hasmoved) this.madesinglemove = true;
     else if (this.madesinglemove) this.madesinglemove = false;
     super.move(playercolour,newpos);
+    if (this.queeningCheck()) {
+      queening(this,new Queen(this.id,this.colour,this.pos));
+    } else {
+      boardpiecemap[newpos] = this;
+    }
   }
+}
+
+function queening(pawn,queen){
+  console.log(pawn,queen)
+  pawn.removePiece();
+  queen.placePiece(queen.colour);
+  delete boardpiecemap[pawn.pos];
+  boardpiecemap[pawn.pos] = queen;
 }
 
 export class Queen extends Piece {
