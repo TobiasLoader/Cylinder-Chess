@@ -15,12 +15,27 @@ var mycolour = '';
 var currentpiece = '';
 var startedmove = false;
 
+const initgame = $("#initgame");
 const startgame = $("#startgame");
+const createroom = $("#createroom");
+const startgameoptions = $("#startgame-options");
+const gameoptions = $(".game-option");
+const stopcreateroom = $("#stopcreateroom");
 const joingame = $("#joingame");
+const joingameoptions = $("#joingame-options");
+const joinroom = $("#joinroom");
+const stopjoinroom = $('#stopjoinroom');
 const gamearea = $("#gamearea");
+const boardarea = $("#boardarea");
 const mytimeel = $("#mytime");
 const opponenttimeel = $("#opponenttime");
-const closegame = $("#closegame");
+const leaverooms = $(".leaveroom");
+
+function setInitGameState(state,event){
+  if (event != undefined) event.stopPropagation();
+  initgame.removeClass();
+  initgame.addClass(state);
+}
 
 function fetchBoard(board,col,afterfetch) {
   fetch('/game/'+board+'/'+col)
@@ -28,7 +43,7 @@ function fetchBoard(board,col,afterfetch) {
     return response.text();
   })
   .then((html) => {
-    gamearea.append(html);
+    boardarea.append(html);
     afterfetch();
   });
 }
@@ -55,22 +70,14 @@ function waitingroom() {
   myroom = socket.room;
   updateroomnumber();
   console.log('waiting room is joined');
-  startgame.css('display','none');
-  joingame.css('display','none');
-  $("#roomnum").css('display','none');
-  $("#waitingarea").css('display','block');
-  gamearea.css('display','none');
+  setInitGameState('state-waitingarea');
 }
 
 function setupgame() {
   myroom = socket.room;
   updateroomnumber();
   console.log('game is joined');
-  startgame.css('display','none');
-  joingame.css('display','none');
-  $("#roomnum").css('display','none');
-  $("#waitingarea").css('display','none');
-  gamearea.css('display','block');
+  setInitGameState('state-gamearea');
 
   socket.on('setup', (id, board, col, time) => {
     boardtype = board;
@@ -82,6 +89,11 @@ function setupgame() {
     mytime = time[myplayerid];
     opponenttime = time[opponentid];
     fetchBoard(boardtype,mycolour,begingame);
+  });
+
+  socket.on('playerleft',function(player){
+    console.log('player ', player, ' left your room.')
+    alert('player ' + player.toString() + ' left your room.');
   });
 }
 
@@ -129,16 +141,19 @@ function offmymove() {
   initNextMove();
 }
 
-function closeaction() {
+function leaveaction() {
   console.log('game to be/is closed');
-  startgame.css('display','block');
-  joingame.css('display','block');
-  $("#roomnum").css('display','block');
-  $("#waitingarea").css('display','none');
-  gamearea.css('display','none');
+  boardarea.empty();
+  setInitGameState('state-home');
 }
 
-startgame.click(function () {
+startgame.click(function(e){setInitGameState('state-startgame',e)});
+
+function getStartGameOption(name){
+  return $('#startgame-options input[name="'+name+'"]:checked').val();
+}
+
+createroom.click(function(){
   fetch("/game_init", {
     method: "POST",
     headers: { 'Content-Type': 'application/json' },
@@ -150,8 +165,8 @@ startgame.click(function () {
     data = JSON.parse(data.toString());
     console.log(data);
     if (data['type'] == 'init') {
-      if (socket == undefined) socket = io();
-      socket.emit('createroom', data['room'], 'user-1', 'w', 'cylinder');
+      socket = io();
+      socket.emit('createroom', data['room'], 'user-1', getStartGameOption('colour'), getStartGameOption('surface'));
       socket.emit('join', data['room']);
       logsocketresponses();
       socket.on('status', (msg) => {
@@ -168,21 +183,25 @@ startgame.click(function () {
   });
 });
 
-joingame.click(function () {
-  if (socket == undefined) {
-    socket = io();
-    var roomnum = Number.parseInt(document.getElementById('roomnum').value);
-    if (roomnum != undefined && roomnum >= 1000) socket.emit('join', roomnum);
-    logsocketresponses(socket);
-    socket.on('status', (msg) => {
-      if (msg == 'joined') {
-        console.log('joined')
-        socket.room = roomnum;
-        setupgame();
-      }
-    });
-  }
+stopcreateroom.click(function(e){setInitGameState('state-home',e)});
+
+joingame.click(function(e){setInitGameState('state-joingame',e)});
+
+joinroom.click(function () {
+  socket = io();
+  var roomnum = Number.parseInt(document.getElementById('roomnum').value);
+  if (roomnum != undefined && roomnum >= 1000) socket.emit('join', roomnum);
+  logsocketresponses(socket);
+  socket.on('status', (msg) => {
+    if (msg == 'joined') {
+      console.log('joined')
+      socket.room = roomnum;
+      setupgame();
+    }
+  });
 });
+
+stopjoinroom.click(function(e){setInitGameState('state-home',e)});
 
 function resetClasses(){
   $('.candidatemove').off( "click");
@@ -225,9 +244,11 @@ async function makeMove(frompos){
   offmymove();
 }
 
-closegame.click(function () {
-  socket.emit('end');
-  closeaction();
+leaverooms.click(function () {
+  socket.emit('leaveroom',myroom,myplayerid);
+  socket.on('leaveacknowledged', function() {
+    leaveaction();
+  });
 });
 
 // $(document).click(function(e){

@@ -4,10 +4,41 @@ html, body {
 	overflow: hidden;
 }
 
+#initgame.state-home #startgame {display: block;}
+#initgame.state-home #startgame-options {display: none;}
+#initgame.state-home #joingame {display: block;}
+#initgame.state-home #joingame-options {display: none;}
+#initgame.state-home #waitingarea {display: none;}
+#initgame.state-home #gamearea {display: none;}
+
+#initgame.state-startgame #startgame {display: block;}
+#initgame.state-startgame #startgame-options {display: block;}
+#initgame.state-startgame #joingame {display: none;}
+#initgame.state-startgame #joingame-options {display: none;}
+#initgame.state-startgame #waitingarea {display: none;}
+#initgame.state-startgame #gamearea {display: none;}
+
+#initgame.state-joingame #startgame {display: none;}
+#initgame.state-joingame #startgame-options {display: none;}
+#initgame.state-joingame #joingame {display: block;}
+#initgame.state-joingame #joingame-options {display: block;}
+#initgame.state-joingame #waitingarea {display: none;}
+#initgame.state-joingame #gamearea {display: none;}
+
+#initgame.state-waitingarea #startgame {display: none;}
+#initgame.state-waitingarea #joingame {display: none;}
+#initgame.state-waitingarea #waitingarea {display: block;}
+#initgame.state-waitingarea #gamearea {display: none;}
+
+#initgame.state-gamearea #startgame {display: none;}
+#initgame.state-gamearea #joingame {display: none;}
+#initgame.state-gamearea #waitingarea {display: none;}
+#initgame.state-gamearea #gamearea {display: block;}
+
 .postbutton {
     border: black 1px solid;
     width: 200px;
-    height: 100px;
+    min-height: 100px;
     cursor: pointer;
 }
 
@@ -117,17 +148,17 @@ $t: 12s;
 	position: relative;
 }
 
-#board {
+#square {
 	flex-direction: row;
 	display: flex;
 }
 
-#board .col {
+#square .col {
 	flex-direction: column;
 	display: flex;
 }
 
-#board .cell {
+#square .cell {
 	height: 5em;
 	width: 5em;
 }

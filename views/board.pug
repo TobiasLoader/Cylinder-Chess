@@ -22,8 +22,8 @@ mixin cylinderboard(mycolour)
 
 mixin squareboard(mycolour)
 	- let chessfiles = ['A','B','C','D','E','F','G','H'];
-	#boardarea
-		#board
+	#squarearea
+		#square
 			- for(let x = 0; x < 8; x+=1)
 				- let endx = colourchangexindex(mycolour,x);
 				.col

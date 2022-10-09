@@ -139,8 +139,10 @@ io.sockets.on('connection', function (socket) {
         console.log('play command sent');
     });
 
-    socket.on('end', function () {
-        console.log('disconnect');
+    socket.on('leaveroom', function (room,player) {
+        console.log('player ',player,' leave from room ',room);
+        socket.to(room).emit('playerleft', player);
+        socket.emit('leaveacknowledged');
         socket.disconnect(0);
     });
 });

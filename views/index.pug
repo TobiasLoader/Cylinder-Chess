@@ -1,24 +1,51 @@
+mixin gameoption(id,name,label,value,checkedBool)
+	input(type='radio',id=id,name=name,value=value,checked=checkedBool==true)
+	label(for=id) !{label}
+
 doctype html
 head
 	title Cylinder Chess
 	link(rel='stylesheet' href='styles.css')
 h1 Cylinder Chess
 p Click start to init new game, or type in room num and join.
-#startgame.postbutton Start Game
-input#roomnum(placeholder='#ROOM')
-#joingame.postbutton Join Game
-#waitingarea
-	| Waiting AREA
-	h2.room
-	#closegame.postbutton close
-#gamearea
-	| Game AREA
-	h2.room
-	h3#movemade
-	h3#mytime
-	h3#opponenttime(style='display:inline;')
-	#wcapture
-	#bcapture
+#initgame.state-home
+	#startgame.postbutton Start Game
+		#startgame-options
+			#colour.game-option
+				+gameoption('colour-white','colour','white','w',true)
+				+gameoption('colour-black','colour','black','b',false)
+				+gameoption('colour-random','colour','random','r',false)
+			#time.game-option
+				+gameoption('time-1','time','1min','1',true)
+				+gameoption('time-5','time','5min','5',false)
+				+gameoption('time-unlimited','time','unlimited','u',false)
+			#surface.game-option
+				+gameoption('surface-cylinder','surface','cylinder','cylinder',true)
+				+gameoption('surface-square','surface','square','square',false)
+			#roomsize.game-option
+				+gameoption('roomsize-2','roomsize','room size 2','2',true)
+				+gameoption('roomsize-3','roomsize','room size 3','3',false)
+			#createroom.postbutton Create Room
+			#stopcreateroom.postbutton Back
+	#joingame.postbutton Join Game
+		#joingame-options
+			input#roomnum(placeholder='#ROOM')
+			#joinroom.postbutton Join Room
+			#stopjoinroom.postbutton Back
+	#waitingarea
+		| Waiting AREA
+		h2.room
+		.leaveroom.postbutton leave
+	#gamearea
+		| Game AREA
+		h2.room
+		h3#movemade
+		h3#mytime
+		h3#opponenttime(style='display:inline;')
+		#wcapture
+		#bcapture
+		#boardarea
+		.leaveroom.postbutton leave
 script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js')
 script(src='/socket.io/socket.io.js')
 script(type='module' src='main.mjs')
