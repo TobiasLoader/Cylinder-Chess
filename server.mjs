@@ -77,17 +77,29 @@ app.post('/game_init', (req, res) => {
 io.sockets.on('connection', function (socket) {
     console.log('socket initiated');
 
-    socket.on('createroom', function (room, user, colour, boardtype) {
+    socket.on('createroom', function (room, user, colour, timestr, boardtype) {
         console.log('room ' + room.toString() + ' created by ' + user);
         gamehost[room] = user;
         roomsockets[room] = {};
-        roomtimes[room] = {
-            1: new TimeFormat(5, 0, 0),
-            2: new TimeFormat(5, 0, 0)
-        };
+        if (timestr=='u'){
+            roomtimes[room] = {
+                1: new TimeFormat(true),
+                2: new TimeFormat(true)
+            };
+        } else {
+            const timearray = timestr.split('+');
+            roomtimes[room] = {
+                1: new TimeFormat(false,parseInt(timearray[0]), 0, parseInt(timearray[1])),
+                2: new TimeFormat(false,parseInt(timearray[0]), 0, parseInt(timearray[1]))
+            };
+        }
         roomboardtype[room] = boardtype;
         if (colour=='w') roomplayercolours[room] = {1:'w',2:'b'};
         else if (colour=='b') roomplayercolours[room] = {1:'b',2:'w'};
+        else if (colour=='r') {
+            if (Math.random()<0.5) roomplayercolours[room] = {1:'w',2:'b'};
+            else roomplayercolours[room] = {1:'b',2:'w'};
+        }
     });
 
     socket.on('join', function (room) {

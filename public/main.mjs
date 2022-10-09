@@ -1,4 +1,4 @@
-import {strPrettyTimeFormat, updateTimeTimeFormat } from './time.mjs';
+import {strPrettyTimeFormat, updateTimeTimeFormat, updateAfterMove } from './time.mjs';
 import {initBoard, initNextMove, moveMade, resultMovePieces} from './game.mjs';
 
 var socket;
@@ -9,10 +9,13 @@ var myplayerid = 0;
 var opponentid = 0;
 var mytime;
 var opponenttime;
-var mymovemillis = 0;
+var mymovemillis;
+var opmovemillis;
 var movehistory = [];
 var mycolour = '';
 var currentpiece = '';
+var mytimerticking;
+var optimerticking;
 var startedmove = false;
 
 const initgame = $("#initgame");
@@ -55,9 +58,22 @@ function updateroomnumber() {
   }
 }
 
-function updatetime() {
+function updatetimeHTML() {
   mytimeel.text("ME: " + strPrettyTimeFormat(mytime));
   opponenttimeel.text("OP: " + strPrettyTimeFormat(opponenttime));
+}
+
+function updateMyTime(endmove){
+  if (endmove) updateAfterMove(mytime, Date.now() - mymovemillis);
+  else updateTimeTimeFormat(mytime, Date.now() - mymovemillis);
+  updatetimeHTML();
+  mymovemillis = Date.now();
+}
+
+function updateOpTime(){
+  updateTimeTimeFormat(opponenttime, Date.now() - opmovemillis);
+  updatetimeHTML();
+  opmovemillis = Date.now();
 }
 
 function logsocketresponses() {
@@ -98,7 +114,7 @@ function setupgame() {
 }
 
 function begingame(){
-  updatetime();
+  updatetimeHTML();
   initBoard(boardtype,mycolour);
   socket.emit('ready',myroom);
   socket.on('roomready', function () {
@@ -108,6 +124,11 @@ function begingame(){
 }
 
 function gameplay() {
+  mymovemillis = Date.now();
+  opmovemillis = Date.now();
+  mytimerticking = setInterval(function(){if (mymove) updateMyTime(false)},1000);
+  optimerticking = setInterval(function(){if (!mymove) updateOpTime()},1000);
+
   console.log('gameplay begun');
   socket.on('play', function () {
     console.log('received play command');
@@ -118,7 +139,6 @@ function gameplay() {
     resetClasses();
     mytime = time[myplayerid];
     opponenttime = time[opponentid];
-    updatetime();
     $('#movemade').text('move: from ' + movedata['from'] + ', to ' + movedata['to']);
     movehistory.push(movedata);
     console.log('move played on board', movedata);
@@ -138,13 +158,16 @@ function offmymove() {
   $('.mypiece').off('click');
   mymove = false;
   gamearea.removeClass('mymove');
+  opmovemillis = Date.now();
   initNextMove();
 }
 
 function leaveaction() {
-  console.log('game to be/is closed');
+  clearInterval(mytimerticking);
+  clearInterval(optimerticking);
   boardarea.empty();
   setInitGameState('state-home');
+  console.log('left room');
 }
 
 startgame.click(function(e){setInitGameState('state-startgame',e)});
@@ -166,7 +189,7 @@ createroom.click(function(){
     console.log(data);
     if (data['type'] == 'init') {
       socket = io();
-      socket.emit('createroom', data['room'], 'user-1', getStartGameOption('colour'), getStartGameOption('surface'));
+      socket.emit('createroom', data['room'], 'user-1', getStartGameOption('colour'), getStartGameOption('time'), getStartGameOption('surface'));
       socket.emit('join', data['room']);
       logsocketresponses();
       socket.on('status', (msg) => {
@@ -235,8 +258,7 @@ async function makeMove(frompos){
   startedmove = true;
   await moveMade(frompos).then((movedata)=>{m = movedata});
   console.log('move to be made by me');
-  const movetime = Date.now() - mymovemillis;
-  updateTimeTimeFormat(mytime, movetime);
+  updateMyTime(true);
   const newtimeobject = {};
   newtimeobject[myplayerid] = mytime;
   newtimeobject[opponentid] = opponenttime;

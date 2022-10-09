@@ -7,7 +7,6 @@ head
 	title Cylinder Chess
 	link(rel='stylesheet' href='styles.css')
 h1 Cylinder Chess
-p Click start to init new game, or type in room num and join.
 #initgame.state-home
 	#startgame.postbutton Start Game
 		#startgame-options
@@ -16,8 +15,8 @@ p Click start to init new game, or type in room num and join.
 				+gameoption('colour-black','colour','black','b',false)
 				+gameoption('colour-random','colour','random','r',false)
 			#time.game-option
-				+gameoption('time-1','time','1min','1',true)
-				+gameoption('time-5','time','5min','5',false)
+				+gameoption('time-1','time','1m + 5s','1+5',true)
+				+gameoption('time-5','time','5m + 0s','5+0',false)
 				+gameoption('time-unlimited','time','unlimited','u',false)
 			#surface.game-option
 				+gameoption('surface-cylinder','surface','cylinder','cylinder',true)
