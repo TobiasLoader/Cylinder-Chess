@@ -19,12 +19,12 @@ var optimerticking;
 var startedmove = false;
 
 const initgame = $("#initgame");
-const startgame = $("#startgame");
+const startgame = $("#startgame .mainbutton");
 const createroom = $("#createroom");
 const startgameoptions = $("#startgame-options");
 const gameoptions = $(".game-option");
 const stopcreateroom = $("#stopcreateroom");
-const joingame = $("#joingame");
+const joingame = $("#joingame .mainbutton");
 const joingameoptions = $("#joingame-options");
 const joinroom = $("#joinroom");
 const stopjoinroom = $('#stopjoinroom');
@@ -257,7 +257,7 @@ async function makeMove(frompos){
   var m = {};
   startedmove = true;
   await moveMade(frompos).then((movedata)=>{m = movedata});
-  console.log('move to be made by me');
+  console.log('move to be made by me', m);
   updateMyTime(true);
   const newtimeobject = {};
   newtimeobject[myplayerid] = mytime;

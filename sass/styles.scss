@@ -1,8 +1,79 @@
-
 html, body {
+	background: rgb(40,40,40);
+	margin: 0;
 	height: 100%;
 	overflow: hidden;
+	font-family: Avenir;
 }
+
+h1#cylinder-title {
+	color: white;
+	text-align: center;
+}
+
+.state-home {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+
+//////// UI ELEMENTS
+
+.mainbutton {
+	max-width: 400px;
+	padding: 20px;
+	margin: 10px;
+	display: block;
+	cursor: pointer;
+	text-align: center;
+	border-radius: 3px;
+	background: rgb(100,150,200);
+}
+
+.mainbuttontitle {
+	margin:0;
+}
+
+.subbutton {
+	max-width: 200px;
+	padding: 10px;
+	margin: 10px;
+	min-height: 50px;
+	display: block;
+	cursor: pointer;
+	text-align: center;
+	border-radius: 3px;
+	background: rgb(255, 255, 255);
+}
+
+.submainbuttontitle {
+	color:black;
+}
+
+#waitingarea {
+	background:rgb(38, 65, 57);
+	display:none;
+	width:400px;
+	height:400px;
+	border:black 1px solid;
+	padding:10px;
+}
+
+#startgame-options .game-option {
+	color: white;
+}
+
+#initgame.state-startgame #startgame .mainbutton {
+	background: rgba(100,150,200,0.5);
+	color: white;
+	cursor:default;
+}
+
+#waitingarea {
+	color: white;
+}
+
+//////// INIT GAME STATES:
 
 #initgame.state-home #startgame {display: block;}
 #initgame.state-home #startgame-options {display: none;}
@@ -35,64 +106,19 @@ html, body {
 #initgame.state-gamearea #waitingarea {display: none;}
 #initgame.state-gamearea #gamearea {display: block;}
 
-.postbutton {
-    border: black 1px solid;
-    width: 200px;
-    min-height: 100px;
-    cursor: pointer;
-}
-
-#waitingarea {
-	display:none;
-	width:400px;
-	height:400px;
-	border:black 1px solid;
-	padding:10px;
-}
+//////// GAME PLAY
 
 #gamearea {
-	background: rgb(255, 255, 255);
+	// background: rgb(255, 255, 255);
 	display:none;
 	width:400px;
 	border:black 1px solid;
 	padding:10px;
+	color: white;
 }
 
 #gamearea.mymove {
-	background:rgb(200, 100, 100);
-}
-
-$g: 1em;
-$rc: 6em;
-$b: .3;
-$t: 12s;
-
-#cylinderarea {
-	display: grid;
-	perspective: 35em;
-}
-
-#cylinder {
-	place-self: center;
-	display: grid;
-	transform-style: preserve-3d;
-}
-
-#cylinder .col {
-	display: grid;
-	grid-area: 1/ 1;
-	width: calc(var(--rbe)*#{$rc});
-	height: calc(8*var(--rfh)*#{$rc});
-	transform-origin: 50% 100%;
-	transform: 
-		rotatey(calc(var(--j)*1turn)) 
-		translatez(calc(var(--rri)*#{$rc}))
-		scalex(1.01);
-}
-
-#cylinder .cell {
-	width: calc(var(--rbe)*#{$rc});
-	height: calc(var(--rfh)*#{$rc});
+	background:rgb(38, 65, 57);
 }
 
 .cell {background: rgba(200,200,200,1);}
@@ -147,6 +173,43 @@ $t: 12s;
 	display: block;
 	position: relative;
 }
+
+//////// CYLINDER BOARD
+
+$g: 1em;
+$rc: 6em;
+$b: .3;
+$t: 12s;
+
+#cylinderarea {
+	display: grid;
+	perspective: 35em;
+}
+
+#cylinder {
+	place-self: center;
+	display: grid;
+	transform-style: preserve-3d;
+}
+
+#cylinder .col {
+	display: grid;
+	grid-area: 1/ 1;
+	width: calc(var(--rbe)*#{$rc});
+	height: calc(8*var(--rfh)*#{$rc});
+	transform-origin: 50% 100%;
+	transform: 
+		rotatey(calc(var(--j)*1turn)) 
+		translatez(calc(var(--rri)*#{$rc}))
+		scalex(1.01);
+}
+
+#cylinder .cell {
+	width: calc(var(--rbe)*#{$rc});
+	height: calc(var(--rfh)*#{$rc});
+}
+
+//////// SQUARE BOARD
 
 #square {
 	flex-direction: row;

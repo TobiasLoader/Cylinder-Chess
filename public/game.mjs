@@ -89,9 +89,9 @@ export function initNextMove(){
   console.log(movenum);
 }
 
-export async function moveMade(pos){
-  const piece = boardpiecemap[pos];
-  $('#'+pos).addClass('piecechosen');
+export async function moveMade(frompos){
+  const piece = boardpiecemap[frompos];
+  $('#'+frompos).addClass('piecechosen');
   const candidates = piece.candidateMoves();
   candidates.forEach(function (movedata){
     $('#'+movedata.move).addClass('candidatemove');
@@ -100,15 +100,12 @@ export async function moveMade(pos){
   return new Promise((resolve) => {
     $('.candidatemove').click(function () {
       $('.candidatemove').off( "click");
-      const classes = $(this).attr('class').split(' ');
       var capturepos = '';
-      for (const theclass of classes){
-        if (theclass.length == 12 && theclass.substring(0,10)=='tocapture-'){
-          capturepos = theclass.substring(10,12)
-          break;
-        }
-      }
-      resolve({'from':pos,'to':$(this).attr('id'),'capture':capturepos});
+      var topos = $(this).attr('id');
+      candidates.forEach(function (movedata){
+        if (movedata['move']==topos) capturepos = movedata['capture'];
+      });
+      resolve({'from':frompos,'to':topos,'capture':capturepos});
     });
   });
 }
@@ -121,7 +118,7 @@ export function resultMovePieces(playercolour,moveresult){
     delete boardpiecemap[moveresult['capture']];
   }
   boardpiecemap[moveresult['from']].move(playercolour,moveresult['to']);
-  // boardpiecemap[moveresult['to']] = boardpiecemap[moveresult['from']];
+  boardpiecemap[moveresult['to']] = boardpiecemap[moveresult['from']];
   delete boardpiecemap[moveresult['from']];
   console.log('board state after: ',boardpiecemap);
 }

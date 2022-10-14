@@ -1,6 +1,64 @@
 html, body {
+  background: #282828;
+  margin: 0;
   height: 100%;
-  overflow: hidden; }
+  overflow: hidden;
+  font-family: Avenir; }
+
+h1#cylinder-title {
+  color: white;
+  text-align: center; }
+
+.state-home {
+  display: flex;
+  flex-direction: row;
+  justify-content: center; }
+
+.mainbutton {
+  max-width: 400px;
+  padding: 20px;
+  margin: 10px;
+  display: block;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 3px;
+  background: #6496c8; }
+
+.mainbuttontitle {
+  margin: 0; }
+
+.subbutton {
+  max-width: 200px;
+  padding: 10px;
+  margin: 10px;
+  min-height: 50px;
+  display: block;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 3px;
+  background: white; }
+
+.submainbuttontitle {
+  color: black; }
+
+#waitingarea {
+  background: #264139;
+  display: none;
+  width: 400px;
+  height: 400px;
+  border: black 1px solid;
+  padding: 10px; }
+
+#startgame-options .game-option {
+  color: white; }
+
+#initgame.state-startgame #startgame .mainbutton {
+  background: rgba(100, 150, 200, 0.5);
+  color: white;
+  cursor: default; }
+
+#waitingarea {
+  color: white; }
 
 #initgame.state-home #startgame {
   display: block; }
@@ -80,49 +138,15 @@ html, body {
 #initgame.state-gamearea #gamearea {
   display: block; }
 
-.postbutton {
-  border: black 1px solid;
-  width: 200px;
-  min-height: 100px;
-  cursor: pointer; }
-
-#waitingarea {
-  display: none;
-  width: 400px;
-  height: 400px;
-  border: black 1px solid;
-  padding: 10px; }
-
 #gamearea {
-  background: white;
   display: none;
   width: 400px;
   border: black 1px solid;
-  padding: 10px; }
+  padding: 10px;
+  color: white; }
 
 #gamearea.mymove {
-  background: #c86464; }
-
-#cylinderarea {
-  display: grid;
-  perspective: 35em; }
-
-#cylinder {
-  place-self: center;
-  display: grid;
-  transform-style: preserve-3d; }
-
-#cylinder .col {
-  display: grid;
-  grid-area: 1/ 1;
-  width: calc(var(--rbe)*6em);
-  height: calc(8*var(--rfh)*6em);
-  transform-origin: 50% 100%;
-  transform: rotatey(calc(var(--j)*1turn)) translatez(calc(var(--rri)*6em)) scalex(1.01); }
-
-#cylinder .cell {
-  width: calc(var(--rbe)*6em);
-  height: calc(var(--rfh)*6em); }
+  background: #264139; }
 
 .cell {
   background: #c8c8c8; }
@@ -169,14 +193,35 @@ html, body {
   display: block;
   position: relative; }
 
-#board {
+#cylinderarea {
+  display: grid;
+  perspective: 35em; }
+
+#cylinder {
+  place-self: center;
+  display: grid;
+  transform-style: preserve-3d; }
+
+#cylinder .col {
+  display: grid;
+  grid-area: 1/ 1;
+  width: calc(var(--rbe)*6em);
+  height: calc(8*var(--rfh)*6em);
+  transform-origin: 50% 100%;
+  transform: rotatey(calc(var(--j)*1turn)) translatez(calc(var(--rri)*6em)) scalex(1.01); }
+
+#cylinder .cell {
+  width: calc(var(--rbe)*6em);
+  height: calc(var(--rfh)*6em); }
+
+#square {
   flex-direction: row;
   display: flex; }
 
-#board .col {
+#square .col {
   flex-direction: column;
   display: flex; }
 
-#board .cell {
+#square .cell {
   height: 5em;
   width: 5em; }
