@@ -43,6 +43,7 @@ h1#cylinder-title {
 
 #waitingarea {
   background: #264139;
+  margin: auto;
   display: none;
   width: 400px;
   height: 400px;
@@ -52,13 +53,73 @@ h1#cylinder-title {
 #startgame-options .game-option {
   color: white; }
 
-#initgame.state-startgame #startgame .mainbutton {
+#initgame.state-startgame .mainbutton, #initgame.state-joingame .mainbutton {
   background: rgba(100, 150, 200, 0.5);
   color: white;
   cursor: default; }
 
 #waitingarea {
   color: white; }
+
+.buttonrow {
+  display: flex; }
+
+.buttonrow .subbutton {
+  flex: 1; }
+
+#timerow {
+  display: flex; }
+
+#timerow h3 {
+  flex: 1;
+  margin: auto;
+  text-align: center; }
+
+#gameovermsg {
+  flex: 1;
+  text-align: center;
+  margin: auto; }
+
+.popup {
+  color: white;
+  top: 50%;
+  transform: translateY(-50%);
+  position: absolute;
+  margin: auto 20%;
+  width: 60%;
+  height: 40%;
+  min-height: 300px;
+  background: #3c3c3c;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 150px; }
+
+.popup h2 {
+  margin: 0;
+  margin-top: 40px;
+  padding: 40px; }
+
+.popup p {
+  margin: 0;
+  padding-left: 40px; }
+
+.popup .popupcross {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  right: 0;
+  padding: 20px; }
+
+.popup .crossline {
+  position: absolute;
+  height: 40px;
+  width: 1px;
+  margin-left: 20px;
+  border-left: white 1px solid; }
+
+.popup .popupcrossleft {
+  transform: rotate(45deg); }
+
+.popup .popupcrossright {
+  transform: rotate(315deg); }
 
 #initgame.state-home #startgame {
   display: block; }
@@ -139,9 +200,9 @@ h1#cylinder-title {
   display: block; }
 
 #gamearea {
+  margin: auto;
   display: none;
   width: 400px;
-  border: black 1px solid;
   padding: 10px;
   color: white; }
 
@@ -156,10 +217,10 @@ h1#cylinder-title {
   background: #649e8d; }
 
 .piece {
-  width: 4em;
+  width: calc(8*var(--relativesize)/10);
   display: inline;
   position: absolute;
-  margin: 0.5em 0.5em; }
+  margin: calc(var(--relativesize)/10); }
 
 .rankid {
   display: inline;
@@ -182,12 +243,11 @@ h1#cylinder-title {
   cursor: pointer; }
 
 #wcapture {
-  height: 100px;
-  float: left; }
+  position: absolute; }
 
 #bcapture {
-  height: 100px;
-  float: right; }
+  position: absolute;
+  right: 0; }
 
 .captured {
   display: block;
@@ -195,7 +255,8 @@ h1#cylinder-title {
 
 #cylinderarea {
   display: grid;
-  perspective: 35em; }
+  perspective: calc(7*var(--relativesize));
+  height: calc(10*var(--relativesize)); }
 
 #cylinder {
   place-self: center;
@@ -205,14 +266,14 @@ h1#cylinder-title {
 #cylinder .col {
   display: grid;
   grid-area: 1/ 1;
-  width: calc(var(--rbe)*6em);
-  height: calc(8*var(--rfh)*6em);
+  width: var(--relativesize);
+  height: calc(8*var(--relativesize));
   transform-origin: 50% 100%;
-  transform: rotatey(calc(var(--j)*1turn)) translatez(calc(var(--rri)*6em)) scalex(1.01); }
+  transform: rotatey(calc(var(--j)*1turn)) translatez(calc(var(--rri)*var(--relativesize)/var(--cellconst))) scalex(1.01); }
 
 #cylinder .cell {
-  width: calc(var(--rbe)*6em);
-  height: calc(var(--rfh)*6em); }
+  width: var(--relativesize);
+  height: var(--relativesize); }
 
 #square {
   flex-direction: row;
@@ -223,5 +284,5 @@ h1#cylinder-title {
   display: flex; }
 
 #square .cell {
-  height: 5em;
-  width: 5em; }
+  height: var(--relativesize);
+  width: var(--relativesize); }

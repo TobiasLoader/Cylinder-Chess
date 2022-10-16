@@ -151,9 +151,18 @@ io.sockets.on('connection', function (socket) {
         console.log('play command sent');
     });
 
+    socket.on('outoftime', function (room, player) {
+        io.sockets.in(room).emit('victory', 3-player, 'ran out of time');
+    });
+
+    socket.on('resign', function (room, player) {
+        io.sockets.in(room).emit('victory', 3-player, 'resigned the game');
+    });
+
     socket.on('leaveroom', function (room,player) {
         console.log('player ',player,' leave from room ',room);
         socket.to(room).emit('playerleft', player);
+        socket.to(room).emit('victory', 3-player, 'left the room');
         socket.emit('leaveacknowledged');
         socket.disconnect(0);
     });

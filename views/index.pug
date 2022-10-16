@@ -23,28 +23,33 @@ body
 				#roomsize.game-option
 					+gameoption('roomsize-2','roomsize','room size 2','2',true)
 					+gameoption('roomsize-3','roomsize','room size 3','3',false)
-				+subbutton('createroom','Create Room')
-				+subbutton('stopcreateroom','Back')
+				.buttonrow
+					+subbutton('stopcreateroom','back')
+					+subbutton('createroom','create room')
 		#joingame
 			+mainbutton('Join Game')
 			#joingame-options
 				input#roomnum(placeholder='#ROOM')
-				+subbutton('joinroom','Join Room')
-				+subbutton('stopjoinroom','Back')
+				.buttonrow
+					+subbutton('stopjoinroom','back')
+					+subbutton('joinroom','join room')
 		#waitingarea
 			| Waiting AREA
 			h2.room
 			+subbuttonclass('leaveroom','leave')
 		#gamearea
-			| Game AREA
-			h2.room
-			h3#movemade
-			h3#mytime
-			h3#opponenttime(style='display:inline;')
-			#wcapture
-			#bcapture
+			//- | Game AREA
+			//- h2.room
+			//- h3#movemade
+			#timerow
+				h3#mytime
+				h3#opponenttime(style='display:inline;')
 			#boardarea
-			+subbuttonclass('leaveroom','leave')
+			.buttonrow
+				+subbutton('resigngame','resign')
+				+subbuttonclass('leaveroom','leave')
+				h3#gameovermsg(style='display:none;')
+		+popup('gameoverpopup')
 	script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js')
 	script(src='/socket.io/socket.io.js')
 	script(type='module' src='main.mjs')

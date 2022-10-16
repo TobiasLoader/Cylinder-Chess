@@ -13,3 +13,9 @@ mixin subbuttonclass(classname,title)
 mixin gameoption(id,name,label,value,checkedBool)
   input(type='radio',id=id,name=name,value=value,checked=checkedBool==true)
   label(for=id) !{label}
+
+mixin popup(id)
+  .popup(id=id,style='display:none;')
+    .popupcross
+      .crossline.popupcrossleft
+      .crossline.popupcrossright

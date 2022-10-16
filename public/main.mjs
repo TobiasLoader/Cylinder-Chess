@@ -1,8 +1,9 @@
-import {strPrettyTimeFormat, updateTimeTimeFormat, updateAfterMove } from './time.mjs';
+import {strPrettyTimeFormat, updateTimeTimeFormat, updateAfterMove, setToZero } from './time.mjs';
 import {initBoard, initNextMove, moveMade, resultMovePieces} from './game.mjs';
 
 var socket;
 var mymove = false;
+var gameover = false;
 var myroom = 0;
 var boardtype = '';
 var myplayerid = 0;
@@ -33,6 +34,9 @@ const boardarea = $("#boardarea");
 const mytimeel = $("#mytime");
 const opponenttimeel = $("#opponenttime");
 const leaverooms = $(".leaveroom");
+const resigngame = $("#resigngame");
+const gameovermsg =  $('#gameovermsg');
+const gameoverpopup = $('#gameoverpopup')
 
 function setInitGameState(state,event){
   if (event != undefined) event.stopPropagation();
@@ -66,6 +70,10 @@ function updatetimeHTML() {
 function updateMyTime(endmove){
   if (endmove) updateAfterMove(mytime, Date.now() - mymovemillis);
   else updateTimeTimeFormat(mytime, Date.now() - mymovemillis);
+  if (mytime.current_mil < 0) {
+    mytime = setToZero(mytime);
+    socket.emit('outoftime', myroom, myplayerid);
+  }
   updatetimeHTML();
   mymovemillis = Date.now();
 }
@@ -111,6 +119,25 @@ function setupgame() {
     console.log('player ', player, ' left your room.')
     alert('player ' + player.toString() + ' left your room.');
   });
+
+  socket.on('victory',function(player,msg){
+    if (!gameover){
+      gameOver();
+      if (player==3-myplayerid && msg=='ran out of time') opponenttime = setToZero(opponenttime)
+      if (player==myplayerid)  {
+        gameoverpopup.append('<h2>VICTORY!</h2><p>Your opponent ' + msg+'</p>');
+        gameovermsg.append('VICTORY!');
+      }
+      else if (player==3-myplayerid)  {
+        gameoverpopup.append('<h2>DEFEAT...</h2><p>You ' + msg+'</p>');
+        gameovermsg.append('DEFEAT');
+      }
+      else {
+        gameoverpopup.append('<h2>Player ' + player + ' won!</h2><p>Their opponent ' + msg+'</p>');
+        gameovermsg.append('Player ' + player + ' won');
+      }
+    }
+  });
 }
 
 function begingame(){
@@ -126,8 +153,8 @@ function begingame(){
 function gameplay() {
   mymovemillis = Date.now();
   opmovemillis = Date.now();
-  mytimerticking = setInterval(function(){if (mymove) updateMyTime(false)},1000);
-  optimerticking = setInterval(function(){if (!mymove) updateOpTime()},1000);
+  mytimerticking = setInterval(function(){if (!gameover && mymove) updateMyTime(false)},1000);
+  optimerticking = setInterval(function(){if (!gameover && !mymove) updateOpTime()},1000);
 
   console.log('gameplay begun');
   socket.on('play', function () {
@@ -162,9 +189,20 @@ function offmymove() {
   initNextMove();
 }
 
-function leaveaction() {
+function gameOver(){
+  resigngame.css('display','none');
+  gameoverpopup.css('display','block');
+  gameovermsg.css('display','block');
+  gameover = true;
+  mymove = false;
+  offmymove();
+  resetClasses();
   clearInterval(mytimerticking);
   clearInterval(optimerticking);
+}
+
+function leaveaction() {
+  gameOver();
   boardarea.empty();
   setInitGameState('state-home');
   console.log('left room');
@@ -265,6 +303,10 @@ async function makeMove(frompos){
   socket.emit('move', m, myroom, myplayerid, newtimeobject);
   offmymove();
 }
+
+resigngame.click(function(){
+  socket.emit('resign',myroom,myplayerid);
+});
 
 leaverooms.click(function () {
   socket.emit('leaveroom',myroom,myplayerid);

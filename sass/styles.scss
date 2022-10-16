@@ -50,8 +50,17 @@ h1#cylinder-title {
 	color:black;
 }
 
+// #startgame {
+	// margin: auto;
+// }
+
+// #joingame {
+	// margin: auto;
+// }
+
 #waitingarea {
 	background:rgb(38, 65, 57);
+	margin:auto;
 	display:none;
 	width:400px;
 	height:400px;
@@ -63,7 +72,7 @@ h1#cylinder-title {
 	color: white;
 }
 
-#initgame.state-startgame #startgame .mainbutton {
+#initgame.state-startgame .mainbutton, #initgame.state-joingame .mainbutton {
 	background: rgba(100,150,200,0.5);
 	color: white;
 	cursor:default;
@@ -72,6 +81,62 @@ h1#cylinder-title {
 #waitingarea {
 	color: white;
 }
+
+.buttonrow {display: flex;}
+.buttonrow .subbutton {flex:1;}
+
+#timerow {display: flex;}
+#timerow h3 {
+	flex:1;
+	margin: auto;
+	text-align: center;
+}
+
+#gameovermsg {
+	flex: 1;
+	text-align: center;
+	margin: auto;
+}
+
+.popup {
+	color: white;
+	top: 50%;
+	transform: translateY(-50%);
+	position: absolute;
+	margin: auto 25%;
+	width: 50%;
+	height: 40%;
+	min-height: 300px;
+	background: rgb(60,60,60);
+	box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 150px;
+}
+
+.popup h2 {
+	margin:0;
+	margin-top:20px;
+	padding:40px;
+}
+.popup p {
+	margin:0;
+	padding-left:40px;
+}
+.popup .popupcross {
+	position: absolute;
+	width: 40px;
+	height: 40px;
+	right: 0;
+	margin: 20px;
+	cursor: pointer;
+}
+.popup .crossline {
+	position: absolute;
+	height: 40px;
+	width: 1px;
+	margin-left: 20px;
+	border-left: white 1px solid;
+}
+.popup .popupcrossleft {transform: rotate(45deg);}
+.popup .popupcrossright {	transform: rotate(315deg);}
 
 //////// INIT GAME STATES:
 
@@ -109,10 +174,9 @@ h1#cylinder-title {
 //////// GAME PLAY
 
 #gamearea {
-	// background: rgb(255, 255, 255);
+	margin:auto;
 	display:none;
 	width:400px;
-	border:black 1px solid;
 	padding:10px;
 	color: white;
 }
@@ -128,10 +192,10 @@ h1#cylinder-title {
 }
 
 .piece {
-	width: 4em;
+	width: calc(8*var(--relativesize)/10);
 	display: inline;
 	position: absolute;
-	margin: 0.5em 0.5em;
+	margin: calc(var(--relativesize)/10);
 }
 
 .rankid {
@@ -160,13 +224,12 @@ h1#cylinder-title {
 }
 
 #wcapture {
-	height: 100px;
-	float: left;
+	position: absolute;
 }
 
 #bcapture {
-	height: 100px;
-	float: right;
+	position: absolute;
+	right: 0;
 }
 
 .captured {
@@ -177,13 +240,13 @@ h1#cylinder-title {
 //////// CYLINDER BOARD
 
 $g: 1em;
-$rc: 6em;
 $b: .3;
 $t: 12s;
 
 #cylinderarea {
 	display: grid;
-	perspective: 35em;
+	perspective: calc(7*var(--relativesize));
+	height: calc(10*var(--relativesize));
 }
 
 #cylinder {
@@ -195,18 +258,18 @@ $t: 12s;
 #cylinder .col {
 	display: grid;
 	grid-area: 1/ 1;
-	width: calc(var(--rbe)*#{$rc});
-	height: calc(8*var(--rfh)*#{$rc});
+	width: var(--relativesize);
+	height: calc(8*var(--relativesize));
 	transform-origin: 50% 100%;
 	transform: 
 		rotatey(calc(var(--j)*1turn)) 
-		translatez(calc(var(--rri)*#{$rc}))
+		translatez(calc(var(--rri)*var(--relativesize)/var(--cellconst)))
 		scalex(1.01);
 }
 
 #cylinder .cell {
-	width: calc(var(--rbe)*#{$rc});
-	height: calc(var(--rfh)*#{$rc});
+	width: var(--relativesize);
+	height: var(--relativesize);
 }
 
 //////// SQUARE BOARD
@@ -222,6 +285,6 @@ $t: 12s;
 }
 
 #square .cell {
-	height: 5em;
-	width: 5em;
+	height: var(--relativesize);
+	width: var(--relativesize);
 }

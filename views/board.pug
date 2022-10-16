@@ -5,9 +5,8 @@ mixin cylinderboard(mycolour)
 	- let chessfiles = ['A','B','C','D','E','F','G','H'];
 	- let ba = 2*Math.PI/8; // base angle
 	- let rri = Math.cos(ba/2);
-	- let rbe = 2*Math.sin(ba/2);
-	- let rfh = Math.sqrt(2-Math.sqrt(2));
-	#cylinderarea(style=`--rri: ${rri}; --rbe: ${rbe}; --rfh: ${rfh};`)
+	- let cellconst = 2*Math.sin(ba/2);
+	#cylinderarea(style=`--rri: ${rri}; --cellconst: ${cellconst}; --relativesize: 5em;`)
 		#cylinder
 			- for(let x = 0; x < 8; x+=1)
 				- let endx = colourchangexindex(mycolour,x);
@@ -19,10 +18,12 @@ mixin cylinderboard(mycolour)
 								p.rankid !{endy}								
 							if (y==7)
 								p.fileid !{chessfiles[endx]}
+		#wcapture
+		#bcapture
 
 mixin squareboard(mycolour)
 	- let chessfiles = ['A','B','C','D','E','F','G','H'];
-	#squarearea
+	#squarearea(style=`--relativesize: 5em;`)
 		#square
 			- for(let x = 0; x < 8; x+=1)
 				- let endx = colourchangexindex(mycolour,x);
@@ -34,6 +35,8 @@ mixin squareboard(mycolour)
 								p.rankid !{endy}								
 							if (y==7)
 								p.fileid !{chessfiles[endx]}
+		#wcapture
+		#bcapture
 
 if (boardtype == 'cylinder')
 	+cylinderboard(colour)

@@ -3,17 +3,16 @@ export class TimeFormat {
     this.unlimited = unlimited;
     this.min = (min === undefined) ? 0 : min;
     this.sec = (sec === undefined) ? 0 : sec;
-    this.mil = 0;
     this.inc = (inc === undefined) ? 0 : inc;
     this.current_mil = 1000 * (60 * min + sec);
+    this.settozero = false;
   }
 }
-
 
 export function printTimeFormat(t) {
   if (t.unlimited) console.log('unlimited')
   else {
-    console.log(t.min, t.sec, t.mil, t.inc, t.current_mil);
+    console.log(t.min, t.sec, t.inc, t.current_mil);
   }
 }
 
@@ -26,11 +25,20 @@ export function strPrettyTimeFormat(t) {
 }
 
 export function updateTimeTimeFormat(t, move_time) {
-  if (t.unlimited==false) t.current_mil -= move_time;
+  if (!t.settozero && !t.unlimited) t.current_mil -= move_time;
   return t;
 }
 
 export function updateAfterMove(t, move_time) {
-  if (t.unlimited==false) t.current_mil += 1000*t.inc - move_time;
+  if (!t.settozero && !t.unlimited) t.current_mil += 1000*t.inc - move_time;
+  return t;
+}
+
+export function setToZero(t) {
+  t.min = 0;
+  t.sec = 0;
+  t.mil = 0;
+  t.current_mil = 0;
+  t.settozero = true;
   return t;
 }
