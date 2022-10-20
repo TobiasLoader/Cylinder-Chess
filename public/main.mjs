@@ -19,13 +19,13 @@ var mytimerticking;
 var optimerticking;
 var startedmove = false;
 
-const initgame = $("#initgame");
-const startgame = $("#startgame .mainbutton");
+const main = $("#main");
+const startbutton = $("#startbutton");
 const createroom = $("#createroom");
 const startgameoptions = $("#startgame-options");
 const gameoptions = $(".game-option");
 const stopcreateroom = $("#stopcreateroom");
-const joingame = $("#joingame .mainbutton");
+const joinbutton = $("#joinbutton");
 const joingameoptions = $("#joingame-options");
 const joinroom = $("#joinroom");
 const stopjoinroom = $('#stopjoinroom');
@@ -33,15 +33,18 @@ const gamearea = $("#gamearea");
 const boardarea = $("#boardarea");
 const mytimeel = $("#mytime");
 const opponenttimeel = $("#opponenttime");
-const leaverooms = $(".leaveroom");
+const leavewaitingroom = $("#leavewaitingroom");
+const leaveroom = $("#leaveroom");
 const resigngame = $("#resigngame");
 const gameovermsg =  $('#gameovermsg');
-const gameoverpopup = $('#gameoverpopup')
+const gameoverpopup = $('#gameoverpopup');
+const mainpopup = $('#main > .popup');
+const popupcrosses = $('.popupcross');
 
 function setInitGameState(state,event){
   if (event != undefined) event.stopPropagation();
-  initgame.removeClass();
-  initgame.addClass(state);
+  main.removeClass();
+  main.addClass(state);
 }
 
 function fetchBoard(board,col,afterfetch) {
@@ -115,25 +118,21 @@ function setupgame() {
     fetchBoard(boardtype,mycolour,begingame);
   });
 
-  socket.on('playerleft',function(player){
-    console.log('player ', player, ' left your room.')
-    alert('player ' + player.toString() + ' left your room.');
-  });
-
   socket.on('victory',function(player,msg){
     if (!gameover){
+      popUpGameOver();
       gameOver();
       if (player==3-myplayerid && msg=='ran out of time') opponenttime = setToZero(opponenttime)
       if (player==myplayerid)  {
-        gameoverpopup.append('<h2>VICTORY!</h2><p>Your opponent ' + msg+'</p>');
+        mainpopup.append('<h2>VICTORY!</h2><p>Your opponent ' + msg+'</p>');
         gameovermsg.append('VICTORY!');
       }
       else if (player==3-myplayerid)  {
-        gameoverpopup.append('<h2>DEFEAT...</h2><p>You ' + msg+'</p>');
+        mainpopup.append('<h2>DEFEAT...</h2><p>You ' + msg+'</p>');
         gameovermsg.append('DEFEAT');
       }
       else {
-        gameoverpopup.append('<h2>Player ' + player + ' won!</h2><p>Their opponent ' + msg+'</p>');
+        mainpopup.append('<h2>Player ' + player + ' won!</h2><p>Their opponent ' + msg+'</p>');
         gameovermsg.append('Player ' + player + ' won');
       }
     }
@@ -189,10 +188,13 @@ function offmymove() {
   initNextMove();
 }
 
-function gameOver(){
+function popUpGameOver(){
   resigngame.css('display','none');
-  gameoverpopup.css('display','block');
+  main.addClass('popup-active');
   gameovermsg.css('display','block');
+}
+
+function gameOver(){
   gameover = true;
   mymove = false;
   offmymove();
@@ -208,7 +210,7 @@ function leaveaction() {
   console.log('left room');
 }
 
-startgame.click(function(e){setInitGameState('state-startgame',e)});
+startbutton.click(function(e){setInitGameState('state-startgame',e)});
 
 function getStartGameOption(name){
   return $('#startgame-options input[name="'+name+'"]:checked').val();
@@ -240,13 +242,18 @@ createroom.click(function(){
           });
         }
       });
+      socket.on('kick', function() {
+        console.log('kicked');
+        setInitGameState('state-home');
+        socket.emit('disconnect');
+      });
     }
   });
 });
 
 stopcreateroom.click(function(e){setInitGameState('state-home',e)});
 
-joingame.click(function(e){setInitGameState('state-joingame',e)});
+joinbutton.click(function(e){setInitGameState('state-joingame',e)});
 
 joinroom.click(function () {
   socket = io();
@@ -295,7 +302,6 @@ async function makeMove(frompos){
   var m = {};
   startedmove = true;
   await moveMade(frompos).then((movedata)=>{m = movedata});
-  console.log('move to be made by me', m);
   updateMyTime(true);
   const newtimeobject = {};
   newtimeobject[myplayerid] = mytime;
@@ -304,15 +310,25 @@ async function makeMove(frompos){
   offmymove();
 }
 
+popupcrosses.click(function(){main.removeClass('popup-active');})
+
 resigngame.click(function(){
   socket.emit('resign',myroom,myplayerid);
 });
 
-leaverooms.click(function () {
+leaveroom.click(function () {
   socket.emit('leaveroom',myroom,myplayerid);
+  socket.on('leaveserverconfirm', function() {
+    socket.emit('leaveclientconfirm');
+    popUpGameOver();
+  });
   socket.on('leaveacknowledged', function() {
     leaveaction();
   });
+});
+
+leavewaitingroom.click(function(){
+  socket.emit('destroyroom',myroom,myplayerid);
 });
 
 // $(document).click(function(e){

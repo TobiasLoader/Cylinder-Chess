@@ -12,6 +12,7 @@ var roomtimes = {};
 var roomboardtype = {};
 var roomplayercolours = {};
 var roomready = {};
+var roomplaying = {};
 
 const express = require('express')
 const app = express()
@@ -133,6 +134,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('ready', function (room) {
         roomready[room] += 1;
         if (roomready[room]==numplayers[room]) {
+            roomplaying[room] = true;
             io.sockets.in(room).emit('roomready');
             console.log('all players ready');
             if (roomplayercolours[room][1]=='w') roomsockets[room][1].emit('play');
@@ -161,11 +163,40 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('leaveroom', function (room,player) {
         console.log('player ',player,' leave from room ',room);
-        socket.to(room).emit('playerleft', player);
-        socket.to(room).emit('victory', 3-player, 'left the room');
-        socket.emit('leaveacknowledged');
-        socket.disconnect(0);
+        if (roomplaying[room]){
+            io.sockets.in(room).emit('victory', 3-player, 'left the room');
+            socket.emit('leaveserverconfirm');
+            socket.on('leaveclientconfirm',function(){
+                socket.emit('leaveacknowledged');
+                socket.disconnect(0);
+            });
+        } else {
+            socket.emit('leaveacknowledged');
+            socket.disconnect(0);
+        }
+        if (player=='1' || player=='2') roomplaying[room] = false;
     });
+
+    socket.on('destroyroom', function (room) {
+        console.log('destroy room request')
+        io.sockets.in(room).emit('kick');
+        delete gamehost[room];
+        delete numplayers[room];
+        delete roomsockets[room];
+        delete roomtimes[room];
+        delete roomboardtype[room];
+        delete roomplayercolours[room];
+        delete roomtimes[room];
+        delete roomready[room];
+        // for (const [playerid,sock] of Object.entries(roomsockets[room])){
+        //     sock.disconnect(0);
+        // }
+    });
+
+    socket.on('disconnect', function (){
+        console.log('disconnect')
+        socket.disconnect(0);
+    })
 });
 
 server.listen(3000);

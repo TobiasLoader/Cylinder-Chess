@@ -105,7 +105,8 @@ export async function moveMade(frompos){
       candidates.forEach(function (movedata){
         if (movedata['move']==topos) capturepos = movedata['capture'];
       });
-      resolve({'from':frompos,'to':topos,'capture':capturepos});
+      if (capturepos=='') resolve({'from':frompos,'to':topos});
+      else resolve({'from':frompos,'to':topos,'capture':capturepos});
     });
   });
 }
@@ -113,7 +114,7 @@ export async function moveMade(frompos){
 
 export function resultMovePieces(playercolour,moveresult){
   resetPlayedLastMovedFlags(playercolour);
-  if (moveresult['capture']!='') {
+  if ('capture' in moveresult && moveresult['capture']!='') {
     boardpiecemap[moveresult['from']].capture(boardpiecemap[moveresult['capture']]);
     delete boardpiecemap[moveresult['capture']];
   }

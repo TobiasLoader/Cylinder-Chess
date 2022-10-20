@@ -4,10 +4,10 @@ head
 	link(rel='stylesheet' href='styles.css')
 body
 	include ui-components
-	h1#cylinder-title Cylinder Chess
-	#initgame.state-home
+	h1#cylinder-title cylinderchess.com
+	#main.state-home
+		+mainbutton('startbutton','Start Game')
 		#startgame
-			+mainbutton('Start Game')
 			#startgame-options
 				#colour.game-option
 					+gameoption('colour-white','colour','white','w',true)
@@ -26,8 +26,8 @@ body
 				.buttonrow
 					+subbutton('stopcreateroom','back')
 					+subbutton('createroom','create room')
+		+mainbutton('joinbutton','Join Game')
 		#joingame
-			+mainbutton('Join Game')
 			#joingame-options
 				input#roomnum(placeholder='#ROOM')
 				.buttonrow
@@ -36,7 +36,7 @@ body
 		#waitingarea
 			| Waiting AREA
 			h2.room
-			+subbuttonclass('leaveroom','leave')
+			+subbutton('leavewaitingroom','leave')
 		#gamearea
 			//- | Game AREA
 			//- h2.room
@@ -47,9 +47,9 @@ body
 			#boardarea
 			.buttonrow
 				+subbutton('resigngame','resign')
-				+subbuttonclass('leaveroom','leave')
+				+subbutton('leaveroom','leave')
 				h3#gameovermsg(style='display:none;')
-		+popup('gameoverpopup')
+		+popup()
 	script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js')
 	script(src='/socket.io/socket.io.js')
 	script(type='module' src='main.mjs')

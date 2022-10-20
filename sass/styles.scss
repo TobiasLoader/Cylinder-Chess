@@ -1,13 +1,20 @@
-html, body {
-	background: rgb(40,40,40);
+html {
 	margin: 0;
+	width: 100%;
 	height: 100%;
+	display: flex;
+}
+
+body {
+	background: rgb(40,40,40);
+	margin: auto;
 	overflow: hidden;
 	font-family: Avenir;
 }
 
 h1#cylinder-title {
-	color: white;
+	color: #343434;
+  font-size: 30px;
 	text-align: center;
 }
 
@@ -18,6 +25,10 @@ h1#cylinder-title {
 }
 
 //////// UI ELEMENTS
+
+#main {
+	position: relative;
+}
 
 .mainbutton {
 	max-width: 400px;
@@ -36,8 +47,6 @@ h1#cylinder-title {
 
 .subbutton {
 	max-width: 200px;
-	padding: 10px;
-	margin: 10px;
 	min-height: 50px;
 	display: block;
 	cursor: pointer;
@@ -68,14 +77,20 @@ h1#cylinder-title {
 	padding:10px;
 }
 
-#startgame-options .game-option {
-	color: white;
+#startgame-options {
+	margin-top: 40px;
 }
 
-#initgame.state-startgame .mainbutton, #initgame.state-joingame .mainbutton {
-	background: rgba(100,150,200,0.5);
+#startgame-options .game-option {
+	width: 400px;
+	margin: auto;
 	color: white;
-	cursor:default;
+	padding: 20px;
+	border-left: white 1px solid;
+}
+
+#startgame-options input {
+	margin:10px;
 }
 
 #waitingarea {
@@ -84,6 +99,13 @@ h1#cylinder-title {
 
 .buttonrow {display: flex;}
 .buttonrow .subbutton {flex:1;}
+
+#startgame .buttonrow {
+	width: 440px;
+	margin: auto;
+	margin-top: 40px;
+	place-content: space-between;
+}
 
 #timerow {display: flex;}
 #timerow h3 {
@@ -99,16 +121,16 @@ h1#cylinder-title {
 }
 
 .popup {
+	display: none;
 	color: white;
 	top: 50%;
 	transform: translateY(-50%);
 	position: absolute;
-	margin: auto 25%;
-	width: 50%;
+	width: 100%;
 	height: 40%;
 	min-height: 300px;
-	background: rgb(60,60,60);
-	box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 150px;
+	background: #3c3c3c;
+	box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 50px;
 }
 
 .popup h2 {
@@ -138,38 +160,52 @@ h1#cylinder-title {
 .popup .popupcrossleft {transform: rotate(45deg);}
 .popup .popupcrossright {	transform: rotate(315deg);}
 
+#main.popup-active > #gamearea {
+	filter: blur(2px);
+	pointer-events: none;
+}
+
+#main.popup-active > .popup {
+	display: block;
+}
+
 //////// INIT GAME STATES:
 
-#initgame.state-home #startgame {display: block;}
-#initgame.state-home #startgame-options {display: none;}
-#initgame.state-home #joingame {display: block;}
-#initgame.state-home #joingame-options {display: none;}
-#initgame.state-home #waitingarea {display: none;}
-#initgame.state-home #gamearea {display: none;}
+#main.state-home > .mainbutton {display: block;}
+#main.state-home #startgame {display: none;}
+#main.state-home #startgame-options {display: none;}
+#main.state-home #joingame {display: none;}
+#main.state-home #joingame-options {display: none;}
+#main.state-home #waitingarea {display: none;}
+#main.state-home #gamearea {display: none;}
 
-#initgame.state-startgame #startgame {display: block;}
-#initgame.state-startgame #startgame-options {display: block;}
-#initgame.state-startgame #joingame {display: none;}
-#initgame.state-startgame #joingame-options {display: none;}
-#initgame.state-startgame #waitingarea {display: none;}
-#initgame.state-startgame #gamearea {display: none;}
+#main.state-startgame > .mainbutton {display: none;}
+#main.state-startgame #startgame {display: block;}
+#main.state-startgame #startgame-options {display: block;}
+#main.state-startgame #joingame {display: none;}
+#main.state-startgame #joingame-options {display: none;}
+#main.state-startgame #waitingarea {display: none;}
+#main.state-startgame #gamearea {display: none;}
 
-#initgame.state-joingame #startgame {display: none;}
-#initgame.state-joingame #startgame-options {display: none;}
-#initgame.state-joingame #joingame {display: block;}
-#initgame.state-joingame #joingame-options {display: block;}
-#initgame.state-joingame #waitingarea {display: none;}
-#initgame.state-joingame #gamearea {display: none;}
+#main.state-joingame > .mainbutton {display: none;}
+#main.state-joingame #startgame {display: none;}
+#main.state-joingame #startgame-options {display: none;}
+#main.state-joingame #joingame {display: block;}
+#main.state-joingame #joingame-options {display: block;}
+#main.state-joingame #waitingarea {display: none;}
+#main.state-joingame #gamearea {display: none;}
 
-#initgame.state-waitingarea #startgame {display: none;}
-#initgame.state-waitingarea #joingame {display: none;}
-#initgame.state-waitingarea #waitingarea {display: block;}
-#initgame.state-waitingarea #gamearea {display: none;}
+#main.state-waitingarea > .mainbutton {display: none;}
+#main.state-waitingarea #startgame {display: none;}
+#main.state-waitingarea #joingame {display: none;}
+#main.state-waitingarea #waitingarea {display: block;}
+#main.state-waitingarea #gamearea {display: none;}
 
-#initgame.state-gamearea #startgame {display: none;}
-#initgame.state-gamearea #joingame {display: none;}
-#initgame.state-gamearea #waitingarea {display: none;}
-#initgame.state-gamearea #gamearea {display: block;}
+#main.state-gamearea > .mainbutton {display: none;}
+#main.state-gamearea #startgame {display: none;}
+#main.state-gamearea #joingame {display: none;}
+#main.state-gamearea #waitingarea {display: none;}
+#main.state-gamearea #gamearea {display: block;}
 
 //////// GAME PLAY
 
@@ -185,7 +221,7 @@ h1#cylinder-title {
 	background:rgb(38, 65, 57);
 }
 
-.cell {background: rgba(200,200,200,1);}
+.cell {background: rgb(210, 210, 210)}
 .col:nth-child(even) .cell:nth-child(even),
 .col:nth-child(odd) .cell:nth-child(odd) {
 	background: rgba(100, 158, 141,1);
@@ -211,12 +247,12 @@ h1#cylinder-title {
 }
 
 .piecechosen {
-	background: rgb(199, 246, 232) !important;
+	background: rgb(162, 206, 177) !important;
 }
 
 .mymove .candidatemove {
 	cursor: pointer;
-	background: rgb(236, 159, 159) !important;
+	background: rgb(178, 215, 220) !important;
 }
 
 .mymove .mypiece {
@@ -246,7 +282,10 @@ $t: 12s;
 #cylinderarea {
 	display: grid;
 	perspective: calc(7*var(--relativesize));
-	height: calc(10*var(--relativesize));
+	box-shadow: #000000 0px 0px 80px 10px;
+	width: calc(2*var(--relativesize));
+	height: calc(8*var(--relativesize));
+	margin: calc(var(--relativesize)) auto;
 }
 
 #cylinder {

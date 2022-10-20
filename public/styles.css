@@ -1,18 +1,27 @@
-html, body {
-  background: #282828;
+html {
   margin: 0;
+  width: 100%;
   height: 100%;
+  display: flex; }
+
+body {
+  background: #282828;
+  margin: auto;
   overflow: hidden;
   font-family: Avenir; }
 
 h1#cylinder-title {
-  color: white;
+  color: #343434;
+  font-size: 30px;
   text-align: center; }
 
 .state-home {
   display: flex;
   flex-direction: row;
   justify-content: center; }
+
+#main {
+  position: relative; }
 
 .mainbutton {
   max-width: 400px;
@@ -29,8 +38,6 @@ h1#cylinder-title {
 
 .subbutton {
   max-width: 200px;
-  padding: 10px;
-  margin: 10px;
   min-height: 50px;
   display: block;
   cursor: pointer;
@@ -50,13 +57,18 @@ h1#cylinder-title {
   border: black 1px solid;
   padding: 10px; }
 
-#startgame-options .game-option {
-  color: white; }
+#startgame-options {
+  margin-top: 40px; }
 
-#initgame.state-startgame .mainbutton, #initgame.state-joingame .mainbutton {
-  background: rgba(100, 150, 200, 0.5);
+#startgame-options .game-option {
+  width: 400px;
+  margin: auto;
   color: white;
-  cursor: default; }
+  padding: 20px;
+  border-left: white 1px solid; }
+
+#startgame-options input {
+  margin: 10px; }
 
 #waitingarea {
   color: white; }
@@ -66,6 +78,12 @@ h1#cylinder-title {
 
 .buttonrow .subbutton {
   flex: 1; }
+
+#startgame .buttonrow {
+  width: 440px;
+  margin: auto;
+  margin-top: 40px;
+  place-content: space-between; }
 
 #timerow {
   display: flex; }
@@ -81,20 +99,20 @@ h1#cylinder-title {
   margin: auto; }
 
 .popup {
+  display: none;
   color: white;
   top: 50%;
   transform: translateY(-50%);
   position: absolute;
-  margin: auto 20%;
-  width: 60%;
+  width: 100%;
   height: 40%;
   min-height: 300px;
   background: #3c3c3c;
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 150px; }
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 50px; }
 
 .popup h2 {
   margin: 0;
-  margin-top: 40px;
+  margin-top: 20px;
   padding: 40px; }
 
 .popup p {
@@ -106,7 +124,8 @@ h1#cylinder-title {
   width: 40px;
   height: 40px;
   right: 0;
-  padding: 20px; }
+  margin: 20px;
+  cursor: pointer; }
 
 .popup .crossline {
   position: absolute;
@@ -121,82 +140,104 @@ h1#cylinder-title {
 .popup .popupcrossright {
   transform: rotate(315deg); }
 
-#initgame.state-home #startgame {
+#main.popup-active > #gamearea {
+  filter: blur(2px);
+  pointer-events: none; }
+
+#main.popup-active > .popup {
   display: block; }
 
-#initgame.state-home #startgame-options {
-  display: none; }
-
-#initgame.state-home #joingame {
+#main.state-home > .mainbutton {
   display: block; }
 
-#initgame.state-home #joingame-options {
+#main.state-home #startgame {
   display: none; }
 
-#initgame.state-home #waitingarea {
+#main.state-home #startgame-options {
   display: none; }
 
-#initgame.state-home #gamearea {
+#main.state-home #joingame {
   display: none; }
 
-#initgame.state-startgame #startgame {
+#main.state-home #joingame-options {
+  display: none; }
+
+#main.state-home #waitingarea {
+  display: none; }
+
+#main.state-home #gamearea {
+  display: none; }
+
+#main.state-startgame > .mainbutton {
+  display: none; }
+
+#main.state-startgame #startgame {
   display: block; }
 
-#initgame.state-startgame #startgame-options {
+#main.state-startgame #startgame-options {
   display: block; }
 
-#initgame.state-startgame #joingame {
+#main.state-startgame #joingame {
   display: none; }
 
-#initgame.state-startgame #joingame-options {
+#main.state-startgame #joingame-options {
   display: none; }
 
-#initgame.state-startgame #waitingarea {
+#main.state-startgame #waitingarea {
   display: none; }
 
-#initgame.state-startgame #gamearea {
+#main.state-startgame #gamearea {
   display: none; }
 
-#initgame.state-joingame #startgame {
+#main.state-joingame > .mainbutton {
   display: none; }
 
-#initgame.state-joingame #startgame-options {
+#main.state-joingame #startgame {
   display: none; }
 
-#initgame.state-joingame #joingame {
+#main.state-joingame #startgame-options {
+  display: none; }
+
+#main.state-joingame #joingame {
   display: block; }
 
-#initgame.state-joingame #joingame-options {
+#main.state-joingame #joingame-options {
   display: block; }
 
-#initgame.state-joingame #waitingarea {
+#main.state-joingame #waitingarea {
   display: none; }
 
-#initgame.state-joingame #gamearea {
+#main.state-joingame #gamearea {
   display: none; }
 
-#initgame.state-waitingarea #startgame {
+#main.state-waitingarea > .mainbutton {
   display: none; }
 
-#initgame.state-waitingarea #joingame {
+#main.state-waitingarea #startgame {
   display: none; }
 
-#initgame.state-waitingarea #waitingarea {
+#main.state-waitingarea #joingame {
+  display: none; }
+
+#main.state-waitingarea #waitingarea {
   display: block; }
 
-#initgame.state-waitingarea #gamearea {
+#main.state-waitingarea #gamearea {
   display: none; }
 
-#initgame.state-gamearea #startgame {
+#main.state-gamearea > .mainbutton {
   display: none; }
 
-#initgame.state-gamearea #joingame {
+#main.state-gamearea #startgame {
   display: none; }
 
-#initgame.state-gamearea #waitingarea {
+#main.state-gamearea #joingame {
   display: none; }
 
-#initgame.state-gamearea #gamearea {
+#main.state-gamearea #waitingarea {
+  display: none; }
+
+#main.state-gamearea #gamearea {
   display: block; }
 
 #gamearea {
@@ -210,7 +251,7 @@ h1#cylinder-title {
   background: #264139; }
 
 .cell {
-  background: #c8c8c8; }
+  background: #d2d2d2; }
 
 .col:nth-child(even) .cell:nth-child(even),
 .col:nth-child(odd) .cell:nth-child(odd) {
@@ -233,11 +274,11 @@ h1#cylinder-title {
   margin-top: 15px; }
 
 .piecechosen {
-  background: #c7f6e8 !important; }
+  background: #a2ceb1 !important; }
 
 .mymove .candidatemove {
   cursor: pointer;
-  background: #ec9f9f !important; }
+  background: #b2d7dc !important; }
 
 .mymove .mypiece {
   cursor: pointer; }
@@ -256,7 +297,10 @@ h1#cylinder-title {
 #cylinderarea {
   display: grid;
   perspective: calc(7*var(--relativesize));
-  height: calc(10*var(--relativesize)); }
+  box-shadow: #000000 0px 0px 80px 10px;
+  width: calc(2*var(--relativesize));
+  height: calc(8*var(--relativesize));
+  margin: calc(var(--relativesize)) auto; }
 
 #cylinder {
   place-self: center;

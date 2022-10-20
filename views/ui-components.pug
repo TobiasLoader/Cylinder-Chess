@@ -1,5 +1,5 @@
-mixin mainbutton(title)
-  .mainbutton
+mixin mainbutton(buttonid,title)
+  .mainbutton(id=buttonid)
     h2.mainbuttontitle !{title}
 
 mixin subbutton(id,title)
@@ -14,8 +14,8 @@ mixin gameoption(id,name,label,value,checkedBool)
   input(type='radio',id=id,name=name,value=value,checked=checkedBool==true)
   label(for=id) !{label}
 
-mixin popup(id)
-  .popup(id=id,style='display:none;')
+mixin popup()
+  .popup
     .popupcross
       .crossline.popupcrossleft
       .crossline.popupcrossright
