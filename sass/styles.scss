@@ -274,10 +274,24 @@ h1#cylinder-title {
 	background:rgb(38, 65, 57);
 }
 
-.cell {background: rgb(210, 210, 210)}
+.cell {
+	background: var(--colw);
+	position: relative;
+}
 .col:nth-child(even) .cell:nth-child(even),
 .col:nth-child(odd) .cell:nth-child(odd) {
-	background: rgba(100, 158, 141,1);
+	background: var(--colb);
+}
+
+.cell p {
+	color: var(--colb);
+	font-size: calc(var(--relativesize)/4);
+	margin: 0;
+	position: absolute;
+}
+.col:nth-child(even) .cell:nth-child(even) p,
+.col:nth-child(odd) .cell:nth-child(odd) p {
+	color: var(--colw);
 }
 
 .piece {
@@ -288,15 +302,13 @@ h1#cylinder-title {
 }
 
 .rankid {
-	display: inline;
-	position: absolute;
-	margin: 0;
+	top: 0;
+	left: 2px;
 }
 
 .fileid {
-	position: absolute;
-	display: inline;
-	margin-top: 15px;
+	right: 2px;
+	bottom: 0;
 }
 
 .piecechosen {
@@ -384,4 +396,11 @@ $t: 12s;
 #square .cell {
 	height: var(--relativesize);
 	width: var(--relativesize);
+}
+
+@media only screen and (max-width: 600px) {
+  .piece {
+	width: calc(var(--relativesize));
+	margin: 0;
+  }
 }

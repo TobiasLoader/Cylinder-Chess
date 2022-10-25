@@ -44,8 +44,8 @@ export class GameState {
 			if (this.isenemy(piece)){
 				var moves = piece.candidateMoves(boardmap).map(m => m.move);
 				if (moves.includes(kingpos)){
-					console.log('in check');
-					console.log(position,piece,moves,kingpos);
+					// console.log('in check');
+					// console.log(position,piece,moves,kingpos);
 					return true;
 				}
 			}
@@ -74,7 +74,7 @@ export class GameState {
 			if (this.ismypiece(piece)) {
 				myvalidmoves[position] = [];
 				for (const candmove of cms[position]){
-					console.log(position,candmove);
+					// console.log(position,candmove);
 					var dupboardmap = {};
 					for (const [p1, p2] of Object.entries(this.boardpiecemap)){
 						if (p1!=candmove.move){
@@ -82,9 +82,9 @@ export class GameState {
 							else dupboardmap[candmove.move] = new GhostPiece(p2.name,p2.colour,candmove.move);
 						}
 					}
-					console.log(dupboardmap);
+					// console.log(dupboardmap);
 					if (!this.inCheck(dupboardmap)) {
-						console.log('not in check!')
+						// console.log('not in check!')
 						myvalidmoves[position].push(candmove);
 					}
 				}

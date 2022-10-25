@@ -294,11 +294,22 @@ h1#cylinder-title {
   background: #264139; }
 
 .cell {
-  background: #d2d2d2; }
+  background: var(--colw);
+  position: relative; }
 
 .col:nth-child(even) .cell:nth-child(even),
 .col:nth-child(odd) .cell:nth-child(odd) {
-  background: #649e8d; }
+  background: var(--colb); }
+
+.cell p {
+  color: var(--colb);
+  font-size: calc(var(--relativesize)/4);
+  margin: 0;
+  position: absolute; }
+
+.col:nth-child(even) .cell:nth-child(even) p,
+.col:nth-child(odd) .cell:nth-child(odd) p {
+  color: var(--colw); }
 
 .piece {
   width: calc(8*var(--relativesize)/10);
@@ -307,14 +318,12 @@ h1#cylinder-title {
   margin: calc(var(--relativesize)/10); }
 
 .rankid {
-  display: inline;
-  position: absolute;
-  margin: 0; }
+  top: 0;
+  left: 2px; }
 
 .fileid {
-  position: absolute;
-  display: inline;
-  margin-top: 15px; }
+  right: 2px;
+  bottom: 0; }
 
 .piecechosen {
   background: #a2ceb1 !important; }
@@ -377,3 +386,8 @@ h1#cylinder-title {
 #square .cell {
   height: var(--relativesize);
   width: var(--relativesize); }
+
+@media only screen and (max-width: 600px) {
+  .piece {
+    width: calc(var(--relativesize));
+    margin: 0; } }
