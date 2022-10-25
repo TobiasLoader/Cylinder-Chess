@@ -1,4 +1,4 @@
-import {boardpiecemap} from './game.mjs';
+import {localstate} from './main.mjs';
 
 const colourname = {'w':'white','b':'black'};
 
@@ -94,9 +94,9 @@ export class Piece {
   filterAbsoluteMoves(moves,cumul){
     var ms = [];
     for (const move of moves) {
-      // console.log(move,boardpiecemap,move in boardpiecemap)
-      if (move in boardpiecemap) {
-        if (boardpiecemap[move].enemycolour == this.colour) ms.push({'status':'attack','move':move,'capture':move});
+      // console.log(move,localstate.boardpiecemap,move in localstate.boardpiecemap)
+      if (move in localstate.boardpiecemap) {
+        if (localstate.boardpiecemap[move].enemycolour == this.colour) ms.push({'status':'attack','move':move,'capture':move});
         if (cumul) break;
       }
       else {
@@ -174,8 +174,8 @@ export class Pawn extends Piece {
         {'move':this.absolutemovegroups['attack'][1],'capture':this.absolutemovegroups['enpassant-captures'][1]}
       ];
       for (var movepackage of absposmoves){
-        if (!(movepackage['move'] in boardpiecemap) && (movepackage['capture'] in boardpiecemap)){
-          const piecetocap = boardpiecemap[movepackage['capture']];
+        if (!(movepackage['move'] in localstate.boardpiecemap) && (movepackage['capture'] in localstate.boardpiecemap)){
+          const piecetocap = localstate.boardpiecemap[movepackage['capture']];
           console.log(piecetocap)
           if (piecetocap.name == 'pawn' && piecetocap.colour == this.enemycolour && piecetocap.madesinglemove && piecetocap.playedlastmove){
             ms.push({'status':'attack','move':movepackage['move'],'capture':movepackage['capture']});
@@ -208,7 +208,7 @@ export class Pawn extends Piece {
     if (this.queeningCheck()) {
       queening(this,new Queen(this.id,this.colour,this.pos));
     } else {
-      boardpiecemap[newpos] = this;
+      localstate.boardpiecemap[newpos] = this;
     }
   }
 }
@@ -217,8 +217,8 @@ function queening(pawn,queen){
   console.log(pawn,queen)
   pawn.removePiece();
   queen.placePiece(queen.colour);
-  delete boardpiecemap[pawn.pos];
-  boardpiecemap[pawn.pos] = queen;
+  delete localstate.boardpiecemap[pawn.pos];
+  localstate.boardpiecemap[pawn.pos] = queen;
 }
 
 export class Queen extends Piece {

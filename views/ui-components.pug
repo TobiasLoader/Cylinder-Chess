@@ -11,11 +11,13 @@ mixin subbuttonclass(classname,title)
     h3.submainbuttontitle !{title}
 
 mixin gameoption(id,name,label,value,checkedBool)
-  input(type='radio',id=id,name=name,value=value,checked=checkedBool==true)
-  label(for=id) !{label}
+  li.radiobuttonoption
+    input(type='radio',id=id,name=name,value=value,checked=checkedBool==true)
+    label(for=id) !{label}
 
 mixin popup()
   .popup
     .popupcross
       .crossline.popupcrossleft
       .crossline.popupcrossright
+    .popupcontent

@@ -1,4 +1,4 @@
-import { TimeFormat, printTimeFormat } from './public/time.mjs';
+import { TimeFormat, printTimeFormat } from './public/js/time.mjs';
 
 // Implement the old require function
 import { createRequire } from 'module'
@@ -149,6 +149,7 @@ io.sockets.on('connection', function (socket) {
         console.log('move', movedata, room, player);
         io.sockets.in(room).emit('boardmove', movedata, roomtimes[room]);
         console.log(player);
+        // console.log(roomsockets);
         roomsockets[room][3 - player].emit('play');
         console.log('play command sent');
     });

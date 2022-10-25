@@ -6,6 +6,8 @@ html {
 
 body {
   background: #282828;
+  max-width: 600px;
+  width: 100%;
   margin: auto;
   overflow: hidden;
   font-family: Avenir; }
@@ -52,7 +54,6 @@ h1#cylinder-title {
   background: #264139;
   margin: auto;
   display: none;
-  width: 400px;
   height: 400px;
   border: black 1px solid;
   padding: 10px; }
@@ -61,29 +62,50 @@ h1#cylinder-title {
   margin-top: 40px; }
 
 #startgame-options .game-option {
-  width: 400px;
+  list-style-type: none;
   margin: auto;
+  display: flex;
+  place-content: space-around;
   color: white;
-  padding: 20px;
-  border-left: white 1px solid; }
+  padding: 10px 0; }
 
-#startgame-options input {
-  margin: 10px; }
+.radiobuttonoption {
+  flex: 1;
+  margin: 0 10px;
+  height: 50px;
+  background: black;
+  cursor: pointer;
+  position: relative; }
+
+.radiobuttonoption input {
+  margin: 0;
+  pointer-events: none;
+  visibility: hidden; }
+
+.radiobuttonoption label {
+  pointer-events: none;
+  width: calc(100% - 26px);
+  position: absolute;
+  margin-right: 13px;
+  text-align: center;
+  transform: translateY(-50%);
+  top: 50%; }
+
+.radiobuttonoption input:checked + label {
+  color: #6496c8; }
 
 #waitingarea {
   color: white; }
 
 .buttonrow {
-  display: flex; }
-
-.buttonrow .subbutton {
-  flex: 1; }
-
-#startgame .buttonrow {
-  width: 440px;
+  display: flex;
   margin: auto;
   margin-top: 40px;
-  place-content: space-between; }
+  place-content: space-evenly; }
+
+.buttonrow .subbutton {
+  flex: 1;
+  margin: 0 10px; }
 
 #timerow {
   display: flex; }
@@ -96,7 +118,14 @@ h1#cylinder-title {
 #gameovermsg {
   flex: 1;
   text-align: center;
-  margin: auto; }
+  margin: auto;
+  display: none; }
+
+#endgamerow.gameover #resigngame {
+  display: none; }
+
+#endgamerow.gameover #gameovermsg {
+  display: block; }
 
 .popup {
   display: none;
@@ -243,7 +272,6 @@ h1#cylinder-title {
 #gamearea {
   margin: auto;
   display: none;
-  width: 400px;
   padding: 10px;
   color: white; }
 
@@ -319,9 +347,13 @@ h1#cylinder-title {
   width: var(--relativesize);
   height: var(--relativesize); }
 
+#squarearea {
+  display: flex; }
+
 #square {
   flex-direction: row;
-  display: flex; }
+  display: flex;
+  margin: auto; }
 
 #square .col {
   flex-direction: column;

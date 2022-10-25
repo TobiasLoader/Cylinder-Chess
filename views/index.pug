@@ -9,18 +9,18 @@ body
 		+mainbutton('startbutton','Start Game')
 		#startgame
 			#startgame-options
-				#colour.game-option
+				ul#colour.game-option
 					+gameoption('colour-white','colour','white','w',true)
 					+gameoption('colour-black','colour','black','b',false)
 					+gameoption('colour-random','colour','random','r',false)
-				#time.game-option
+				ul#time.game-option
 					+gameoption('time-1','time','1m + 5s','1+5',true)
 					+gameoption('time-5','time','5m + 0s','5+0',false)
 					+gameoption('time-unlimited','time','unlimited','u',false)
-				#surface.game-option
+				ul#surface.game-option
 					+gameoption('surface-cylinder','surface','cylinder','cylinder',true)
 					+gameoption('surface-square','surface','square','square',false)
-				#roomsize.game-option
+				ul#roomsize.game-option
 					+gameoption('roomsize-2','roomsize','room size 2','2',true)
 					+gameoption('roomsize-3','roomsize','room size 3','3',false)
 				.buttonrow
@@ -45,11 +45,12 @@ body
 				h3#mytime
 				h3#opponenttime(style='display:inline;')
 			#boardarea
-			.buttonrow
+			#endgamerow.buttonrow
 				+subbutton('resigngame','resign')
 				+subbutton('leaveroom','leave')
-				h3#gameovermsg(style='display:none;')
+				h3#gameovermsg
 		+popup()
-	script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js')
+	script(src='/js/jquery.min.js')
 	script(src='/socket.io/socket.io.js')
-	script(type='module' src='main.mjs')
+	script(type='module' src='/js/main.mjs')
+	script(src='/js/ui-components.js')
