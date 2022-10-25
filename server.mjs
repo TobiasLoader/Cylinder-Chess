@@ -161,6 +161,10 @@ io.sockets.on('connection', function (socket) {
     socket.on('resign', function (room, player) {
         io.sockets.in(room).emit('victory', 3-player, 'resigned the game');
     });
+    
+    socket.on('checkmate', function (room, player) {
+        io.sockets.in(room).emit('victory', 3-player, 'got checkmated');
+    });
 
     socket.on('leaveroom', function (room,player) {
         console.log('player ',player,' leave from room ',room);

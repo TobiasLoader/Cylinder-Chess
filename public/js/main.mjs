@@ -1,5 +1,5 @@
 import {strPrettyTimeFormat, updateTimeTimeFormat, updateAfterMove, setToZero } from './time.mjs';
-import {initBoard, resizeCylinderBoard, resizeSquareBoard, initNextMove, moveMade, resultMovePieces} from './game.mjs';
+import {initBoard, resizeCylinderBoard, resizeSquareBoard, moveMade, resultMovePieces} from './game.mjs';
 import {GameState} from './gamestate.mjs';
 
 export const localstate = new GameState();
@@ -159,18 +159,19 @@ function gameplay() {
 }
 
 function onmymove() {
-  initNextMove();
   localstate.mymove = true;
   gamearea.addClass('mymove');
   localstate.mymovemillis = Date.now();
-  listenMoveMade();
+  console.log(localstate.inCheck(localstate.boardpiecemap));
+  localstate.findValidMoves();
+  if (localstate.inCheckmate()) localstate.socket.emit('checkmate',localstate.myroom,localstate.myplayerid);
+  else listenMoveMade();
 }
 function offmymove() {
   $('.mypiece').off('click');
   localstate.mymove = false;
   gamearea.removeClass('mymove');
   localstate.opmovemillis = Date.now();
-  initNextMove();
 }
 
 function popUpGameOver(){
@@ -260,9 +261,9 @@ joinroom.click(function () {
 stopjoinroom.click(function(e){setInitState('state-home',e)});
 
 function resetClasses(){
-  $('.candidatemove').off( "click");
+  $('.validcandidate').off( "click");
   $('.piecechosen').removeClass('piecechosen');
-  $('.candidatemove').removeClass('candidatemove');
+  $('.validcandidate').removeClass('validcandidate');
   for (var i=0; i<8; i+=1){
     for (var j=0; j<8; j+=1){
       const c = 'tocapture-'+String.fromCharCode(65+i)+(1+j).toString();

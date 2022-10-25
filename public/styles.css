@@ -50,6 +50,18 @@ h1#cylinder-title {
 .submainbuttontitle {
   color: black; }
 
+#joingame input#roomnum {
+  height: 40px;
+  padding-left: 20px;
+  margin: auto;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  border-radius: 3px;
+  border: none; }
+
+#roomnum:focus {
+  outline: none; }
+
 #waitingarea {
   background: #264139;
   margin: auto;
@@ -57,6 +69,9 @@ h1#cylinder-title {
   height: 400px;
   border: black 1px solid;
   padding: 10px; }
+
+#waitingarea .room {
+  text-align: center; }
 
 #startgame-options {
   margin-top: 40px; }
@@ -304,7 +319,7 @@ h1#cylinder-title {
 .piecechosen {
   background: #a2ceb1 !important; }
 
-.mymove .candidatemove {
+.mymove .validcandidate {
   cursor: pointer;
   background: #b2d7dc !important; }
 

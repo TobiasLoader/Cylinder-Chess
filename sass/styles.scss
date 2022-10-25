@@ -69,6 +69,18 @@ h1#cylinder-title {
 	// margin: auto;
 // }
 
+#joingame input#roomnum {
+	height: 40px;
+	padding-left: 20px;
+	margin: auto;
+	margin-left: 50%;
+	transform: translateX(-50%);
+	border-radius: 3px;
+	border:none;
+}
+
+#roomnum:focus {outline: none;}
+
 #waitingarea {
 	background:rgb(38, 65, 57);
 	margin:auto;
@@ -76,6 +88,10 @@ h1#cylinder-title {
 	height:400px;
 	border:black 1px solid;
 	padding:10px;
+}
+
+#waitingarea .room {
+	text-align: center;
 }
 
 #startgame-options {
@@ -287,7 +303,7 @@ h1#cylinder-title {
 	background: rgb(162, 206, 177) !important;
 }
 
-.mymove .candidatemove {
+.mymove .validcandidate {
 	cursor: pointer;
 	background: rgb(178, 215, 220) !important;
 }

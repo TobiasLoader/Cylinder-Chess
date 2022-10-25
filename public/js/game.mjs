@@ -93,25 +93,19 @@ function startingChessPieces(mycolour){
   }
 }
 
-export function initNextMove(){
-  movenum += 1;
-  console.log(movenum);
-}
-
 export async function moveMade(frompos){
-  const piece = localstate.boardpiecemap[frompos];
   $('#'+frompos).addClass('piecechosen');
-  const candidates = piece.candidateMoves();
-  candidates.forEach(function (movedata){
-    $('#'+movedata.move).addClass('candidatemove');
+  const validcandidates = localstate.validmoves[frompos];
+  validcandidates.forEach(function (movedata){
+    $('#'+movedata.move).addClass('validcandidate');
     if (movedata.status=='attack') $('#'+movedata.move).addClass('tocapture-'+movedata['capture']);
   });
   return new Promise((resolve) => {
-    $('.candidatemove').click(function () {
-      $('.candidatemove').off( "click");
+    $('.validcandidate').click(function () {
+      $('.validcandidate').off( "click");
       var capturepos = '';
       var topos = $(this).attr('id');
-      candidates.forEach(function (movedata){
+      validcandidates.forEach(function (movedata){
         if (movedata['move']==topos) capturepos = movedata['capture'];
       });
       if (capturepos=='') resolve({'from':frompos,'to':topos});

@@ -14,9 +14,9 @@ body
 					+gameoption('colour-black','colour','black','b',false)
 					+gameoption('colour-random','colour','random','r',false)
 				ul#time.game-option
-					+gameoption('time-1','time','1m + 5s','1+5',true)
+					+gameoption('time-1','time','1m + 5s','1+5',false)
 					+gameoption('time-5','time','5m + 0s','5+0',false)
-					+gameoption('time-unlimited','time','unlimited','u',false)
+					+gameoption('time-unlimited','time','unlimited','u',true)
 				ul#surface.game-option
 					+gameoption('surface-cylinder','surface','cylinder','cylinder',true)
 					+gameoption('surface-square','surface','square','square',false)
@@ -36,7 +36,8 @@ body
 		#waitingarea
 			| Waiting AREA
 			h2.room
-			+subbutton('leavewaitingroom','leave')
+			.buttonrow
+				+subbutton('leavewaitingroom','leave')
 		#gamearea
 			//- | Game AREA
 			//- h2.room
