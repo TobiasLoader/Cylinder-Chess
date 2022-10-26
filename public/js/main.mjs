@@ -4,6 +4,7 @@ import {GameState} from './gamestate.mjs';
 
 export const localstate = new GameState();
 
+const body = $("body");
 const main = $("#main");
 const startbutton = $("#startbutton");
 const createroom = $("#createroom");
@@ -160,7 +161,7 @@ function gameplay() {
 
 function onmymove() {
   localstate.mymove = true;
-  gamearea.addClass('mymove');
+  body.addClass('mymove');
   localstate.mymovemillis = Date.now();
   console.log(localstate.inCheck(localstate.boardpiecemap));
   localstate.findValidMoves();
@@ -170,7 +171,7 @@ function onmymove() {
 function offmymove() {
   $('.mypiece').off('click');
   localstate.mymove = false;
-  gamearea.removeClass('mymove');
+  body.removeClass('mymove');
   localstate.opmovemillis = Date.now();
 }
 

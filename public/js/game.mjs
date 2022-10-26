@@ -54,6 +54,7 @@ export function resizeCylinderBoard(){
 }
 
 function cylinderBoardGame(mycolour){
+  $('#commonboard').addClass('cyl');
   const cylinderarea = document.getElementById("cylinderarea");
   const cylinder = $("#cylinder");
   const cols = $(".col");
@@ -74,6 +75,7 @@ export function resizeSquareBoard(){
 }
 
 function squareBoardGame(mycolour){
+  $('#commonboard').addClass('sqr');
   startingChessPieces(mycolour);
   resizeSquareBoard();
 }

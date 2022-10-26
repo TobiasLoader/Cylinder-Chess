@@ -36,10 +36,12 @@ body
 					+subbutton('stopjoinroom','back')
 					+subbutton('joinroom','join room')
 		#waitingarea
-			| Waiting AREA
-			h2.room
-			.buttonrow
-				+subbutton('leavewaitingroom','leave')
+			#waitingareacontent
+				h2.room
+				.buttonrow
+					+subbutton('leavewaitingroom','leave')
+				p
+					| Waiting AREA
 		#gamearea
 			//- | Game AREA
 			//- h2.room

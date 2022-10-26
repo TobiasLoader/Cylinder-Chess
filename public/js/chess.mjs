@@ -53,9 +53,17 @@ export class Piece {
     $('#'+this.pos).removeClass(this.colour+'cell');
     $('#'+this.id).remove();
   }
-  addToCapturedPieces(){
+  addToCapturedPieces(mycol){
     console.log('add to capture pieces')
-    $('#'+this.enemycolour+'capture').append('<img id="'+this.id+'" class="captured '+colourname[this.colour]+' '+this.name+' piece" src="'+this.src+'" alt="'+this.name+'">');
+    const imgtoadd = '<img id="'+this.id+'" class="captured '+colourname[this.colour]+' '+this.name+' piece" src="'+this.src+'" alt="'+this.name+'">';
+    if (this.colour == mycol) {
+      $('#mycapture').addClass('hasimgs');
+      $('#mycapture').append(imgtoadd);
+    }
+    if (this.enemycolour == mycol) {
+      $('#opcapture').addClass('hasimgs');
+      $('#opcapture').append(imgtoadd);
+    }
   }
 
   move(playercolour,newpos){
@@ -68,14 +76,14 @@ export class Piece {
 
   capture(piece){
     console.log(this.id + ' has captured ' + piece.id);
-    piece.beCaptured();
+    piece.beCaptured(localstate.mycolour);
   }
 
-  beCaptured(){
+  beCaptured(mycol){
     console.log('capture ' + this.pos + this.id)
     this.iscaptured = true;
     this.removePiece();
-    this.addToCapturedPieces();
+    this.addToCapturedPieces(mycol);
   }
 
   generateAbsoluteMoves(){

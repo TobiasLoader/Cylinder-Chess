@@ -17,7 +17,7 @@ export function printTimeFormat(t) {
 }
 
 export function strPrettyTimeFormat(t) {
-  if (t.unlimited) return 'unlimited';
+  if (t.unlimited) return '∞';
   const m = Math.floor(t.current_mil / 60000);
   const strs = (Math.round((t.current_mil / 1000) % 60)/1000).toFixed(3).toString()
   const s = strs.substring(strs.length-2,strs.length);
