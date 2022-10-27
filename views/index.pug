@@ -1,60 +1,55 @@
 doctype html
 head
 	title Cylinder Chess
-	link(rel='stylesheet', href='styles.css')
+	link(rel='stylesheet', href='styles/font.css')
+	link(rel='stylesheet', href='styles/init-game-states.css')
+	link(rel='stylesheet', href='styles/styles.css')
+	link(rel='stylesheet', href='styles/mobile-styles.css')
 	meta(name="viewport", content="width=device-width, initial-scale=1.0")
 
-body
+body(style=`--pricol: rgb(100, 158, 141); --bgcol: rgb(40,40,40);  --secbgcol: rgb(10,10,10)`)
+	img#cc-graphic(alt='graphic',src='/assets/cc-graphic.svg')
 	include ui-components
-	h1#cylinder-title cylinderchess.com
 	#main.state-home
-		+mainbutton('startbutton','Start Game')
+		#mainbuttonsrow
+			#gamebuttonscontainer
+				+mainbutton('startbutton','Start Game')
+				+mainbutton('joinbutton','Join Game')
+			#sharebuttonscontainer
+				+inversemainbutton('sharebutton','Share')
 		#startgame
-			#startgame-options
-				ul#colour.game-option
-					+gameoption('colour-white','colour','white','w',true)
-					+gameoption('colour-black','colour','black','b',false)
-					+gameoption('colour-random','colour','random','r',false)
-				ul#time.game-option
-					+gameoption('time-1','time','1m + 5s','1+5',false)
-					+gameoption('time-5','time','5m + 0s','5+0',false)
-					+gameoption('time-unlimited','time','unlimited','u',true)
-				ul#surface.game-option
-					+gameoption('surface-cylinder','surface','cylinder','cylinder',true)
-					+gameoption('surface-square','surface','square','square',false)
-				ul#roomsize.game-option
-					+gameoption('roomsize-2','roomsize','room size 2','2',true)
-					+gameoption('roomsize-3','roomsize','room size 3','3',false)
-				.buttonrow
-					+subbutton('stopcreateroom','back')
-					+subbutton('createroom','create room')
-		+mainbutton('joinbutton','Join Game')
+			+startgameoptions()
 		#joingame
-			#joingame-options
-				input#roomnum(placeholder='#ROOM')
-				.buttonrow
-					+subbutton('stopjoinroom','back')
-					+subbutton('joinroom','join room')
+			+joingameoptions()
 		#waitingarea
 			#waitingareacontent
 				h2.room
-				.buttonrow
-					+subbutton('leavewaitingroom','leave')
+				+subbutton('leavewaitingroom','leave')
 				p
 					| Waiting AREA
 		#gamearea
 			//- | Game AREA
 			//- h2.room
 			//- h3#movemade
-			#timerow
-				h3#mytime
-				h3#opponenttime(style='display:inline;')
-			#boardarea
 			#endgamerow.buttonrow
 				+subbutton('resigngame','resign')
 				+subbutton('leaveroom','leave')
 				h3#gameovermsg
+			#timerow
+				h3#mytime
+				h3#opponenttime(style='display:inline;')
+			#boardarea
+		#sharearea
+			h2.titlebanner
+				| please share:
+			.copytext
+				p.tocopy cylinderchess.com
+				img.clipboard-copy(alt='copy to clipboard',src='/assets/light-clipboard-copy.svg')
+			.buttonrow
+				+subbutton('backsharearea','back')
 		+popup()
+	h1#cylinder-title
+		| @ cylinderchess.com
 	script(src='/js/jquery.min.js')
 	script(src='/socket.io/socket.io.js')
 	script(type='module' src='/js/main.mjs')

@@ -16,6 +16,9 @@ const joingameoptions = $("#joingame-options");
 const joinroom = $("#joinroom");
 const stopjoinroom = $('#stopjoinroom');
 const gamearea = $("#gamearea");
+const sharebutton = $("#sharebutton");
+const backsharearea = $("#backsharearea");
+const copytexts = $(".copytext");
 const boardarea = $("#boardarea");
 const mytimeel = $("#mytime");
 const opponenttimeel = $("#opponenttime");
@@ -75,6 +78,7 @@ function updateOpTime(){
 function logsocketresponses() {
   localstate.socket.on('error', (msg) => {
     console.log('error: ' + msg);
+    if (msg == 'nosuchroom') popUpNoSuchRoom();
   });
 }
 
@@ -300,7 +304,15 @@ async function makeMove(frompos){
   offmymove();
 }
 
-popupcrosses.click(function(){main.removeClass('popup-active');})
+function popUpNoSuchRoom(){
+  mainpopup.append('<h2>BRRP!</h2><p>No such room exists. Please try a different room id, or start a new game.</p>');
+  main.addClass('popup-active');
+}
+
+popupcrosses.click(function(){
+  mainpopup.empty();
+  main.removeClass('popup-active');
+});
 
 resigngame.click(function(){
   localstate.socket.emit('resign',localstate.myroom,localstate.myplayerid);
@@ -321,6 +333,34 @@ leavewaitingroom.click(function(){
   localstate.socket.emit('destroyroom',localstate.myroom,localstate.myplayerid);
 });
 
+async function tryWebShare(){
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "CylinderChess.com",
+        url: 'cylinderchess.com'
+      });
+      console.log("Data was shared successfully");
+    } catch (err) {
+      console.error("Share failed:", err.message);
+    }
+  } else {
+    setInitState('state-sharearea');
+  }
+}
+
+sharebutton.click(function(){
+  tryWebShare();
+})
+
+copytexts.click(function(){
+  navigator.clipboard.writeText($(this).children('p').text());
+  $('#sharearea .titlebanner').text('thank you!');
+});
+
+backsharearea.click(function(){
+  setInitState('state-home')
+});
 
 $(window).on('resize',function(){
   if (localstate.boardtype=='cylinder') resizeCylinderBoard();

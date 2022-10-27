@@ -105,7 +105,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('join', function (room) {
         if (gamehost[room] == undefined) {
-            socket.emit('error', 'game doesn\'t exist')
+            socket.emit('error', 'nosuchroom')
         } else {
             if (numplayers[room] == undefined || numplayers[room] < 2) {
                 socket.join(room);

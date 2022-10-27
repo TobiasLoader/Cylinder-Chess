@@ -1,0 +1,26 @@
+@media only screen and (max-width: 600px) {
+  #mainbuttonsrow {
+    width: 80%; }
+  #gamebuttonscontainer {
+    display: flex;
+    flex-direction: column; }
+  #sharebuttonscontainer {
+    flex-direction: column; }
+  .mainbutton {
+    border-radius: 100px !important;
+    width: auto; }
+  .mainbuttontitle {
+    font-size: 20px; }
+  .piece {
+    width: calc(var(--relativesize));
+    margin: 0; }
+  #commonboard.cyl .capturearea {
+    width: calc(4*var(--relativesize)/3);
+    grid-auto-rows: calc(2*var(--relativesize)/3); }
+  #commonboard.cyl .captured.piece {
+    width: calc(2*var(--relativesize)/3); }
+  #commonboard.sqr .capturearea {
+    height: calc(5*var(--relativesize)/10);
+    grid-auto-columns: calc(4*var(--relativesize)/10); }
+  #commonboard.sqr .captured.piece {
+    width: calc(5*var(--relativesize)/10); } }

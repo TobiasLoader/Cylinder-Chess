@@ -2,6 +2,10 @@ mixin mainbutton(buttonid,title)
   .mainbutton(id=buttonid)
     h2.mainbuttontitle !{title}
 
+mixin inversemainbutton(buttonid,title)
+    .inversemainbutton.mainbutton(id=buttonid)
+      h2.mainbuttontitle !{title}
+
 mixin subbutton(id,title)
   .subbutton(id=id)
     h3.submainbuttontitle !{title}
@@ -21,3 +25,35 @@ mixin popup()
       .crossline.popupcrossleft
       .crossline.popupcrossright
     .popupcontent
+
+mixin startgameoptions()
+  #startgame-options
+    h2.titlebanner
+      | Choose Game Config:
+    ul#colour.game-option
+      +gameoption('colour-white','colour','white','w',true)
+      +gameoption('colour-black','colour','black','b',false)
+      +gameoption('colour-random','colour','random','r',false)
+    ul#surface.game-option
+      +gameoption('surface-cylinder','surface','cylinder','cylinder',true)
+      +gameoption('surface-square','surface','square','square',false)
+    ul#time.game-option
+      +gameoption('time-1','time','1m + 5s','1+5',false)
+      +gameoption('time-5','time','5m + 0s','5+0',false)
+      +gameoption('time-unlimited','time','unlimited','u',true)
+    ul#roomsize.game-option
+      +gameoption('roomsize-2','roomsize','room size 2','2',true)
+      +gameoption('roomsize-3','roomsize','room size 3','3',false)
+    .buttonrow
+      +subbutton('stopcreateroom','back')
+      +subbutton('createroom','create room')
+  
+mixin joingameoptions()
+  #joingame-options
+    h2.titlebanner
+      | Enter ROOM ID:
+    #roomnumcontainer
+      input#roomnum(placeholder='#ROOM')
+    .buttonrow
+      +subbutton('stopjoinroom','back')
+      +subbutton('joinroom','join room')

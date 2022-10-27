@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <rect x="125" y="125" width="350" height="350" style="stroke-width: 50px; fill: none; stroke: rgb(255,255,255);" x1="350" y1="25" x2="0" y2="25"/>
+  <line style="stroke-width: 50px; stroke: rgb(255,255,255);" x1="25" y1="350" x2="25" y2="0"/>
+  <line style="stroke-width: 50px; stroke: rgb(255,255,255);" x1="325" y1="0" x2="325" y2="75" bx:origin="0 3"/>
+  <line style="stroke-width: 50px; stroke: rgb(255,255,255);" x1="0" y1="325" x2="75" y2="325" bx:origin="3 0"/>
+  <line style="stroke-width: 50px; stroke: rgb(255,255,255);" x1="0" y1="25" x2="350" y2="25"/>
+</svg>

@@ -5,14 +5,14 @@ html {
   display: flex; }
 
 body {
-  background: linear-gradient(0deg, #313a38 0%, #282828 50%);
+  background: linear-gradient(0deg, #313a38 0%, var(--bgcol) 50%);
   background-position: 0% 0%;
   background-size: 100% 200%;
   max-width: 600px;
   width: 100%;
   margin: auto;
   overflow: hidden;
-  font-family: Avenir;
+  font-family: "JetBrains Mono";
   animation: BgUp 1s ease; }
 
 body.mymove {
@@ -31,10 +31,24 @@ body.mymove {
   100% {
     background-position: 0% 0%; } }
 
+#cc-graphic {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.3;
+  max-width: 600px; }
+
 h1#cylinder-title {
   color: rgba(100, 158, 141, 0.2);
   font-size: 30px;
-  text-align: center; }
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  font-size: 20px;
+  margin: 0;
+  margin-bottom: 10px; }
 
 .state-home {
   display: flex;
@@ -44,39 +58,96 @@ h1#cylinder-title {
 #main {
   position: relative; }
 
+#mainbuttonsrow {
+  width: 100%;
+  display: flex;
+  flex-direction: column; }
+
+#gamebuttonscontainer {
+  display: flex; }
+
+#sharebuttonscontainer {
+  display: flex; }
+
 .mainbutton {
-  max-width: 400px;
-  padding: 20px;
+  width: 100%;
+  padding: 10px 20px;
   margin: 10px;
   display: block;
   cursor: pointer;
   text-align: center;
-  border-radius: 3px;
-  background: #649e8d; }
+  border-radius: 0;
+  background: var(--pricol);
+  color: var(--secbgcol); }
+
+#gamebuttonscontainer .mainbutton:first-child {
+  border-radius: 100px 0 0 100px; }
+
+#gamebuttonscontainer .mainbutton:last-child {
+  border-radius: 0 100px 100px 0; }
+
+.inversemainbutton {
+  background: var(--bgcol);
+  color: var(--pricol);
+  border: var(--pricol) 2px solid;
+  border-radius: 100px; }
+
+.inversemainbutton:hover {
+  background: var(--secbgcol); }
 
 .mainbuttontitle {
-  margin: 0; }
+  margin: 0;
+  padding: 5px;
+  font-size: 25px; }
 
 .subbutton {
-  max-width: 200px;
-  min-height: 50px;
+  height: 50px;
   display: block;
   cursor: pointer;
   text-align: center;
   border-radius: 3px;
-  background: white; }
+  background: var(--pricol); }
 
 .submainbuttontitle {
-  color: black; }
+  color: var(--secbgcol);
+  margin: 0;
+  line-height: 50px;
+  font-family: "JetBrains Mono Light"; }
+
+.buttonrow {
+  display: flex;
+  margin: auto;
+  margin-top: 10px;
+  place-content: space-evenly; }
+
+.buttonrow .subbutton {
+  flex: 1;
+  margin: 0 10px; }
+
+.titlebanner {
+  height: 50px;
+  margin: 10px;
+  color: var(--secbgcol);
+  text-align: center;
+  background: var(--pricol);
+  opacity: 0.9;
+  line-height: 50px; }
+
+#roomnumcontainer {
+  margin: 20px 10px; }
 
 #joingame input#roomnum {
-  height: 40px;
-  padding-left: 20px;
-  margin: auto;
-  margin-left: 50%;
-  transform: translateX(-50%);
+  height: 50px;
+  width: 100%;
+  background: var(--secbgcol);
+  color: white;
+  font-size: 20px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
   border-radius: 3px;
-  border: none; }
+  border: none;
+  font-family: "JetBrains Mono Light"; }
 
 #roomnum:focus {
   outline: none; }
@@ -85,7 +156,8 @@ h1#cylinder-title {
   background: rgba(100, 158, 141, 0.4);
   margin: auto;
   display: none;
-  padding-top: 100%; }
+  padding-top: 100%;
+  border-radius: 3px; }
 
 #waitingareacontent {
   position: absolute;
@@ -100,26 +172,32 @@ h1#cylinder-title {
 #waitingarea .room {
   text-align: center; }
 
+#leavewaitingroom {
+  width: 50%;
+  margin: auto; }
+
 #startgame-options {
-  margin-top: 40px; }
+  margin: 5px; }
 
 #startgame-options .game-option {
   list-style-type: none;
   margin: auto;
   display: flex;
   place-content: space-around;
-  color: white;
+  color: #e6e4e4;
   padding: 10px 0; }
 
 .radiobuttonoption {
   flex: 1;
   margin: 0 10px;
   height: 50px;
-  background: black;
+  background: var(--secbgcol);
   cursor: pointer;
-  position: relative; }
+  position: relative;
+  border-radius: 3px; }
 
 .radiobuttonoption input {
+  position: absolute;
   margin: 0;
   pointer-events: none;
   visibility: hidden; }
@@ -128,26 +206,19 @@ h1#cylinder-title {
   pointer-events: none;
   width: calc(100% - 26px);
   position: absolute;
-  margin-right: 13px;
+  height: 100%;
+  line-height: 50px;
+  width: 100%;
   text-align: center;
-  transform: translateY(-50%);
-  top: 50%; }
+  background: rgba(100, 158, 141, 0.1); }
 
 .radiobuttonoption input:checked + label {
-  color: #649e8d; }
+  color: var(--pricol);
+  background: var(--secbgcol);
+  border: rgba(100, 158, 141, 0.5) 1px solid; }
 
 #waitingarea {
   color: white; }
-
-.buttonrow {
-  display: flex;
-  margin: auto;
-  margin-top: 20px;
-  place-content: space-evenly; }
-
-.buttonrow .subbutton {
-  flex: 1;
-  margin: 0 10px; }
 
 #timerow {
   display: flex;
@@ -169,6 +240,28 @@ h1#cylinder-title {
 
 #endgamerow.gameover #gameovermsg {
   display: block; }
+
+#sharearea .copytext {
+  background: var(--secbgcol);
+  display: flex;
+  margin: 20px 10px;
+  border: rgba(255, 255, 255, 0.5) 1px solid;
+  height: 50px; }
+
+#sharearea .copytext:hover {
+  background: var(--bgcol);
+  cursor: pointer; }
+
+#sharearea .tocopy {
+  flex: 1;
+  margin: 0;
+  margin-left: 20px;
+  line-height: 50px;
+  color: white; }
+
+#sharearea .clipboard-copy {
+  width: 20px;
+  padding: 0 15px; }
 
 .popup {
   display: none;
@@ -217,99 +310,6 @@ h1#cylinder-title {
   pointer-events: none; }
 
 #main.popup-active > .popup {
-  display: block; }
-
-#main.state-home > .mainbutton {
-  display: block; }
-
-#main.state-home #startgame {
-  display: none; }
-
-#main.state-home #startgame-options {
-  display: none; }
-
-#main.state-home #joingame {
-  display: none; }
-
-#main.state-home #joingame-options {
-  display: none; }
-
-#main.state-home #waitingarea {
-  display: none; }
-
-#main.state-home #gamearea {
-  display: none; }
-
-#main.state-startgame > .mainbutton {
-  display: none; }
-
-#main.state-startgame #startgame {
-  display: block; }
-
-#main.state-startgame #startgame-options {
-  display: block; }
-
-#main.state-startgame #joingame {
-  display: none; }
-
-#main.state-startgame #joingame-options {
-  display: none; }
-
-#main.state-startgame #waitingarea {
-  display: none; }
-
-#main.state-startgame #gamearea {
-  display: none; }
-
-#main.state-joingame > .mainbutton {
-  display: none; }
-
-#main.state-joingame #startgame {
-  display: none; }
-
-#main.state-joingame #startgame-options {
-  display: none; }
-
-#main.state-joingame #joingame {
-  display: block; }
-
-#main.state-joingame #joingame-options {
-  display: block; }
-
-#main.state-joingame #waitingarea {
-  display: none; }
-
-#main.state-joingame #gamearea {
-  display: none; }
-
-#main.state-waitingarea > .mainbutton {
-  display: none; }
-
-#main.state-waitingarea #startgame {
-  display: none; }
-
-#main.state-waitingarea #joingame {
-  display: none; }
-
-#main.state-waitingarea #waitingarea {
-  display: block; }
-
-#main.state-waitingarea #gamearea {
-  display: none; }
-
-#main.state-gamearea > .mainbutton {
-  display: none; }
-
-#main.state-gamearea #startgame {
-  display: none; }
-
-#main.state-gamearea #joingame {
-  display: none; }
-
-#main.state-gamearea #waitingarea {
-  display: none; }
-
-#main.state-gamearea #gamearea {
   display: block; }
 
 #gamearea {
@@ -440,18 +440,3 @@ h1#cylinder-title {
 #square .cell {
   height: var(--relativesize);
   width: var(--relativesize); }
-
-@media only screen and (max-width: 600px) {
-  .piece {
-    width: calc(var(--relativesize));
-    margin: 0; }
-  #commonboard.cyl .capturearea {
-    width: calc(4*var(--relativesize)/3);
-    grid-auto-rows: calc(2*var(--relativesize)/3); }
-  #commonboard.cyl .captured.piece {
-    width: calc(2*var(--relativesize)/3); }
-  #commonboard.sqr .capturearea {
-    height: calc(5*var(--relativesize)/10);
-    grid-auto-columns: calc(4*var(--relativesize)/10); }
-  #commonboard.sqr .captured.piece {
-    width: calc(5*var(--relativesize)/10); } }

@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "scss": "node-sass sass/styles.scss public/styles.css",
     "start": "node server.mjs",
-    "scss-run": "node-sass sass/styles.scss public/styles.css && echo 'start server' && node server.mjs"
+    "scss-run": "node-sass sass/styles.scss public/styles/styles.css && node-sass sass/mobile-styles.scss public/styles/mobile-styles.css && node-sass sass/init-game-states.scss public/styles/init-game-states.css && echo 'start server' && node server.mjs"
   },
   "repository": {
     "type": "git",

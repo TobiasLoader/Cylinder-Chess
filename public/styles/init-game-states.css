@@ -1,0 +1,125 @@
+#main.state-home #mainbuttonsrow {
+  display: flex; }
+
+#main.state-home #startgame {
+  display: none; }
+
+#main.state-home #startgame-options {
+  display: none; }
+
+#main.state-home #joingame {
+  display: none; }
+
+#main.state-home #joingame-options {
+  display: none; }
+
+#main.state-home #waitingarea {
+  display: none; }
+
+#main.state-home #gamearea {
+  display: none; }
+
+#main.state-home #sharearea {
+  display: none; }
+
+#main.state-startgame #mainbuttonsrow {
+  display: none; }
+
+#main.state-startgame #startgame {
+  display: block; }
+
+#main.state-startgame #startgame-options {
+  display: block; }
+
+#main.state-startgame #joingame {
+  display: none; }
+
+#main.state-startgame #joingame-options {
+  display: none; }
+
+#main.state-startgame #waitingarea {
+  display: none; }
+
+#main.state-startgame #gamearea {
+  display: none; }
+
+#main.state-startgame #sharearea {
+  display: none; }
+
+#main.state-joingame #mainbuttonsrow {
+  display: none; }
+
+#main.state-joingame #startgame {
+  display: none; }
+
+#main.state-joingame #startgame-options {
+  display: none; }
+
+#main.state-joingame #joingame {
+  display: block; }
+
+#main.state-joingame #joingame-options {
+  display: block; }
+
+#main.state-joingame #waitingarea {
+  display: none; }
+
+#main.state-joingame #gamearea {
+  display: none; }
+
+#main.state-joingame #sharearea {
+  display: none; }
+
+#main.state-waitingarea #mainbuttonsrow {
+  display: none; }
+
+#main.state-waitingarea #startgame {
+  display: none; }
+
+#main.state-waitingarea #joingame {
+  display: none; }
+
+#main.state-waitingarea #waitingarea {
+  display: block; }
+
+#main.state-waitingarea #gamearea {
+  display: none; }
+
+#main.state-waitingarea #sharearea {
+  display: none; }
+
+#main.state-gamearea #mainbuttonsrow {
+  display: none; }
+
+#main.state-gamearea #startgame {
+  display: none; }
+
+#main.state-gamearea #joingame {
+  display: none; }
+
+#main.state-gamearea #waitingarea {
+  display: none; }
+
+#main.state-gamearea #gamearea {
+  display: block; }
+
+#main.state-gamearea #sharearea {
+  display: none; }
+
+#main.state-sharearea #mainbuttonsrow {
+  display: none; }
+
+#main.state-sharearea #startgame {
+  display: none; }
+
+#main.state-sharearea #joingame {
+  display: none; }
+
+#main.state-sharearea #waitingarea {
+  display: none; }
+
+#main.state-sharearea #gamearea {
+  display: none; }
+
+#main.state-sharearea #sharearea {
+  display: block; }
