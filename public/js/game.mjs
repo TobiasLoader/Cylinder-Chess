@@ -53,6 +53,15 @@ export function resizeCylinderBoard(){
   document.getElementById('cylinderarea').style.setProperty("--relativesize",(Math.min($('#boardarea').width()/8,$(window).height()/14)).toString()+"px");
 }
 
+function scrollMapping(x,y){
+  if (x==0 && y==0) return 0;
+  if (x==0) return y;
+  if (y==0) return x;
+  const ax = Math.abs(x);
+  const ay = Math.abs(y);
+  return ((x+y)*Math.abs(ax-ay))/(ax+ay);
+}
+
 function cylinderBoardGame(mycolour){
   $('#commonboard').addClass('cyl');
   const cylinderarea = document.getElementById("cylinderarea");
@@ -64,7 +73,7 @@ function cylinderBoardGame(mycolour){
   resizeCylinderBoard();
   applyCylinderShadow(cylinderroty,cols,mycolour);
   cylinderarea.addEventListener('wheel', function (e) {
-    cylinderroty += e.deltaY/10;
+    cylinderroty += scrollMapping(-e.deltaX,e.deltaY)/10;
     cylinder.css('transform','rotateY('+cylinderroty.toString()+'deg)');
     applyCylinderShadow(cylinderroty,cols);
   });//, {passive: true}

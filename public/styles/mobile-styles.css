@@ -11,6 +11,8 @@
     width: auto; }
   .mainbuttontitle {
     font-size: 20px; }
+  #gamearea .subbutton {
+    margin: 0 10px !important; }
   .piece {
     width: calc(var(--relativesize));
     margin: 0; }

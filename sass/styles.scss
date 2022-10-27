@@ -100,6 +100,10 @@ h1#cylinder-title {
 	color: var(--secbgcol);
 }
 
+.mainbutton:hover {
+	cursor:pointer;
+}
+
 #gamebuttonscontainer .mainbutton:first-child {
 	border-radius: 100px 0 0 100px;
 }
@@ -132,6 +136,10 @@ h1#cylinder-title {
 	border-radius: 3px;
 	background: var(--pricol);
 	// background: linear-gradient(90deg, 0% var(--pricol), 100% var(--pricol));
+}
+
+.subbutton:hover {
+	cursor:pointer;
 }
 
 .submainbuttontitle {
@@ -263,9 +271,28 @@ h1#cylinder-title {
 	color: white;
 }
 
+#gamearea .buttonrow {
+	margin-top:0;
+}
+
+#gamearea .subbutton {
+	opacity:0.3;
+}
+#gamearea .subbutton:hover {
+	opacity:1;
+}
+
+#gamearea .subbutton:first-child {
+	margin-left:0;
+}
+#gamearea .subbutton:last-child {
+	margin-right:0;
+}
+
+
 #timerow {
 	display: flex;
-	margin-bottom:20px;
+	margin:20px 0;
 }
 #timerow h3 {
 	flex:1;
