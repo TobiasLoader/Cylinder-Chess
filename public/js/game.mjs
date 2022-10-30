@@ -44,13 +44,19 @@ function cloneStandardStartingPositions(){
 };
 
 export function initBoard(boardtype,mycolour){
+  const commonboard = $('#commonboard');
   localstate.boardpiecemap = cloneStandardStartingPositions();
-  if (boardtype=='cylinder') cylinderBoardGame(mycolour);
-  if (boardtype=='square') squareBoardGame(mycolour);
+  if (boardtype=='cylinder') cylinderBoardGame(commonboard,mycolour);
+  if (boardtype=='square') squareBoardGame(commonboard,mycolour);
 }
 
 export function resizeCylinderBoard(){
-  document.getElementById('cylinderarea').style.setProperty("--relativesize",(Math.min($('#boardarea').width()/8,$(window).height()/14)).toString()+"px");
+  const w = $(window).width();
+  if (w < 600) {
+    document.getElementById('cylinderarea').style.setProperty("--relativesize",(Math.min($('#boardarea').width()/7,$(window).height()/13)).toString()+"px");
+  } else {
+    document.getElementById('cylinderarea').style.setProperty("--relativesize",(Math.min($('#boardarea').width()/8,$(window).height()/15)).toString()+"px");
+  }
 }
 
 function scrollMapping(x,y){
@@ -62,29 +68,50 @@ function scrollMapping(x,y){
   return ((x+y)*Math.abs(ax-ay))/(ax+ay);
 }
 
-function cylinderBoardGame(mycolour){
-  $('#commonboard').addClass('cyl');
+function cylinderBoardGame(commonboard,mycolour){
+  commonboard.addClass('cyl');
   const cylinderarea = document.getElementById("cylinderarea");
   const cylinder = $("#cylinder");
   const cols = $(".col");
   var cylinderroty = 202.5;
+  var touchloc = {x:0,y:0};
+  var touchrot = false;
   cylinder.css('transform','rotateY('+cylinderroty.toString()+'deg)');
   startingChessPieces(mycolour);
   resizeCylinderBoard();
   applyCylinderShadow(cylinderroty,cols,mycolour);
+  
   cylinderarea.addEventListener('wheel', function (e) {
     cylinderroty += scrollMapping(-e.deltaX,e.deltaY)/10;
     cylinder.css('transform','rotateY('+cylinderroty.toString()+'deg)');
     applyCylinderShadow(cylinderroty,cols);
   });//, {passive: true}
+  
+  commonboard.on('touchstart',function(e){
+    touchloc.x = e.touches[0].pageX;
+    touchloc.y = e.touches[0].pageY;
+    touchrot = true;
+  });
+  
+  commonboard.on('touchmove',function(e){
+    if (touchrot){
+      cylinderroty += scrollMapping(-e.deltaX,e.deltaY)/10;
+      cylinder.css('transform','rotateY('+cylinderroty.toString()+'deg)');
+      applyCylinderShadow(cylinderroty,cols);
+    }
+  });
+  
+  commonboard.on('touchend',function(e){
+    touchrot = false;
+  });
 }
 
 export function resizeSquareBoard(){
-  document.getElementById('squarearea').style.setProperty("--relativesize",(Math.min($('#boardarea').width()/8,$(window).height()/12)).toString()+"px");
+  document.getElementById('squarearea').style.setProperty("--relativesize",(Math.min($('#boardarea').width()/8,$(window).height()/13)).toString()+"px");
 }
 
-function squareBoardGame(mycolour){
-  $('#commonboard').addClass('sqr');
+function squareBoardGame(commonboard,mycolour){
+  commonboard.addClass('sqr');
   startingChessPieces(mycolour);
   resizeSquareBoard();
 }

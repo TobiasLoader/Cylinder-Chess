@@ -10,6 +10,10 @@ mixin subbutton(id,title)
   .subbutton(id=id)
     h3.submainbuttontitle !{title}
 
+mixin inversesubbutton(id,title)
+  .inversesubbutton.subbutton(id=id)
+    h3.submainbuttontitle !{title}
+
 mixin subbuttonclass(classname,title)
   .subbutton(class=classname)
     h3.submainbuttontitle !{title}

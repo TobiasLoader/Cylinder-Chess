@@ -149,27 +149,42 @@ io.sockets.on('connection', function (socket) {
         console.log('move', movedata, room, player);
         io.sockets.in(room).emit('boardmove', movedata, roomtimes[room]);
         console.log(player);
-        // console.log(roomsockets);
         roomsockets[room][3 - player].emit('play');
         console.log('play command sent');
     });
 
     socket.on('outoftime', function (room, player) {
-        io.sockets.in(room).emit('victory', 3-player, 'ran out of time');
+        io.sockets.in(room).emit('victory', 3-player, 'You Won!',"You're opponent ran out of time.",'Out of Time!','You opponent won because you ran out of time.');
     });
 
     socket.on('resign', function (room, player) {
-        io.sockets.in(room).emit('victory', 3-player, 'resigned the game');
+        io.sockets.in(room).emit('victory', 3-player, 'You Won!',"You're opponent resigned the game.",'Resigned','You opponent won because you ran out of time.');
     });
     
     socket.on('checkmate', function (room, player) {
-        io.sockets.in(room).emit('victory', 3-player, 'got checkmated');
+        io.sockets.in(room).emit('victory', 3-player, 'CHECKMATE!', 'You won the game!',  'CHECKMATE!', "You're opponent won the game because they put you into checkmate. Your king was in check and you had no legal moves.");
+    });
+    
+    socket.on('stalemate', function (room, player) {
+        io.sockets.in(room).emit('draw', 3-player, 'STALEMATE!', 'The game was a draw,it ended in a stalemate.');
+    });
+    
+    socket.on('drawoffer', function (room, player) {
+        roomsockets[room][3 - player].emit('drawoffer');
+    });
+    
+    socket.on('declinedraw', function (room) {
+        io.sockets.in(room).emit('drawdeclined');
+    });
+    
+    socket.on('drawaccept', function (room, player) {
+        io.sockets.in(room).emit('draw', 3-player, 'DRAW!', '🤝 The players agreed to a draw.');
     });
 
     socket.on('leaveroom', function (room,player) {
         console.log('player ',player,' leave from room ',room);
         if (roomplaying[room]){
-            io.sockets.in(room).emit('victory', 3-player, 'left the room');
+            io.sockets.in(room).emit('victory', 3-player, 'You Won!', "You're opponent left the room mid game.", 'You left the room!', 'You forfeit the game.');
             socket.emit('leaveserverconfirm');
             socket.on('leaveclientconfirm',function(){
                 socket.emit('leaveacknowledged');

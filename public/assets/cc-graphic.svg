@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-  <path style="fill: rgb(100, 158, 141);" d="M 26.354 109.09 L 43.638 72.131 L 90.35 74.938 L 99.56 34.39 L 138.188 28.394 L 145.97 0 L 0 0 L 0 100 L 26.354 109.09 Z"/>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <g transform="matrix(1, 0, 0, 1, -133.997391, -100)">
+    <rect x="200" y="100" width="100" height="100" style="fill: rgb(100, 158, 141);"/>
+    <rect x="200" y="300" width="100" height="100" style="fill: rgb(100, 158, 141);"/>
+    <rect x="259.258" y="187.765" width="70" height="93.882" style="fill: rgb(100, 158, 141);" transform="matrix(0.93972, -0.341944, -0.002789, 1.065161, 57.155697, 88.585266)"/>
+    <rect x="-259.258" y="-187.765" width="70" height="93.882" style="fill: rgb(100, 158, 141);" transform="matrix(-0.93972, -0.341944, 0.002789, 1.065161, -43.32848, 311.212902)" bx:origin="0.486377 0.496849"/>
+  </g>
 </svg>

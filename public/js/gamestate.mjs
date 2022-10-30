@@ -23,6 +23,7 @@ export class GameState {
 		this.mytimerticking = null;
 		this.optimerticking = null;
 		this.startedmove = false;
+		this.drawopen = false;
 		this.boardpiecemap = {};
 		this.validmoves = {};
 		console.log('reset game state')

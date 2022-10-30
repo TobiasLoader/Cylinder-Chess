@@ -7,8 +7,8 @@ head
 	link(rel='stylesheet', href='styles/mobile-styles.css')
 	meta(name="viewport", content="width=device-width, initial-scale=1.0")
 
-body(style=`--pricol: rgb(100, 158, 141); --bgcol: rgb(40,40,40);  --secbgcol: rgb(10,10,10)`)
-	img#cc-graphic(alt='graphic',src='/assets/cc-graphic.svg')
+body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; --bgcol: 40,40,40;  --secbgcol: 10,10,10`)
+	img#cc-graphic(alt='graphic',src='/assets/cc-logo.svg')
 	include ui-components
 	#main.state-home
 		#mainbuttonsrow
@@ -32,9 +32,13 @@ body(style=`--pricol: rgb(100, 158, 141); --bgcol: rgb(40,40,40);  --secbgcol: r
 			//- h2.room
 			//- h3#movemade
 			#endgamerow.buttonrow
-				+subbutton('leaveroom','leave')
-				h3#gameovermsg
-				+subbutton('resigngame','resign')
+				+inversesubbutton('leaveroom','leave room')
+				h3#gameovermsg.endgamerowmsg
+				+inversesubbutton('offerdraw','offer draw')
+				h3#drawoffersent.endgamerowmsg offer sent
+				+subbutton('acceptdraw','accept draw')
+				+inversesubbutton('resigngame','resign game')
+				+inversesubbutton('rematch','rematch')
 			#timerow
 				h3#mytime
 				h3#opponenttime(style='display:inline;')

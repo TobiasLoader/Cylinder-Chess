@@ -6,7 +6,7 @@ mixin cylinderboard(mycolour)
 	- let ba = 2*Math.PI/8; // base angle
 	- let rri = Math.cos(ba/2);
 	- let cellconst = 2*Math.sin(ba/2);
-	#commonboard(style=`--relativesize: 60px; --colw: rgb(210, 210, 210); --colb: rgb(100, 158, 141);`)
+	#commonboard(style=`--relativesize: 60px;`)
 		#mycapture.capturearea
 		#cylinderarea(style=`--rri: ${rri}; --cellconst: ${cellconst};`)
 			#cylinder
@@ -24,7 +24,7 @@ mixin cylinderboard(mycolour)
 
 mixin squareboard(mycolour)
 	- let chessfiles = ['A','B','C','D','E','F','G','H'];
-	#commonboard(style=`--relativesize: 60px; --colw: rgb(210, 210, 210); --colb: rgb(100, 158, 141);`)
+	#commonboard(style=`--relativesize: 60px;`)
 		#mycapture.capturearea
 		#squarearea
 			#square

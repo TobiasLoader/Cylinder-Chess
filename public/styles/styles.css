@@ -2,44 +2,33 @@ html {
   margin: 0;
   width: 100%;
   height: 100%;
-  display: flex; }
+  display: flex;
+  background: black; }
 
 body {
-  background: linear-gradient(0deg, #313a38 0%, var(--bgcol) 50%);
-  background-position: 0% 0%;
-  background-size: 100% 200%;
-  max-width: 600px;
+  background: linear-gradient(180deg, rgba(var(--bgcol), 1) 0%, rgba(var(--pricol), 0.35) 100%);
+  height: 100%;
   width: 100%;
-  margin: auto;
+  margin: 0;
   overflow: hidden;
   font-family: "JetBrains Mono";
-  animation: BgUp 1s ease; }
-
-body.mymove {
-  animation: BgDown 1s ease;
-  background-position: 0% 100%; }
-
-@keyframes BgDown {
-  0% {
-    background-position: 0% 0%; }
-  100% {
-    background-position: 0% 100%; } }
-
-@keyframes BgUp {
-  0% {
-    background-position: 0% 100%; }
-  100% {
-    background-position: 0% 0%; } }
+  display: flex; }
 
 #cc-graphic {
+  display: block;
   position: absolute;
   top: 0;
   left: 0;
   opacity: 0.3;
-  max-width: 600px; }
+  max-width: 200px;
+  width: 10%;
+  padding: 30px 40px; }
+
+body.ingame #cc-graphic {
+  display: none; }
 
 h1#cylinder-title {
-  color: rgba(100, 158, 141, 0.2);
+  color: rgba(var(--pricol), 1);
   font-size: 30px;
   text-align: center;
   position: absolute;
@@ -56,7 +45,10 @@ h1#cylinder-title {
   justify-content: center; }
 
 #main {
-  position: relative; }
+  position: relative;
+  max-width: 600px;
+  margin: auto;
+  width: 100%; }
 
 #mainbuttonsrow {
   width: 100%;
@@ -72,13 +64,13 @@ h1#cylinder-title {
 .mainbutton {
   width: 100%;
   padding: 10px 20px;
-  margin: 10px;
+  margin: 10px 7.5px;
   display: block;
   cursor: pointer;
   text-align: center;
   border-radius: 0;
-  background: var(--pricol);
-  color: var(--secbgcol); }
+  background: rgba(var(--pricol), 1);
+  color: rgba(var(--secbgcol), 1); }
 
 .mainbutton:hover {
   cursor: pointer; }
@@ -90,18 +82,21 @@ h1#cylinder-title {
   border-radius: 0 100px 100px 0; }
 
 .inversemainbutton {
-  background: var(--bgcol);
-  color: var(--pricol);
-  border: var(--pricol) 2px solid;
+  background: rgba(var(--bgcol), 1);
+  color: rgba(var(--pricol), 1);
+  border: rgba(var(--pricol), 1) 2px solid;
   border-radius: 100px; }
 
 .inversemainbutton:hover {
-  background: var(--secbgcol); }
+  background: rgba(var(--secbgcol), 1); }
+
+.inversesubbutton .submainbuttontitle {
+  color: rgba(var(--pricol), 1); }
 
 .mainbuttontitle {
   margin: 0;
   padding: 5px;
-  font-size: 25px; }
+  font-size: 22px; }
 
 .subbutton {
   height: 50px;
@@ -109,16 +104,25 @@ h1#cylinder-title {
   cursor: pointer;
   text-align: center;
   border-radius: 3px;
-  background: var(--pricol); }
+  background: rgba(var(--pricol), 1); }
 
 .subbutton:hover {
   cursor: pointer; }
 
+.inversesubbutton {
+  background: rgba(var(--bgcol), 1);
+  color: rgba(var(--pricol), 1);
+  border: rgba(var(--pricol), 1) 1px solid; }
+
+.inversesubbutton:hover {
+  background: rgba(var(--secbgcol), 1); }
+
 .submainbuttontitle {
-  color: var(--secbgcol);
+  color: rgba(var(--secbgcol), 1);
   margin: 0;
   line-height: 50px;
-  font-family: "JetBrains Mono Light"; }
+  font-family: "JetBrains Mono Light";
+  font-size: 17px; }
 
 .buttonrow {
   display: flex;
@@ -133,9 +137,9 @@ h1#cylinder-title {
 .titlebanner {
   height: 50px;
   margin: 10px;
-  color: var(--secbgcol);
+  color: rgba(var(--secbgcol), 1);
   text-align: center;
-  background: var(--pricol);
+  background: rgba(var(--pricol), 1);
   opacity: 0.9;
   line-height: 50px; }
 
@@ -145,7 +149,7 @@ h1#cylinder-title {
 #joingame input#roomnum {
   height: 50px;
   width: 100%;
-  background: var(--secbgcol);
+  background: rgba(var(--secbgcol), 1);
   color: white;
   font-size: 20px;
   margin: 0;
@@ -197,7 +201,7 @@ h1#cylinder-title {
   flex: 1;
   margin: 0 10px;
   height: 50px;
-  background: var(--secbgcol);
+  background: rgba(var(--secbgcol), 1);
   cursor: pointer;
   position: relative;
   border-radius: 3px; }
@@ -219,8 +223,8 @@ h1#cylinder-title {
   background: rgba(100, 158, 141, 0.1); }
 
 .radiobuttonoption input:checked + label {
-  color: var(--pricol);
-  background: var(--secbgcol);
+  color: rgba(var(--pricol), 1);
+  background: rgba(var(--secbgcol), 1);
   border: rgba(100, 158, 141, 0.5) 1px solid; }
 
 #waitingarea {
@@ -230,10 +234,11 @@ h1#cylinder-title {
   margin-top: 0; }
 
 #gamearea .subbutton {
-  opacity: 0.3; }
+  height: 40px; }
 
-#gamearea .subbutton:hover {
-  opacity: 1; }
+#gamearea .submainbuttontitle {
+  line-height: 40px;
+  font-size: 17px; }
 
 #gamearea .subbutton:first-child {
   margin-left: 0; }
@@ -250,27 +255,65 @@ h1#cylinder-title {
   margin: auto;
   text-align: center; }
 
-#gameovermsg {
+.endgamerowmsg {
   flex: 1;
   text-align: center;
-  margin: auto;
+  margin: auto; }
+
+#gamearea #endgamerow #gameovermsg {
   display: none; }
 
-#endgamerow.gameover #resigngame {
+#gamearea #endgamerow #offerdraw {
   display: none; }
 
-#endgamerow.gameover #gameovermsg {
+#gamearea #endgamerow #drawoffersent {
+  display: none; }
+
+#gamearea #endgamerow #acceptdraw {
+  display: none; }
+
+#gamearea #endgamerow #resigngame {
+  display: none; }
+
+#gamearea #endgamerow #rematch {
+  display: none; }
+
+#gamearea.playstate #endgamerow #offerdraw {
   display: block; }
 
+#gamearea.playstate #endgamerow #resigngame {
+  display: block; }
+
+#gamearea.drawsent #endgamerow #drawoffersent {
+  display: block; }
+
+#gamearea.drawsent #endgamerow #resigngame {
+  display: block; }
+
+#gamearea.drawreceived #endgamerow #acceptdraw {
+  display: block; }
+
+#gamearea.drawreceived #endgamerow #resigngame {
+  display: block; }
+
+#gamearea.gameover #endgamerow #gameovermsg {
+  display: block; }
+
+#gamearea.gameover #endgamerow #rematch {
+  display: block; }
+
+#gamearea.gameover {
+  filter: grayscale(0.7); }
+
 #sharearea .copytext {
-  background: var(--secbgcol);
+  background: rgba(var(--secbgcol), 1);
   display: flex;
   margin: 20px 10px;
   border: rgba(255, 255, 255, 0.5) 1px solid;
   height: 50px; }
 
 #sharearea .copytext:hover {
-  background: var(--bgcol);
+  background: rgba(var(--bgcol), 1);
   cursor: pointer; }
 
 #sharearea .tocopy {
@@ -290,20 +333,21 @@ h1#cylinder-title {
   top: 50%;
   transform: translateY(-50%);
   position: absolute;
-  width: 100%;
+  width: calc(100% - 20px);
   height: 40%;
+  margin: 0 10px;
   min-height: 300px;
   background: #3c3c3c;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 50px; }
 
-.popup h2 {
-  margin: 0;
-  margin-top: 20px;
+.popupcontent {
   padding: 40px; }
 
+.popup h2 {
+  margin: 20px 0; }
+
 .popup p {
-  margin: 0;
-  padding-left: 40px; }
+  margin: 0; }
 
 .popup .popupcross {
   position: absolute;
@@ -327,7 +371,6 @@ h1#cylinder-title {
   transform: rotate(315deg); }
 
 #main.popup-active > #gamearea {
-  filter: blur(2px);
   pointer-events: none; }
 
 #main.popup-active > .popup {
@@ -347,14 +390,11 @@ h1#cylinder-title {
   flex-direction: column; }
 
 #commonboard.cyl .capturearea {
-  width: calc(2*var(--relativesize));
+  width: calc(12*var(--relativesize)/10);
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-auto-rows: calc(var(--relativesize));
+  grid-auto-rows: calc(6*var(--relativesize)/10);
   margin: 10% 0 auto 0; }
-
-#commonboard.cyl .capturearea > * {
-  background: rgba(255, 255, 255, 0.2); }
 
 #commonboard.sqr .capturearea {
   height: calc(7*var(--relativesize)/10);
@@ -372,28 +412,28 @@ h1#cylinder-title {
   direction: rtl; }
 
 .cell {
-  background: var(--colw);
+  background: rgba(var(--pricol), 1);
   position: relative; }
 
 .col:nth-child(even) .cell:nth-child(even),
 .col:nth-child(odd) .cell:nth-child(odd) {
-  background: var(--colb); }
+  background: rgba(var(--seccol), 1); }
 
 .cell p {
-  color: var(--colb);
+  color: rgba(var(--seccol), 1);
   font-size: calc(var(--relativesize)/4);
   margin: 0;
   position: absolute; }
 
 .col:nth-child(even) .cell:nth-child(even) p,
 .col:nth-child(odd) .cell:nth-child(odd) p {
-  color: var(--colw); }
+  color: rgba(var(--pricol), 1); }
 
 .piece {
-  width: calc(8*var(--relativesize)/10);
+  width: calc(9*var(--relativesize)/10);
   display: inline;
   position: absolute;
-  margin: calc(var(--relativesize)/10); }
+  margin: calc(var(--relativesize)/20); }
 
 .rankid {
   top: 0;
@@ -415,7 +455,9 @@ h1#cylinder-title {
 
 .captured {
   display: block;
-  position: relative; }
+  position: relative;
+  width: calc(6*var(--relativesize)/10);
+  margin: 0; }
 
 #commonboard.sqr .captured {
   margin: 0;
@@ -424,7 +466,7 @@ h1#cylinder-title {
 #cylinderarea {
   display: grid;
   perspective: calc(7*var(--relativesize));
-  box-shadow: #000000 0px 0px 80px 10px;
+  box-shadow: rgba(20, 20, 20, 0.4) 0px 0px 30px 30px;
   width: calc(2*var(--relativesize));
   height: calc(8*var(--relativesize));
   margin: calc(var(--relativesize)) auto; }
@@ -452,7 +494,8 @@ h1#cylinder-title {
 #square {
   flex-direction: row;
   display: flex;
-  margin: auto; }
+  margin: auto;
+  box-shadow: rgba(20, 20, 20, 0.3) 0 0 40px 10px; }
 
 #square .col {
   flex-direction: column;

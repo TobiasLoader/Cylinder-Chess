@@ -24,8 +24,12 @@ const mytimeel = $("#mytime");
 const opponenttimeel = $("#opponenttime");
 const leavewaitingroom = $("#leavewaitingroom");
 const leaveroom = $("#leaveroom");
+const offerdraw = $("#offerdraw");
+const acceptdraw = $("#acceptdraw");
 const resigngame = $("#resigngame");
+const rematch = $("#rematch");
 const gameovermsg =  $('#gameovermsg');
+const drawoffersent =  $('#drawoffersent');
 const mainpopup = $('#main > .popup .popupcontent');
 const popupcrosses = $('.popupcross');
 
@@ -33,6 +37,13 @@ function setInitState(state,event){
   if (event != undefined) event.stopPropagation();
   main.removeClass();
   main.addClass(state);
+  if (state == 'state-gamearea') body.addClass('ingame');
+  else if (body.hasClass('ingame')) body.removeClass('ingame');
+}
+
+function setInGameState(state){
+  gamearea.removeClass();
+  if (state!=undefined) gamearea.addClass(state);
 }
 
 function fetchBoard(board,col,afterfetch) {
@@ -95,6 +106,7 @@ function setupgame() {
   updateroomnumber();
   console.log('game is joined');
   setInitState('state-gamearea');
+  setInGameState('playstate');
 
   localstate.socket.on('setup', (id, board, col, time) => {
     localstate.boardtype = board;
@@ -108,23 +120,34 @@ function setupgame() {
     fetchBoard(localstate.boardtype,localstate.mycolour,begingame);
   });
 
-  localstate.socket.on('victory',function(player,msg){
+  localstate.socket.on('victory',function(player,wintitle,winmsg,losetitle,losemsg){
     if (!localstate.gameover){
       popUpGameOver();
       gameOver();
       if (player==3-localstate.myplayerid && msg=='ran out of time') localstate.opponenttime = setToZero(localstate.opponenttime)
-      if (player==localstate.myplayerid)  {
-        mainpopup.append('<h2>VICTORY!</h2><p>Your opponent ' + msg+'</p>');
+      if (player==localstate.myplayerid) {
+        mainpopup.append('<h2>'+wintitle+'</h2><p>'+winmsg+'</p>');
         gameovermsg.append('VICTORY!');
+        // button to 'Play Again?'
       }
       else if (player==3-localstate.myplayerid)  {
-        mainpopup.append('<h2>DEFEAT...</h2><p>You ' + msg+'</p>');
+        mainpopup.append('<h2>'+losetitle+'</h2><p>'+losemsg+'</p>');
         gameovermsg.append('DEFEAT');
+        // button to 'Try Again?'
       }
       else {
-        mainpopup.append('<h2>Player ' + player + ' won!</h2><p>Their opponent ' + msg+'</p>');
-        gameovermsg.append('Player ' + player + ' won');
+        // mainpopup.append('<h2>Player ' + player + ' won!</h2><p>Their opponent ' + msg+'</p>');
+        // gameovermsg.append('Player ' + player + ' won');
       }
+    }
+  });
+  
+  localstate.socket.on('draw',function(player,title,msg){
+    if (!localstate.gameover){
+      popUpGameOver();
+      gameOver();
+      mainpopup.append('<h2>'+title+'</h2><p>'+msg+'</p>');
+      gameovermsg.append('DRAW!');
     }
   });
 }
@@ -161,6 +184,14 @@ function gameplay() {
     console.log(strPrettyTimeFormat(time[localstate.myplayerid]), strPrettyTimeFormat(time[localstate.opponentid]));
     console.log('-----');
   });
+  localstate.socket.on('drawoffer', function () {
+    setInGameState('drawreceived')
+    localstate.drawopen = true;
+  });
+  localstate.socket.on('drawdeclined', function () {
+    setInGameState('playstate')
+    localstate.drawopen = false;
+  });
 }
 
 function onmymove() {
@@ -180,7 +211,7 @@ function offmymove() {
 }
 
 function popUpGameOver(){
-  $('#endgamerow').addClass('gameover');
+  setInGameState('gameover');
   main.addClass('popup-active');
 }
 
@@ -199,7 +230,7 @@ function leaveaction() {
   boardarea.empty();
   gameovermsg.empty();
   mainpopup.empty();
-  $('#endgamerow').removeClass('gameover');
+  setInGameState();
   setInitState('state-home');
   console.log('left room');
 }
@@ -300,18 +331,30 @@ async function makeMove(frompos){
   const newtimeobject = {};
   newtimeobject[localstate.myplayerid] = localstate.mytime;
   newtimeobject[localstate.opponentid] = localstate.opponenttime;
+  if (localstate.drawopen) localstate.socket.emit('declinedraw',localstate.myroom);
   localstate.socket.emit('move', m, localstate.myroom, localstate.myplayerid, newtimeobject);
   offmymove();
 }
 
 function popUpNoSuchRoom(){
-  mainpopup.append('<h2>BRRP!</h2><p>No such room exists. Please try a different room id, or start a new game.</p>');
+  mainpopup.append('<h2>OH NOES!</h2><p>No such room exists. Please try a different room id, or start a new game.</p>');
   main.addClass('popup-active');
 }
 
 popupcrosses.click(function(){
   mainpopup.empty();
   main.removeClass('popup-active');
+});
+
+offerdraw.click(function(){
+  localstate.socket.emit('drawoffer',localstate.myroom,localstate.myplayerid);
+  setInGameState('drawsent');
+  localstate.drawopen = true;
+});
+
+acceptdraw.click(function(){
+  localstate.socket.emit('drawaccept',localstate.myroom,localstate.myplayerid);
+  localstate.drawopen = false;
 });
 
 resigngame.click(function(){

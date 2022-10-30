@@ -1,4 +1,7 @@
 @media only screen and (max-width: 600px) {
+	body {
+		font-size: 13px;
+	}
 	#mainbuttonsrow {
 		width:80%;
 	}
@@ -14,11 +17,42 @@
 		width: auto;
 	}
 	.mainbuttontitle {
-		font-size:20px;
+		font-size:18px;
+	}
+	.titlebanner {
+		margin: 5px;
+	}
+	#startgame-options .game-option {
+		padding: 5px 0;
+	}
+	.radiobuttonoption {
+		margin: 0 5px;
+	}
+	.buttonrow .subbutton {
+		flex: 1;
+		margin: 0 5px;
+	}
+	#roomnumcontainer {
+		margin: 10px 5px;
+	}
+	#main.state-waitingarea #waitingarea {
+		background: none;
+	}
+	.state-gamearea {
+		position: absolute !important;
+		margin-top: 5px;
+		top:0;
+		left:0;
+		width:100%;
 	}
 	#gamearea .subbutton {
-		margin:0 10px !important;
+		// margin:0 5px !important;
+		height: 35px;
 	}
+	#gamearea .submainbuttontitle {
+		line-height: 35px;
+		font-size: 15px;
+	} 
 	.piece {
 		width: calc(var(--relativesize));
 		margin: 0;
@@ -36,5 +70,15 @@
 	}
 	#commonboard.sqr .captured.piece {
 		width: calc(5*var(--relativesize)/10);
+	}
+	h1#cylinder-title {
+		font-size:15px;	
+	}
+	body.ingame h1#cylinder-title {
+		display: none;
+	}
+	.popup {
+		width: calc(100% - 30px);
+		margin: 0 15px;
 	}
 }
