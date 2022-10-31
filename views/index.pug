@@ -16,7 +16,7 @@ body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; 
 				+mainbutton('startbutton','Start Game')
 				+mainbutton('joinbutton','Join Game')
 			#sharebuttonscontainer
-				+inversemainbutton('sharebutton','Share')
+				+inversemainbuttonicon('sharebutton','Share','/assets/share_light.svg')
 		#startgame
 			+startgameoptions()
 		#joingame
@@ -33,13 +33,13 @@ body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; 
 			//- h3#movemade
 			#endgamerow.buttonrow
 				+inversesubbutton('leaveroom','leave room')
-				h3#gameovermsg.endgamerowmsg
+				+buttonrowmsg('gameovermsg','')
 				+inversesubbutton('offerdraw','offer draw')
-				h3#drawoffersent.endgamerowmsg offer sent
+				+buttonrowmsg('drawoffersent','offer sent')
 				+subbutton('acceptdraw','accept draw')
 				+inversesubbutton('resigngame','resign game')
 				+inversesubbutton('offerrematch','rematch')
-				h3#rematchoffersent.endgamerowmsg rematch sent
+				+buttonrowmsg('rematchoffersent','rematch sent')
 				+subbutton('acceptrematch','accept rematch')
 			#timerow
 				h3#mytime

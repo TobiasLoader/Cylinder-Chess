@@ -3,7 +3,8 @@ html {
   width: 100%;
   height: 100%;
   display: flex;
-  background: black; }
+  background: black;
+  touch-action: none; }
 
 body {
   background: linear-gradient(180deg, rgba(var(--bgcol), 1) 0%, rgba(var(--pricol), 0.35) 100%);
@@ -86,6 +87,15 @@ h1#cylinder-title {
   color: rgba(var(--pricol), 1);
   border: rgba(var(--pricol), 1) 2px solid;
   border-radius: 100px; }
+
+.iconbutton {
+  display: flex;
+  place-content: center; }
+
+.iconbutton img {
+  width: 30px;
+  margin: 0 10px;
+  opacity: 0.6; }
 
 .inversemainbutton:hover {
   background: rgba(var(--secbgcol), 1); }
@@ -252,18 +262,24 @@ h1#cylinder-title {
   margin: auto;
   text-align: center; }
 
-.endgamerowmsg {
+.buttonrowmsgcontainer {
   flex: 1;
-  text-align: center;
-  margin: auto; }
+  margin: 0 10px;
+  height: 40px; }
 
-#gamearea #endgamerow #gameovermsg {
+.buttonrowmsg {
+  margin: auto;
+  line-height: 40px;
+  font-size: 17px;
+  text-align: center; }
+
+#gamearea #endgamerow #gameovermsgcontainer {
   display: none; }
 
 #gamearea #endgamerow #offerdraw {
   display: none; }
 
-#gamearea #endgamerow #drawoffersent {
+#gamearea #endgamerow #drawoffersentcontainer {
   display: none; }
 
 #gamearea #endgamerow #acceptdraw {
@@ -275,7 +291,7 @@ h1#cylinder-title {
 #gamearea #endgamerow #offerrematch {
   display: none; }
 
-#gamearea #endgamerow #rematchoffersent {
+#gamearea #endgamerow #rematchoffersentcontainer {
   display: none; }
 
 #gamearea #endgamerow #acceptrematch {
@@ -287,7 +303,7 @@ h1#cylinder-title {
 #gamearea.playstate #endgamerow #resigngame {
   display: block; }
 
-#gamearea.drawsent #endgamerow #drawoffersent {
+#gamearea.drawsent #endgamerow #drawoffersentcontainer {
   display: block; }
 
 #gamearea.drawsent #endgamerow #resigngame {
@@ -299,19 +315,19 @@ h1#cylinder-title {
 #gamearea.drawreceived #endgamerow #resigngame {
   display: block; }
 
-#gamearea.gameover #endgamerow #gameovermsg {
+#gamearea.gameover #endgamerow #gameovermsgcontainer {
   display: block; }
 
 #gamearea.gameover #endgamerow #offerrematch {
   display: block; }
 
-#gamearea.rematchsent #endgamerow #gameovermsg {
+#gamearea.rematchsent #endgamerow #gameovermsgcontainer {
   display: block; }
 
-#gamearea.rematchsent #endgamerow #rematchoffersent {
+#gamearea.rematchsent #endgamerow #rematchoffersentcontainer {
   display: block; }
 
-#gamearea.rematchreceived #endgamerow #gameovermsg {
+#gamearea.rematchreceived #endgamerow #gameovermsgcontainer {
   display: block; }
 
 #gamearea.rematchreceived #endgamerow #acceptrematch {
@@ -421,9 +437,6 @@ h1#cylinder-title {
   grid-auto-columns: calc(6*var(--relativesize)/10);
   width: min-content;
   padding-right: calc(var(--relativesize)/10); }
-
-#commonboard.sqr .capturearea.hasimgs {
-  background: rgba(255, 255, 255, 0.2); }
 
 #commonboard.cyl #mycapture {
   direction: rtl; }

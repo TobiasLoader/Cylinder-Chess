@@ -87,22 +87,54 @@ function cylinderBoardGame(commonboard,mycolour){
     applyCylinderShadow(cylinderroty,cols);
   });//, {passive: true}
   
+  var touchstartx = 0;
+  var touchcurrentx = 0;
+  var touchoffsetx = 0;
+  
   commonboard.on('touchstart',function(e){
-    touchloc.x = e.touches[0].pageX;
-    touchloc.y = e.touches[0].pageY;
-    touchrot = true;
+    touchstartx = e.touches[0].pageX;
+    touchcurrentx = e.touches[0].pageX;
+    console.log('start touch ', touchstartx);
+    cylinder.stop(true,true);
   });
   
   commonboard.on('touchmove',function(e){
-    if (touchrot){
-      cylinderroty += scrollMapping(-e.deltaX,e.deltaY)/10;
-      cylinder.css('transform','rotateY('+cylinderroty.toString()+'deg)');
-      applyCylinderShadow(cylinderroty,cols);
-    }
+        // if (touchrot){
+    touchcurrentx = e.touches[0].pageX;
+    touchoffsetx = touchcurrentx - touchstartx;
+    cylinderroty += touchoffsetx;
+    cylinder.css('transform','rotateY('+cylinderroty.toString()+'deg)');
+    applyCylinderShadow(cylinderroty,cols);
+    touchstartx = e.touches[0].pageX;
+
+    // }
   });
   
+  $.fn.cylmomentum = function(angle, complete) {
+    return this.each(function() {
+      var $elem = $(this);
+      $({deg: angle}).animate({deg: 0}, {
+        duration: 200,
+        step: function(now) {
+          cylinderroty += now;
+          $elem.css({
+            transform: 'rotateY(' + cylinderroty + 'deg)'
+          });
+          applyCylinderShadow(cylinderroty,cols,mycolour);
+        },
+        complete: function(){
+          touchstartx = touchcurrentx;
+          touchoffsetx = 0;
+          console.log('end anim');
+        } 
+      });
+    });
+  };
+
+  
   commonboard.on('touchend',function(e){
-    touchrot = false;
+    cylinder.cylmomentum(touchoffsetx);
+    console.log('end touch');
   });
 }
 

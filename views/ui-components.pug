@@ -6,6 +6,11 @@ mixin inversemainbutton(buttonid,title)
     .inversemainbutton.mainbutton(id=buttonid)
       h2.mainbuttontitle !{title}
 
+mixin inversemainbuttonicon(buttonid,title,iconsrc)
+      .inversemainbutton.iconbutton.mainbutton(id=buttonid)
+        h2.mainbuttontitle !{title}
+        img(alt='icon',src=iconsrc)
+
 mixin subbutton(id,title)
   .subbutton(id=id)
     h3.submainbuttontitle !{title}
@@ -17,6 +22,10 @@ mixin inversesubbutton(id,title)
 mixin subbuttonclass(classname,title)
   .subbutton(class=classname)
     h3.submainbuttontitle !{title}
+
+mixin buttonrowmsg(id,txt)
+  .buttonrowmsgcontainer(id=id+'container')
+    h3.buttonrowmsg(id=id) !{txt}
 
 mixin gameoption(id,name,label,value,checkedBool)
   li.radiobuttonoption

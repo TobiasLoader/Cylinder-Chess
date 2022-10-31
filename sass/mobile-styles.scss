@@ -51,8 +51,15 @@
 	}
 	#gamearea .submainbuttontitle {
 		line-height: 35px;
-		font-size: 15px;
+		font-size: 13px;
 	} 
+	.buttonrowmsgcontainer {
+		height: 35px;
+	}
+	.buttonrowmsg {
+		font-size: 13px;
+		line-height: 35px;
+	}
 	.piece {
 		width: calc(var(--relativesize));
 		margin: 0;
