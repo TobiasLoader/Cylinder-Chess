@@ -180,11 +180,8 @@ h1#cylinder-title {
 .titlebanner {
 	height: 50px;
 	margin: 10px;
-	color: rgba(var(--secbgcol),1);
-	text-align: center;
-	background: rgba(var(--pricol),1);
-	opacity: 0.9;
-	line-height:50px;
+	color: rgba(var(--tricol), 1);
+	line-height: 50px;
 }
 
 #roomnumcontainer {
@@ -195,7 +192,7 @@ h1#cylinder-title {
 	height: 50px;
 	width:100%;
 	background: rgba(var(--secbgcol),1);
-	color: white;
+	color: rgba(var(--tricol), 1);
 	font-size: 20px;
 	margin: 0;
 	padding:0;
@@ -208,7 +205,7 @@ h1#cylinder-title {
 #roomnum:focus {outline: none;}
 
 #waitingarea {
-	background: rgba(100,158,141,0.4);
+	background: rgba(var(--pricol),0.1);
 	margin: auto;
 	display: none;
 	padding-top: 100%;
@@ -244,9 +241,8 @@ h1#cylinder-title {
 	margin: auto;
 	display: flex;
 	place-content: space-around;
-	color: rgb(230, 228, 228);
+	color: rgba(var(--tricol), 1);
 	padding: 10px 0;
-	// border-left: white 1px solid;
 }
 
 .radiobuttonoption {
@@ -280,12 +276,11 @@ h1#cylinder-title {
 .radiobuttonoption input:checked + label {
 	color:rgba(var(--pricol),1);
 	background: rgba(var(--secbgcol),1);
-	border: rgba(100, 158, 141, 0.5) 1px solid;
-
+	border: rgba(var(--pricol), 0.5) 1px solid;
 }
 
 #waitingarea {
-	color: white;
+	color: rgba(var(--tricol), 1);
 }
 
 #gamearea .buttonrow {
@@ -335,7 +330,9 @@ h1#cylinder-title {
 #gamearea #endgamerow #drawoffersent {display: none;}
 #gamearea #endgamerow #acceptdraw {display: none;}
 #gamearea #endgamerow #resigngame {display: none;}
-#gamearea #endgamerow #rematch {display: none;}
+#gamearea #endgamerow #offerrematch {display: none;}
+#gamearea #endgamerow  #rematchoffersent {display: none;}
+#gamearea #endgamerow #acceptrematch {display: none;}
 
 #gamearea.playstate #endgamerow #offerdraw {display: block;}
 #gamearea.playstate #endgamerow #resigngame {display: block;}
@@ -347,9 +344,17 @@ h1#cylinder-title {
 #gamearea.drawreceived #endgamerow #resigngame {display: block;}
 
 #gamearea.gameover #endgamerow #gameovermsg {display: block;}
-#gamearea.gameover #endgamerow #rematch {display: block;}
+#gamearea.gameover #endgamerow #offerrematch {display: block;}
 
-#gamearea.gameover {
+#gamearea.rematchsent #endgamerow #gameovermsg {display: block;}
+#gamearea.rematchsent #endgamerow #rematchoffersent {display: block;}
+
+#gamearea.rematchreceived #endgamerow #gameovermsg {display: block;}
+#gamearea.rematchreceived #endgamerow #acceptrematch {display: block;}
+
+#gamearea.gameover #boardarea,
+#gamearea.rematchsent #boardarea,
+#gamearea.rematchreceived #boardarea{
 	filter: grayscale(0.7);
 }
 
@@ -371,7 +376,7 @@ h1#cylinder-title {
 	margin: 0;
 	margin-left: 20px;
 	line-height: 50px;
-	color: rgb(255,255,255);
+	color: rgba(var(--tricol), 1);
 }
 
 #sharearea .clipboard-copy {
@@ -384,7 +389,7 @@ h1#cylinder-title {
 
 .popup {
 	display: none;
-	color: white;
+	color: rgba(var(--tricol), 1);
 	top: 50%;
 	transform: translateY(-50%);
 	position: absolute;
@@ -419,7 +424,7 @@ h1#cylinder-title {
 	height: 40px;
 	width: 1px;
 	margin-left: 20px;
-	border-left: white 1px solid;
+	border-left: rgba(var(--tricol), 1) 1px solid;
 }
 .popup .popupcrossleft {transform: rotate(45deg);}
 .popup .popupcrossright {	transform: rotate(315deg);}
@@ -438,7 +443,7 @@ h1#cylinder-title {
 	margin:auto;
 	display:none;
 	padding:10px;
-	color: white;
+	color: rgba(var(--tricol), 1);
 }
 
 #commonboard {
@@ -545,7 +550,7 @@ h1#cylinder-title {
 #cylinderarea {
 	display: grid;
 	perspective: calc(7*var(--relativesize));
-	box-shadow: rgba(20, 20, 20,0.4) 0px 0px 30px 30px;
+	box-shadow: rgba(var(--secbgcol),0.4) 0px 0px 30px 30px;
 	width: calc(2*var(--relativesize));
 	height: calc(8*var(--relativesize));
 	margin: calc(var(--relativesize)) auto;
@@ -584,7 +589,7 @@ h1#cylinder-title {
 	flex-direction: row;
 	display: flex;
 	margin: auto;
-	box-shadow: rgba(20, 20, 20,0.3) 0 0 40px 10px;
+	box-shadow: rgba(var(--secbgcol),0.3) 0 0 40px 10px;
 }
 
 #square .col {

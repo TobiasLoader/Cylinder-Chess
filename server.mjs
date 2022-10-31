@@ -1,4 +1,4 @@
-import { TimeFormat, printTimeFormat } from './public/js/time.mjs';
+import { TimeFormat, printTimeFormat, readTimeStr } from './public/js/time.mjs';
 
 // Implement the old require function
 import { createRequire } from 'module'
@@ -8,6 +8,7 @@ var gameid = 1000;
 var gamehost = {};
 var numplayers = {};
 var roomsockets = {};
+var initroomtimes = {};
 var roomtimes = {};
 var roomboardtype = {};
 var roomplayercolours = {};
@@ -82,18 +83,8 @@ io.sockets.on('connection', function (socket) {
         console.log('room ' + room.toString() + ' created by ' + user);
         gamehost[room] = user;
         roomsockets[room] = {};
-        if (timestr=='u'){
-            roomtimes[room] = {
-                1: new TimeFormat(true),
-                2: new TimeFormat(true)
-            };
-        } else {
-            const timearray = timestr.split('+');
-            roomtimes[room] = {
-                1: new TimeFormat(false,parseInt(timearray[0]), 0, parseInt(timearray[1])),
-                2: new TimeFormat(false,parseInt(timearray[0]), 0, parseInt(timearray[1]))
-            };
-        }
+        initroomtimes[room] = timestr;
+        roomtimes[room] = readTimeStr(timestr);
         roomboardtype[room] = boardtype;
         if (colour=='w') roomplayercolours[room] = {1:'w',2:'b'};
         else if (colour=='b') roomplayercolours[room] = {1:'b',2:'w'};
@@ -118,12 +109,14 @@ io.sockets.on('connection', function (socket) {
                 roomsockets[room][numplayers[room]] = socket;
                 console.log('joined room ' + room.toString())
                 console.log('there are now ' + numplayers[room] + ' players')
-                socket.emit('status', 'joined');
+                socket.emit('joined',room);
                 if (numplayers[room] == 2) {
-                    io.sockets.in(room).emit('status', 'full');
+                    io.sockets.in(room).emit('roomstatus', 'full');
                     roomready[room] = 0;
                     for (var i=1; i<=2; i+=1)
-                        roomsockets[room][i].emit('setup', i, roomboardtype[room], roomplayercolours[room][i], roomtimes[room]);
+                        roomsockets[room][i].emit('setup', i, roomboardtype[room],  roomplayercolours[room][i], roomtimes[room]);
+                } else {
+                    socket.emit('roomstatus', 'not full');
                 }
             } else {
                 socket.emit('error', 'the room is already full, you cannot join')
@@ -149,24 +142,25 @@ io.sockets.on('connection', function (socket) {
         console.log('move', movedata, room, player);
         io.sockets.in(room).emit('boardmove', movedata, roomtimes[room]);
         console.log(player);
+        console.log(roomsockets[room][3 - player]);
         roomsockets[room][3 - player].emit('play');
         console.log('play command sent');
     });
 
     socket.on('outoftime', function (room, player) {
-        io.sockets.in(room).emit('victory', 3-player, 'You Won!',"You're opponent ran out of time.",'Out of Time!','You opponent won because you ran out of time.');
+        io.to(room).emit('victory', 3-player, 'You Won!','You\'re opponent ran out of time.','Out of Time!','You\'re opponent won because you ran out of time.');
     });
 
     socket.on('resign', function (room, player) {
-        io.sockets.in(room).emit('victory', 3-player, 'You Won!',"You're opponent resigned the game.",'Resigned','You opponent won because you ran out of time.');
+        io.to(room).emit('victory', 3-player, 'You Won!','You\'re opponent resigned the game.','Resigned','You\'re opponent won because you resigned the game.');
     });
     
     socket.on('checkmate', function (room, player) {
-        io.sockets.in(room).emit('victory', 3-player, 'CHECKMATE!', 'You won the game!',  'CHECKMATE!', "You're opponent won the game because they put you into checkmate. Your king was in check and you had no legal moves.");
+        io.to(room).emit('victory', 3-player, 'CHECKMATE!', 'You won the game!',  'CHECKMATE!', 'You\'re opponent won the game because they put you into checkmate. Your king was in check and you had no legal moves.');
     });
     
     socket.on('stalemate', function (room, player) {
-        io.sockets.in(room).emit('draw', 3-player, 'STALEMATE!', 'The game was a draw,it ended in a stalemate.');
+        io.to(room).emit('draw', 3-player, 'STALEMATE!', 'The game was a draw,it ended in a stalemate.');
     });
     
     socket.on('drawoffer', function (room, player) {
@@ -179,6 +173,24 @@ io.sockets.on('connection', function (socket) {
     
     socket.on('drawaccept', function (room, player) {
         io.sockets.in(room).emit('draw', 3-player, 'DRAW!', '🤝 The players agreed to a draw.');
+    });
+    
+    socket.on('rematchoffer', function (room, player) {
+        roomsockets[room][3 - player].emit('rematchoffer');
+    });
+    
+    socket.on('declinerematch', function (room) {
+        io.sockets.in(room).emit('rematchdeclined');
+    });
+
+    socket.on('rematchaccept', function (room, player) {
+        console.log('rematch logic');
+        roomtimes[room] = readTimeStr(initroomtimes[room]);
+        if (roomplayercolours[room][1]=='w') roomplayercolours[room] = {1:'b',2:'w'};
+        else roomplayercolours[room] = {1:'w',2:'b'};
+        roomready[room] = 0;
+        console.log('rematch server set up done');
+        io.sockets.in(room).emit('rematch',roomtimes[room]);
     });
 
     socket.on('leaveroom', function (room,player) {

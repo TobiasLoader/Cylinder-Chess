@@ -2,31 +2,43 @@ import {GhostPiece} from './chess.mjs';
 
 export class GameState {
 	constructor(){
-		this.resetgamestate();
+		this.resetstate();
 	}
 	
-	resetgamestate(){
+	resetstate(){
 		this.socket = null;
-		this.mymove = false;
-		this.gameover = false;
 		this.myroom = 0;
 		this.boardtype = '';
 		this.myplayerid = 0;
 		this.opponentid = 0;
+		this.mycolour = '';
+		this.resetingamestate();
+	}
+	
+	resetingamestate(){
+		this.mymove = false;
+		this.gameover = false;
 		this.mytime = null;
 		this.opponenttime = null;
 		this.mymovemillis = 0;
 		this.opmovemillis = 0;
 		this.movehistory = [];
-		this.mycolour = '';
 		this.currentpiece = '';
 		this.mytimerticking = null;
 		this.optimerticking = null;
 		this.startedmove = false;
 		this.drawopen = false;
+		this.rematchopen = false;
 		this.boardpiecemap = {};
 		this.validmoves = {};
 		console.log('reset game state')
+	}
+	
+	rematchchange(time){
+		if (this.mycolour=='w') this.mycolour = 'b';
+		else if (this.mycolour=='b') this.mycolour = 'w';
+		this.mytime = time[this.myplayerid];
+		this.opponenttime = time[this.opponentid];
 	}
 	
 	isenemy(piece){return this.mycolour == piece.enemycolour;}
@@ -52,6 +64,10 @@ export class GameState {
 			}
 		}
 		return false;
+	}
+	
+	meInCheck(){
+		return this.inCheck(this.boardpiecemap);
 	}
 	
 	allCandidateMoves(){
@@ -96,7 +112,7 @@ export class GameState {
 		this.validmoves = myvalidmoves;
 	}
 	
-	inCheckmate(){
+	noValidMoves(){
 		var numvalidmoves = 0;
 		for (const [position, moves] of Object.entries(this.validmoves)){
 			numvalidmoves += moves.length;

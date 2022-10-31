@@ -42,3 +42,18 @@ export function setToZero(t) {
   t.settozero = true;
   return t;
 }
+
+export function readTimeStr(timestr) {
+  if (timestr=='u'){
+      return {
+          1: new TimeFormat(true),
+          2: new TimeFormat(true)
+      };
+  } else {
+      const timearray = timestr.split('+');
+      return {
+          1: new TimeFormat(false,parseInt(timearray[0]), 0, parseInt(timearray[1])),
+          2: new TimeFormat(false,parseInt(timearray[0]), 0, parseInt(timearray[1]))
+      };
+  }
+}

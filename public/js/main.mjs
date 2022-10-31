@@ -27,7 +27,9 @@ const leaveroom = $("#leaveroom");
 const offerdraw = $("#offerdraw");
 const acceptdraw = $("#acceptdraw");
 const resigngame = $("#resigngame");
-const rematch = $("#rematch");
+const offerrematch = $("#offerrematch");
+const acceptrematch = $("#acceptrematch");
+
 const gameovermsg =  $('#gameovermsg');
 const drawoffersent =  $('#drawoffersent');
 const mainpopup = $('#main > .popup .popupcontent');
@@ -85,29 +87,13 @@ function updateOpTime(){
   updatetimeHTML();
   localstate.opmovemillis = Date.now();
 }
-
-function logsocketresponses() {
-  localstate.socket.on('error', (msg) => {
-    console.log('error: ' + msg);
-    if (msg == 'nosuchroom') popUpNoSuchRoom();
-  });
-}
-
 function waitingroom() {
-  localstate.myroom = localstate.socket.room;
   updateroomnumber();
   console.log('waiting room is joined');
   setInitState('state-waitingarea');
 }
 
-function setupgame() {
-  localstate.myroom = localstate.socket.room;
-  console.log(localstate);
-  updateroomnumber();
-  console.log('game is joined');
-  setInitState('state-gamearea');
-  setInGameState('playstate');
-
+function listensocket(){
   localstate.socket.on('setup', (id, board, col, time) => {
     localstate.boardtype = board;
     localstate.myplayerid = id;
@@ -119,21 +105,94 @@ function setupgame() {
     localstate.opponenttime = time[localstate.opponentid];
     fetchBoard(localstate.boardtype,localstate.mycolour,begingame);
   });
-
+  
+  // localstate.socket.on('status', (msg, room) => {
+  //   if (msg == 'joined') {
+  //     console.log('joined')
+  //     localstate.socket.room = room;
+  //     setupgame();
+  //   }
+  // });
+  
+  localstate.socket.on('joined', (room) => {
+    console.log('socket joined');
+    localstate.myroom = room;
+  });
+  
+  localstate.socket.on('roomstatus', (fullstatus) => {
+    console.log('room status: ' + fullstatus)
+    if (fullstatus == 'not full') waitingroom();
+    else if (fullstatus == 'full') setupgame();
+  });
+  
+  localstate.socket.on('kick', function() {
+    console.log('kicked');
+    setInitState('state-home');
+    localstate.socket.emit('disconnect');
+  });
+  
+  localstate.socket.on('error', (msg) => {
+    console.log('error: ' + msg);
+    if (msg == 'nosuchroom') popUpNoSuchRoom();
+  });
+  
+  localstate.socket.on('roomready', function () {
+    console.log('room ready');
+    setInGameState('playstate');
+    gameplay();
+  });
+  
+  localstate.socket.on('play', function () {
+    console.log('received play command');
+    onmymove();
+  });
+  
+  localstate.socket.on('boardmove', function (movedata, time) {
+    resultMovePieces(localstate.mycolour,movedata);
+    resetClasses();
+    localstate.mytime = time[localstate.myplayerid];
+    localstate.opponenttime = time[localstate.opponentid];
+    $('#movemade').text('move: from ' + movedata['from'] + ', to ' + movedata['to']);
+    localstate.movehistory.push(movedata);
+    console.log('move played on board', movedata);
+    console.log(strPrettyTimeFormat(time[localstate.myplayerid]), strPrettyTimeFormat(time[localstate.opponentid]));
+    console.log('-----');
+  });
+  
+  localstate.socket.on('drawoffer', function () {
+    setInGameState('drawreceived')
+    localstate.drawopen = true;
+  });
+  localstate.socket.on('drawdeclined', function () {
+    setInGameState('playstate')
+    localstate.drawopen = false;
+  });
+  localstate.socket.on('rematchoffer', function () {
+    setInGameState('rematchreceived')
+    localstate.rematchopen = true;
+  });
+  localstate.socket.on('rematchdeclined', function () {
+    setInGameState('gameover')
+    localstate.rematchopen = false;
+  });
+  
   localstate.socket.on('victory',function(player,wintitle,winmsg,losetitle,losemsg){
     if (!localstate.gameover){
       popUpGameOver();
       gameOver();
-      if (player==3-localstate.myplayerid && msg=='ran out of time') localstate.opponenttime = setToZero(localstate.opponenttime)
+      console.log(player,wintitle,winmsg,losetitle,losemsg);
+      console.log(player==3-localstate.myplayerid);
       if (player==localstate.myplayerid) {
         mainpopup.append('<h2>'+wintitle+'</h2><p>'+winmsg+'</p>');
         gameovermsg.append('VICTORY!');
-        // button to 'Play Again?'
       }
       else if (player==3-localstate.myplayerid)  {
+        console.log(player);
         mainpopup.append('<h2>'+losetitle+'</h2><p>'+losemsg+'</p>');
         gameovermsg.append('DEFEAT');
-        // button to 'Try Again?'
+        if (losetitle=='Out of Time!') {
+          localstate.opponenttime = setToZero(localstate.opponenttime);
+        }
       }
       else {
         // mainpopup.append('<h2>Player ' + player + ' won!</h2><p>Their opponent ' + msg+'</p>');
@@ -150,16 +209,40 @@ function setupgame() {
       gameovermsg.append('DRAW!');
     }
   });
+  
+  localstate.socket.on('rematch',function(time){
+    console.log('rematch start process');
+    localstate.resetingamestate();
+    localstate.rematchchange(time);
+    gameovermsg.empty();
+    boardarea.empty();
+    // $('.capturearea').empty();
+    // $('.piece').remove();
+    // $('.mypiece').removeClass('mypiece');
+    fetchBoard(localstate.boardtype,localstate.mycolour,begingame);
+  });
+  
+  localstate.socket.on('leaveserverconfirm', function() {
+    localstate.socket.emit('leaveclientconfirm');
+    popUpGameOver();
+  });
+  
+  localstate.socket.on('leaveacknowledged', function() {
+    leaveaction();
+  });
+}
+
+function setupgame() {
+  updateroomnumber();
+  console.log('game is joined');
+  setInitState('state-gamearea');
+  setInGameState('playstate');
 }
 
 function begingame(){
   updatetimeHTML();
   initBoard(localstate.boardtype,localstate.mycolour);
   localstate.socket.emit('ready',localstate.myroom);
-  localstate.socket.on('roomready', function () {
-    console.log('room ready');
-    gameplay();
-  });
 }
 
 function gameplay() {
@@ -167,31 +250,7 @@ function gameplay() {
   localstate.opmovemillis = Date.now();
   localstate.mytimerticking = setInterval(function(){if (!localstate.gameover && localstate.mymove) updateMyTime(false)},1000);
   localstate.optimerticking = setInterval(function(){if (!localstate.gameover && !localstate.mymove) updateOpTime()},1000);
-
   console.log('gameplay begun');
-  localstate.socket.on('play', function () {
-    console.log('received play command');
-    onmymove();
-  });
-  localstate.socket.on('boardmove', function (movedata, time) {
-    resultMovePieces(localstate.mycolour,movedata);
-    resetClasses();
-    localstate.mytime = time[localstate.myplayerid];
-    localstate.opponenttime = time[localstate.opponentid];
-    $('#movemade').text('move: from ' + movedata['from'] + ', to ' + movedata['to']);
-    localstate.movehistory.push(movedata);
-    console.log('move played on board', movedata);
-    console.log(strPrettyTimeFormat(time[localstate.myplayerid]), strPrettyTimeFormat(time[localstate.opponentid]));
-    console.log('-----');
-  });
-  localstate.socket.on('drawoffer', function () {
-    setInGameState('drawreceived')
-    localstate.drawopen = true;
-  });
-  localstate.socket.on('drawdeclined', function () {
-    setInGameState('playstate')
-    localstate.drawopen = false;
-  });
 }
 
 function onmymove() {
@@ -200,7 +259,12 @@ function onmymove() {
   localstate.mymovemillis = Date.now();
   console.log(localstate.inCheck(localstate.boardpiecemap));
   localstate.findValidMoves();
-  if (localstate.inCheckmate()) localstate.socket.emit('checkmate',localstate.myroom,localstate.myplayerid);
+  if (localstate.noValidMoves()){
+    if (localstate.meInCheck())
+      localstate.socket.emit('checkmate',localstate.myroom,localstate.myplayerid);
+    else
+      localstate.socket.emit('stalemate',localstate.myroom,localstate.myplayerid);
+  }
   else listenMoveMade();
 }
 function offmymove() {
@@ -226,7 +290,7 @@ function gameOver(){
 
 function leaveaction() {
   gameOver();
-  localstate.resetgamestate();
+  localstate.resetstate();
   boardarea.empty();
   gameovermsg.empty();
   mainpopup.empty();
@@ -256,22 +320,7 @@ createroom.click(function(){
       localstate.socket = io();
       localstate.socket.emit('createroom', data['room'], 'user-1', getStartGameOption('colour'), getStartGameOption('time'), getStartGameOption('surface'));
       localstate.socket.emit('join', data['room']);
-      logsocketresponses();
-      localstate.socket.on('status', (msg) => {
-        if (msg == 'joined') {
-          console.log('socket is joined')
-          localstate.socket.room = data['room'];
-          waitingroom();
-          localstate.socket.on('status', (msg) => {
-            if (msg == 'full') setupgame();
-          });
-        }
-      });
-      localstate.socket.on('kick', function() {
-        console.log('kicked');
-        setInitState('state-home');
-        localstate.socket.emit('disconnect');
-      });
+      listensocket();
     }
   });
 });
@@ -284,14 +333,7 @@ joinroom.click(function () {
   localstate.socket = io();
   var roomnum = Number.parseInt(document.getElementById('roomnum').value);
   if (roomnum != undefined && roomnum >= 1000) localstate.socket.emit('join', roomnum);
-  logsocketresponses();
-  localstate.socket.on('status', (msg) => {
-    if (msg == 'joined') {
-      console.log('joined')
-      localstate.socket.room = roomnum;
-      setupgame();
-    }
-  });
+  listensocket();
 });
 
 stopjoinroom.click(function(e){setInitState('state-home',e)});
@@ -361,15 +403,19 @@ resigngame.click(function(){
   localstate.socket.emit('resign',localstate.myroom,localstate.myplayerid);
 });
 
+offerrematch.click(function(){
+  localstate.socket.emit('rematchoffer',localstate.myroom,localstate.myplayerid);
+  setInGameState('rematchsent');
+  localstate.rematchopen = true;
+});
+
+acceptrematch.click(function(){
+  localstate.socket.emit('rematchaccept',localstate.myroom,localstate.myplayerid);
+  localstate.rematchopen = false;
+});
+
 leaveroom.click(function () {
   localstate.socket.emit('leaveroom',localstate.myroom,localstate.myplayerid);
-  localstate.socket.on('leaveserverconfirm', function() {
-    localstate.socket.emit('leaveclientconfirm');
-    popUpGameOver();
-  });
-  localstate.socket.on('leaveacknowledged', function() {
-    leaveaction();
-  });
 });
 
 leavewaitingroom.click(function(){
@@ -402,7 +448,7 @@ copytexts.click(function(){
 });
 
 backsharearea.click(function(){
-  setInitState('state-home')
+  setInitState('state-home');
 });
 
 $(window).on('resize',function(){
