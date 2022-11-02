@@ -53,9 +53,9 @@ export function initBoard(boardtype,mycolour){
 export function resizeCylinderBoard(){
   const w = $(window).width();
   if (w < 600) {
-    document.getElementById('cylinderarea').style.setProperty("--relativesize",(Math.min($('#boardarea').width()/7,$(window).height()/13)).toString()+"px");
+    document.getElementById('commonboard').style.setProperty("--relativesize",(Math.min($('#boardarea').width()/7,$(window).height()/13)).toString()+"px");
   } else {
-    document.getElementById('cylinderarea').style.setProperty("--relativesize",(Math.min($('#boardarea').width()/8,$(window).height()/15)).toString()+"px");
+    document.getElementById('commonboard').style.setProperty("--relativesize",(Math.min($('#boardarea').width()/8,$(window).height()/15)).toString()+"px");
   }
 }
 
@@ -139,7 +139,7 @@ function cylinderBoardGame(commonboard,mycolour){
 }
 
 export function resizeSquareBoard(){
-  document.getElementById('squarearea').style.setProperty("--relativesize",(Math.min($('#boardarea').width()/8,$(window).height()/13)).toString()+"px");
+  document.getElementById('commonboard').style.setProperty("--relativesize",(Math.min($('#boardarea').width()/8,$(window).height()/13)).toString()+"px");
 }
 
 function squareBoardGame(commonboard,mycolour){
@@ -163,12 +163,24 @@ function startingChessPieces(mycolour){
   }
 }
 
+function placePieceHighlight(pos){
+  $('#'+pos).prepend('<div class="replacepiecehighlight"></div>');
+}
+
 export async function moveMade(frompos){
   $('#'+frompos).addClass('piecechosen');
   const validcandidates = localstate.validmoves[frompos];
+  console.log(validcandidates);
   validcandidates.forEach(function (movedata){
     $('#'+movedata.move).addClass('validcandidate');
-    if (movedata.status=='attack') $('#'+movedata.move).addClass('tocapture-'+movedata['capture']);
+    if (movedata.status=='attack') $('#'+movedata.move).addClass('capturecandidate');
+    if (localstate.showmoves){
+      if (localstate.boardpiecemap[movedata.move]==undefined) {
+        localstate.boardpiecemap[frompos].placeSilhouette(movedata.move);
+      } else {
+        placePieceHighlight(movedata.move);
+      }
+    }
   });
   return new Promise((resolve) => {
     $('.validcandidate').click(function () {
@@ -185,15 +197,19 @@ export async function moveMade(frompos){
 }
 
 
-export function resultMovePieces(playercolour,moveresult){
+export function resultMovePieces(playercolour,res){
   resetPlayedLastMovedFlags(playercolour);
-  if ('capture' in moveresult && moveresult['capture']!='') {
-    localstate.boardpiecemap[moveresult['from']].capture(localstate.boardpiecemap[moveresult['capture']]);
-    delete localstate.boardpiecemap[moveresult['capture']];
+  if ('capture' in res && res['capture']!='') {
+    localstate.boardpiecemap[res['from']].capture(localstate.boardpiecemap[res['capture']]);
+    delete localstate.boardpiecemap[res['capture']];
   }
-  localstate.boardpiecemap[moveresult['from']].move(playercolour,moveresult['to']);
-  localstate.boardpiecemap[moveresult['to']] = localstate.boardpiecemap[moveresult['from']];
-  delete localstate.boardpiecemap[moveresult['from']];
+  const movereturn = localstate.boardpiecemap[res['from']].move(playercolour,res['to']);
+  console.log(movereturn);
+  if (movereturn['queened']==false) {
+    console.log('not queened');
+    localstate.boardpiecemap[res['to']] = localstate.boardpiecemap[res['from']];
+  }
+  delete localstate.boardpiecemap[res['from']];
   console.log('board state after: ',localstate.boardpiecemap);
 }
 

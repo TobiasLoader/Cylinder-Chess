@@ -12,6 +12,7 @@ export class GameState {
 		this.myplayerid = 0;
 		this.opponentid = 0;
 		this.mycolour = '';
+		this.showmoves = true;
 		this.resetingamestate();
 	}
 	
@@ -87,11 +88,11 @@ export class GameState {
 		console.log('start valid search')
 		var cms = this.allCandidateMoves();
 		var myvalidmoves = {};
+		// console.log(Object.entries(this.boardpiecemap));
 		for (const [position, piece] of Object.entries(this.boardpiecemap)){
 			if (this.ismypiece(piece)) {
 				myvalidmoves[position] = [];
 				for (const candmove of cms[position]){
-					// console.log(position,candmove);
 					var dupboardmap = {};
 					for (const [p1, p2] of Object.entries(this.boardpiecemap)){
 						if (p1!=candmove.move){

@@ -22,6 +22,7 @@ export class Piece {
     this.pos = pos;
     this.prevpos = pos;
     this.src = 'assets/pieces/'+this.colour+'/'+this.name+'.svg';
+    this.silhouette = 'assets/pieces/silhouettes/'+this.name+'.svg';
     this.hasmoved = false;
     this.iscaptured = false;
     this.relativemovegroups = {};
@@ -48,13 +49,15 @@ export class Piece {
     if (playercolour==this.colour) $('#'+this.pos).addClass('mypiece');
     $('#'+this.pos).append('<img id="'+this.id+'" class="'+colourname[this.colour]+' '+this.name+' piece" src="'+this.src+'" alt="'+this.name+'">');
   }
+  placeSilhouette(pos){
+    $('#'+pos).append('<img class="silhouette '+this.name+'" src="'+this.silhouette+'" alt="silhouette '+this.name+'">');
+  }
   removePiece(){
     $('#'+this.pos).removeClass('mypiece');
     $('#'+this.pos).removeClass(this.colour+'cell');
     $('#'+this.id).remove();
   }
   addToCapturedPieces(mycol){
-    console.log('add to capture pieces')
     const imgtoadd = '<img id="'+this.id+'" class="captured '+colourname[this.colour]+' '+this.name+' piece" src="'+this.src+'" alt="'+this.name+'">';
     if (this.colour == mycol) {
       $('#mycapture').addClass('hasimgs');
@@ -72,6 +75,7 @@ export class Piece {
     this.hasmoved = true;
     this.placePiece(playercolour);
     this.playedlastmove = true;
+    return {'queened':false};
   }
 
   capture(piece){
@@ -80,7 +84,7 @@ export class Piece {
   }
 
   beCaptured(mycol){
-    console.log('capture ' + this.pos + this.id)
+    console.log('capture ' + this.pos + ', ' + this.id)
     this.iscaptured = true;
     this.removePiece();
     this.addToCapturedPieces(mycol);
@@ -222,21 +226,29 @@ export class Pawn extends Piece {
   move(playercolour,newpos){
     if (!this.hasmoved) this.madesinglemove = true;
     else if (this.madesinglemove) this.madesinglemove = false;
-    super.move(playercolour,newpos);
+    this.removePiece();
+    this.pos = newpos;
+    this.hasmoved = true;
+    this.playedlastmove = true;
     if (this.queeningCheck()) {
-      queening(this,new Queen(this.id,this.colour,this.pos));
+      queening(this,new Queen(this.id,this.colour,this.pos),playercolour);
+      return {'queened':true};
     } else {
       localstate.boardpiecemap[newpos] = this;
+      this.placePiece(playercolour);
+      return {'queened':false};
     }
   }
 }
 
-function queening(pawn,queen){
+function queening(pawn,queen,playercolour){
+  // once pawn is on square to be queened
   console.log(pawn,queen)
-  pawn.removePiece();
-  queen.placePiece(queen.colour);
-  delete localstate.boardpiecemap[pawn.pos];
-  localstate.boardpiecemap[pawn.pos] = queen;
+  const pos = pawn.pos;
+  // delete localstate.boardpiecemap[pos];  
+  localstate.boardpiecemap[pos] = queen;
+  localstate.boardpiecemap[pos].placePiece(playercolour);
+  console.log(localstate.boardpiecemap[queen.pos])
 }
 
 export class Queen extends Piece {

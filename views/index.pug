@@ -7,7 +7,7 @@ head
 	link(rel='stylesheet', href='styles/mobile-styles.css')
 	meta(name="viewport", content="width=device-width, initial-scale=1.0")
 
-body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; --bgcol: 40,40,40;  --secbgcol: 10,10,10`)
+body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; --bgcol: 40,40,40;  --secbgcol: 10,10,10; --darkpricol:	39, 102, 82;`)
 	img#cc-graphic(alt='graphic',src='/assets/cc-logo.svg')
 	include ui-components
 	#main.state-home
@@ -45,6 +45,7 @@ body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; 
 				h3#mytime
 				h3#opponenttime(style='display:inline;')
 			#boardarea
+				+popup('boardpopup')
 		#sharearea
 			h2.titlebanner
 				| please share:
@@ -53,10 +54,10 @@ body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; 
 				img.clipboard-copy(alt='copy to clipboard',src='/assets/light-clipboard-copy.svg')
 			.buttonrow
 				+subbutton('backsharearea','back')
-		+popup()
+		+popup('generalpopup')
 	h1#cylinder-title
 		| @ cylinderchess.com
 	script(src='/js/jquery.min.js')
 	script(src='/socket.io/socket.io.js')
-	script(type='module' src='/js/main.mjs')
+	script(type='module', src='/js/main.mjs')
 	script(src='/js/ui-components.js')

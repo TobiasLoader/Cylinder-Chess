@@ -1,3 +1,7 @@
+// ul#roomsize.game-option
+//   +gameoption('roomsize-2','roomsize','room size 2','2',true)
+//   +gameoption('roomsize-3','roomsize','room size 3','3',false)
+
 import {strPrettyTimeFormat, updateTimeTimeFormat, updateAfterMove, setToZero } from './time.mjs';
 import {initBoard, resizeCylinderBoard, resizeSquareBoard, moveMade, resultMovePieces} from './game.mjs';
 import {GameState} from './gamestate.mjs';
@@ -32,7 +36,9 @@ const acceptrematch = $("#acceptrematch");
 
 const gameovermsg =  $('#gameovermsg');
 const drawoffersent =  $('#drawoffersent');
-const mainpopup = $('#main > .popup .popupcontent');
+const generalpopup = $('#generalpopup .popupcontent');
+const boardpopup = $('#boardpopup .popupcontent');
+const popups = $('.popup .popupcontent')
 const popupcrosses = $('.popupcross');
 
 function setInitState(state,event){
@@ -54,7 +60,7 @@ function fetchBoard(board,col,afterfetch) {
     return response.text();
   })
   .then((html) => {
-    boardarea.append(html);
+    boardarea.prepend(html);
     afterfetch();
   });
 }
@@ -94,12 +100,12 @@ function waitingroom() {
 }
 
 function listensocket(){
-  localstate.socket.on('setup', (id, board, col, time) => {
+  localstate.socket.on('setup', (id, board, col, time, showmoves) => {
     localstate.boardtype = board;
     localstate.myplayerid = id;
     localstate.opponentid = 3 - id;
     localstate.mycolour = col;
-    console.log(localstate.mycolour)
+    localstate.showmoves = showmoves;
     console.log('my player id: ' + id);
     localstate.mytime = time[localstate.myplayerid];
     localstate.opponenttime = time[localstate.opponentid];
@@ -134,6 +140,8 @@ function listensocket(){
   localstate.socket.on('error', (msg) => {
     console.log('error: ' + msg);
     if (msg == 'nosuchroom') popUpNoSuchRoom();
+    if (msg == 'roomabandoned') popUpRoomAbandoned();
+    if (msg == 'roomfull') popUpRoomFull();
   });
   
   localstate.socket.on('roomready', function () {
@@ -183,19 +191,18 @@ function listensocket(){
       console.log(player,wintitle,winmsg,losetitle,losemsg);
       console.log(player==3-localstate.myplayerid);
       if (player==localstate.myplayerid) {
-        mainpopup.append('<h2>'+wintitle+'</h2><p>'+winmsg+'</p>');
+        boardpopup.append('<h2>'+wintitle+'</h2><p>'+winmsg+'</p>');
         gameovermsg.append('VICTORY!');
       }
       else if (player==3-localstate.myplayerid)  {
-        console.log(player);
-        mainpopup.append('<h2>'+losetitle+'</h2><p>'+losemsg+'</p>');
+        boardpopup.append('<h2>'+losetitle+'</h2><p>'+losemsg+'</p>');
         gameovermsg.append('DEFEAT');
         if (losetitle=='Out of Time!') {
           localstate.opponenttime = setToZero(localstate.opponenttime);
         }
       }
       else {
-        // mainpopup.append('<h2>Player ' + player + ' won!</h2><p>Their opponent ' + msg+'</p>');
+        // boardpopup.append('<h2>Player ' + player + ' won!</h2><p>Their opponent ' + msg+'</p>');
         // gameovermsg.append('Player ' + player + ' won');
       }
     }
@@ -205,7 +212,7 @@ function listensocket(){
     if (!localstate.gameover){
       popUpGameOver();
       gameOver();
-      mainpopup.append('<h2>'+title+'</h2><p>'+msg+'</p>');
+      boardpopup.append('<h2>'+title+'</h2><p>'+msg+'</p>');
       gameovermsg.append('DRAW!');
     }
   });
@@ -215,7 +222,7 @@ function listensocket(){
     localstate.resetingamestate();
     localstate.rematchchange(time);
     gameovermsg.empty();
-    boardarea.empty();
+    boardarea.find('#commonboard').remove();
     // $('.capturearea').empty();
     // $('.piece').remove();
     // $('.mypiece').removeClass('mypiece');
@@ -257,7 +264,7 @@ function onmymove() {
   localstate.mymove = true;
   body.addClass('mymove');
   localstate.mymovemillis = Date.now();
-  console.log(localstate.inCheck(localstate.boardpiecemap));
+  console.log('in check ' + localstate.inCheck(localstate.boardpiecemap).toString());
   localstate.findValidMoves();
   if (localstate.noValidMoves()){
     if (localstate.meInCheck())
@@ -291,9 +298,9 @@ function gameOver(){
 function leaveaction() {
   gameOver();
   localstate.resetstate();
-  boardarea.empty();
+  boardarea.find('#commonboard').remove();
   gameovermsg.empty();
-  mainpopup.empty();
+  boardpopup.empty();
   setInGameState();
   setInitState('state-home');
   console.log('left room');
@@ -309,16 +316,16 @@ createroom.click(function(){
   fetch("/game_init", {
     method: "POST",
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 'type': 'init' })
+    body: JSON.stringify({ 'request': 'init_room' })
   }).then(function (response) {
     return response.text();
   }).then(function (data) {
     console.log('startgame body:');
     data = JSON.parse(data.toString());
     console.log(data);
-    if (data['type'] == 'init') {
+    if (data['request'] == 'init_room') {
       localstate.socket = io();
-      localstate.socket.emit('createroom', data['room'], 'user-1', getStartGameOption('colour'), getStartGameOption('time'), getStartGameOption('surface'));
+      localstate.socket.emit('createroom', data['room'], 'user-1', getStartGameOption('colour'), getStartGameOption('time'), getStartGameOption('surface'),getStartGameOption('showmoves'));
       localstate.socket.emit('join', data['room']);
       listensocket();
     }
@@ -342,12 +349,16 @@ function resetClasses(){
   $('.validcandidate').off( "click");
   $('.piecechosen').removeClass('piecechosen');
   $('.validcandidate').removeClass('validcandidate');
-  for (var i=0; i<8; i+=1){
-    for (var j=0; j<8; j+=1){
-      const c = 'tocapture-'+String.fromCharCode(65+i)+(1+j).toString();
-      $('.'+c).removeClass(c);
-    }
-  }
+  $('.capturecandidate').removeClass('capturecandidate');
+  $('.silhouette').remove();
+  $('.replacepiecehighlight').remove();
+
+  // for (var i=0; i<8; i+=1){
+  //   for (var j=0; j<8; j+=1){
+  //     const c = 'tocapture-'+String.fromCharCode(65+i)+(1+j).toString();
+  //     $('.'+c).removeClass(c);
+  //   }
+  // }
 }
 
 function listenMoveMade(){
@@ -379,12 +390,20 @@ async function makeMove(frompos){
 }
 
 function popUpNoSuchRoom(){
-  mainpopup.append('<h2>OH NOES!</h2><p>No such room exists. Please try a different room id, or start a new game.</p>');
+  generalpopup.append('<h2>OH NOES!</h2><p>No such room exists. Please try a different room id, or start a new game.</p>');
+  main.addClass('popup-active');
+}
+function popUpRoomAbandoned(){
+  generalpopup.append('<h2>OH NOES!</h2><p>The room you tried to enter was abandoned. A game happened here but one (or both) players have left.</p>');
+  main.addClass('popup-active');
+}
+function popUpRoomFull(){
+  generalpopup.append('<h2>OH NOES!</h2><p>The room is at full capacity. Sorry you can\'t enter.</p>');
   main.addClass('popup-active');
 }
 
 popupcrosses.click(function(){
-  mainpopup.empty();
+  popups.empty();
   main.removeClass('popup-active');
 });
 

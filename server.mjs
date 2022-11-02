@@ -12,6 +12,8 @@ var initroomtimes = {};
 var roomtimes = {};
 var roomboardtype = {};
 var roomplayercolours = {};
+var roomshowmoves = {};
+var roomreadynum = {};
 var roomready = {};
 var roomplaying = {};
 
@@ -67,7 +69,7 @@ app.post('/game_init', (req, res) => {
     }).on('end', () => {
         body = Buffer.concat(body).toString();
         body = JSON.parse(body);
-        if (body['type'] == 'init') {
+        if (body['request'] == 'init_room') {
             body['room'] = gameid;
             gameid += 1;
         }
@@ -79,54 +81,61 @@ app.post('/game_init', (req, res) => {
 io.sockets.on('connection', function (socket) {
     console.log('socket initiated');
 
-    socket.on('createroom', function (room, user, colour, timestr, boardtype) {
+    socket.on('createroom', function (room, user, colour, timestr, boardtype, showmoves) {
         console.log('room ' + room.toString() + ' created by ' + user);
         gamehost[room] = user;
         roomsockets[room] = {};
         initroomtimes[room] = timestr;
         roomtimes[room] = readTimeStr(timestr);
         roomboardtype[room] = boardtype;
+        console.log('showmoves ' + showmoves)
+        if (showmoves=='t') roomshowmoves[room] = true;
+        else if (showmoves=='f') roomshowmoves[room] = false;
+        console.log('showmoves ' + roomshowmoves[room].toString())
         if (colour=='w') roomplayercolours[room] = {1:'w',2:'b'};
         else if (colour=='b') roomplayercolours[room] = {1:'b',2:'w'};
         else if (colour=='r') {
             if (Math.random()<0.5) roomplayercolours[room] = {1:'w',2:'b'};
             else roomplayercolours[room] = {1:'b',2:'w'};
         }
+        roomready[room] = false;
+        console.log('reached bottom')
     });
 
     socket.on('join', function (room) {
         if (gamehost[room] == undefined) {
-            socket.emit('error', 'nosuchroom')
+            socket.emit('error', 'nosuchroom');
+        } else if (roomready[room] && !roomplaying[room]){
+            socket.emit('error', 'roomabandoned');
+        } else if (numplayers[room] >= 2) {
+            socket.emit('error', 'roomfull')
         } else {
-            if (numplayers[room] == undefined || numplayers[room] < 2) {
-                socket.join(room);
-                socket.room = room;
-                if (numplayers[room] == undefined) {
-                    numplayers[room] = 1;
-                } else {
-                    numplayers[room] += 1;
-                }
-                roomsockets[room][numplayers[room]] = socket;
-                console.log('joined room ' + room.toString())
-                console.log('there are now ' + numplayers[room] + ' players')
-                socket.emit('joined',room);
-                if (numplayers[room] == 2) {
-                    io.sockets.in(room).emit('roomstatus', 'full');
-                    roomready[room] = 0;
-                    for (var i=1; i<=2; i+=1)
-                        roomsockets[room][i].emit('setup', i, roomboardtype[room],  roomplayercolours[room][i], roomtimes[room]);
-                } else {
-                    socket.emit('roomstatus', 'not full');
-                }
+            socket.join(room);
+            socket.room = room;
+            if (numplayers[room] == undefined) {
+                numplayers[room] = 1;
             } else {
-                socket.emit('error', 'the room is already full, you cannot join')
+                numplayers[room] += 1;
+            }
+            roomsockets[room][numplayers[room]] = socket;
+            console.log('joined room ' + room.toString())
+            console.log('there are now ' + numplayers[room] + ' players')
+            socket.emit('joined',room);
+            if (numplayers[room] == 2) {
+                io.sockets.in(room).emit('roomstatus', 'full');
+                roomreadynum[room] = 0;
+                for (var i=1; i<=2; i+=1)
+                    roomsockets[room][i].emit('setup', i, roomboardtype[room],  roomplayercolours[room][i], roomtimes[room], roomshowmoves[room]);
+            } else {
+                socket.emit('roomstatus', 'not full');
             }
         }
     });
 
     socket.on('ready', function (room) {
-        roomready[room] += 1;
-        if (roomready[room]==numplayers[room]) {
+        roomreadynum[room] += 1;
+        if (roomreadynum[room]==numplayers[room]) {
+            roomready[room] = true;
             roomplaying[room] = true;
             io.sockets.in(room).emit('roomready');
             console.log('all players ready');
@@ -142,7 +151,6 @@ io.sockets.on('connection', function (socket) {
         console.log('move', movedata, room, player);
         io.sockets.in(room).emit('boardmove', movedata, roomtimes[room]);
         console.log(player);
-        console.log(roomsockets[room][3 - player]);
         roomsockets[room][3 - player].emit('play');
         console.log('play command sent');
     });
@@ -188,7 +196,7 @@ io.sockets.on('connection', function (socket) {
         roomtimes[room] = readTimeStr(initroomtimes[room]);
         if (roomplayercolours[room][1]=='w') roomplayercolours[room] = {1:'b',2:'w'};
         else roomplayercolours[room] = {1:'w',2:'b'};
-        roomready[room] = 0;
+        roomreadynum[room] = 0;
         console.log('rematch server set up done');
         io.sockets.in(room).emit('rematch',roomtimes[room]);
     });
@@ -219,6 +227,7 @@ io.sockets.on('connection', function (socket) {
         delete roomboardtype[room];
         delete roomplayercolours[room];
         delete roomtimes[room];
+        delete roomreadynum[room];
         delete roomready[room];
         // for (const [playerid,sock] of Object.entries(roomsockets[room])){
         //     sock.disconnect(0);

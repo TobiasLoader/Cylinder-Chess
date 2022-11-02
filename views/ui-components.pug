@@ -32,8 +32,8 @@ mixin gameoption(id,name,label,value,checkedBool)
     input(type='radio',id=id,name=name,value=value,checked=checkedBool==true)
     label(for=id) !{label}
 
-mixin popup()
-  .popup
+mixin popup(id)
+  .popup(id=id)
     .popupcross
       .crossline.popupcrossleft
       .crossline.popupcrossright
@@ -54,9 +54,9 @@ mixin startgameoptions()
       +gameoption('time-1','time','1m + 5s','1+5',false)
       +gameoption('time-5','time','5m + 0s','5+0',false)
       +gameoption('time-unlimited','time','unlimited','u',true)
-    ul#roomsize.game-option
-      +gameoption('roomsize-2','roomsize','room size 2','2',true)
-      +gameoption('roomsize-3','roomsize','room size 3','3',false)
+    ul#showmoves.game-option
+      +gameoption('moves-t','showmoves','show moves','t',true)
+      +gameoption('moves-f','showmoves','hide moves','f',false)
     .buttonrow
       +subbutton('stopcreateroom','back')
       +subbutton('createroom','create room')

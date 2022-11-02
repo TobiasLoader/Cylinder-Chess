@@ -11,7 +11,7 @@ body {
 	// background: linear-gradient(0deg,rgb(49,58,56) 0%, rgba(var(--bgcol) 45%, rgba(var(--bgcol) 55%, rgb(49,58,56) 100%);
 	// background-position:0% 0%;
 	// background-size: 100% 200%;
-	background: linear-gradient(180deg, rgba(var(--bgcol),1) 0%,rgba(var(--pricol),0.35) 100%);
+	background: linear-gradient(180deg, rgba(var(--bgcol),1) 20%,rgba(var(--pricol),0.35) 100%);
 	height: 100%;
 	width: 100%;
 	margin: 0;
@@ -217,7 +217,7 @@ h1#cylinder-title {
 #roomnum:focus {outline: none;}
 
 #waitingarea {
-	background: rgba(var(--pricol),0.1);
+	background: repeating-linear-gradient( 135deg, transparent, transparent 10px, rgba(0, 0, 0, 0.1) 10px, rgba(0, 0, 0, 0.1) 15px);
 	margin: auto;
 	display: none;
 	padding-top: 100%;
@@ -412,12 +412,13 @@ h1#cylinder-title {
 	top: 50%;
 	transform: translateY(-50%);
 	position: absolute;
-	width: calc(100% - 20px);
+	width: 80%;
 	height: 40%;
-	margin: 0 10px;
+	margin: 0 0 0 10%;
 	min-height: 300px;
 	background: #3c3c3c;
 	box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 50px;
+	border: rgba(var(--tricol), 0.5) 1px solid;
 }
 
 .popupcontent {
@@ -448,13 +449,19 @@ h1#cylinder-title {
 .popup .popupcrossleft {transform: rotate(45deg);}
 .popup .popupcrossright {	transform: rotate(315deg);}
 
-#main.popup-active > #gamearea {
+#main.popup-active {
 	pointer-events: none;
 }
 
-#main.popup-active > .popup {
+#main.popup-active .popup {
 	display: block;
+	pointer-events: auto;
 }
+
+.ingame #generalpopup {
+	display: none !important;
+}
+
 
 //////// GAME PLAY
 
@@ -471,13 +478,15 @@ h1#cylinder-title {
 }
 #commonboard.sqr {
 	flex-direction: column;
+	width: min-content;
+	margin: auto;
 }
 
 #commonboard.cyl .capturearea {
-	width: calc(12*var(--relativesize)/10);
+	width: calc(14*var(--relativesize)/10);
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-	grid-auto-rows: calc(6*var(--relativesize)/10);
+	grid-auto-rows: calc(7*var(--relativesize)/10);
 	margin: 10% 0 auto 0;
 }
 
@@ -490,9 +499,9 @@ h1#cylinder-title {
 	display: grid;
 	grid-auto-flow: column dense;
 	grid-template-rows: 1fr;
-	grid-auto-columns: calc(6*var(--relativesize)/10);
+	grid-auto-columns: calc(5.3*var(--relativesize)/10);
 	width: min-content;
-	padding-right: calc(var(--relativesize)/10);
+	// padding-right: calc(var(--relativesize)/10);
 }
 
 #commonboard.sqr .capturearea.hasimgs {
@@ -503,23 +512,23 @@ h1#cylinder-title {
 #commonboard.cyl #opcapture {}
 
 .cell {
-	background: rgba(var(--pricol),1);
+	background: rgba(var(--seccol),1);
 	position: relative;
 }
 .col:nth-child(even) .cell:nth-child(even),
 .col:nth-child(odd) .cell:nth-child(odd) {
-	background: rgba(var(--seccol),1);
+	background: rgba(var(--pricol),1);
 }
 
 .cell p {
-	color: rgba(var(--seccol),1);
+	color: rgba(var(--pricol),1);
 	font-size: calc(var(--relativesize)/4);
 	margin: 0;
 	position: absolute;
 }
 .col:nth-child(even) .cell:nth-child(even) p,
 .col:nth-child(odd) .cell:nth-child(odd) p {
-	color: rgba(var(--pricol),1);
+	color: rgba(var(--seccol),1);
 }
 
 .piece {
@@ -527,6 +536,14 @@ h1#cylinder-title {
 	display: inline;
 	position: absolute;
 	margin: calc(var(--relativesize)/20);
+}
+
+.silhouette {
+	width: calc(6*var(--relativesize)/10);
+	display: inline;
+	position: absolute;
+	opacity: 0.5;
+	margin: calc(2*var(--relativesize)/10);
 }
 
 .rankid {
@@ -540,12 +557,23 @@ h1#cylinder-title {
 }
 
 .piecechosen {
-	background: rgb(162, 206, 177) !important;
+	background: rgba(var(--secbgcol),1) !important;
+}
+
+.replacepiecehighlight {
+	display: inline;
+	position: absolute;
+	width: var(--relativesize);
+	height: var(--relativesize);
+	background: rgba(var(--darkpricol), 1);
+	border-radius: var(--relativesize);
+	opacity: 0.5;
+	overflow-y: hidden;
 }
 
 .mymove .validcandidate {
 	cursor: pointer;
-	background: rgb(178, 215, 220) !important;
+	// background: rgb(178, 215, 220) !important;
 }
 
 .mymove .mypiece {
@@ -555,13 +583,13 @@ h1#cylinder-title {
 .captured {
 	display: block;
 	position: relative;
-	width: calc(6*var(--relativesize)/10);
+	width: calc(7*var(--relativesize)/10);
 	margin: 0;
 }
 
 #commonboard.sqr .captured {
-	margin: 0;
-	width: calc(7*var(--relativesize)/10);
+	margin: auto 0;
+	width: calc(6*var(--relativesize)/10);
 }
 
 //////// CYLINDER BOARD
@@ -603,6 +631,7 @@ h1#cylinder-title {
 
 #squarearea {
 	display: flex;
+	width: min-content;
 }
 
 #square {
