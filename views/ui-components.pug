@@ -11,16 +11,12 @@ mixin inversemainbuttonicon(buttonid,title,iconsrc)
         h2.mainbuttontitle !{title}
         img(alt='icon',src=iconsrc)
 
-mixin subbutton(id,title)
-  .subbutton(id=id)
+mixin subbutton(id,title,className)
+  .subbutton(id=id,class=className)
     h3.submainbuttontitle !{title}
 
-mixin inversesubbutton(id,title)
-  .inversesubbutton.subbutton(id=id)
-    h3.submainbuttontitle !{title}
-
-mixin subbuttonclass(classname,title)
-  .subbutton(class=classname)
+mixin inversesubbutton(id,title,className)
+  .inversesubbutton.subbutton(id=id,class=className)
     h3.submainbuttontitle !{title}
 
 mixin buttonrowmsg(id,txt)
@@ -58,8 +54,8 @@ mixin startgameoptions()
       +gameoption('moves-t','showmoves','show moves','t',true)
       +gameoption('moves-f','showmoves','hide moves','f',false)
     .buttonrow
-      +subbutton('stopcreateroom','back')
-      +subbutton('createroom','create room')
+      +subbutton('stopcreateroom','back','')
+      +subbutton('createroom','create room','')
   
 mixin joingameoptions()
   #joingame-options
@@ -68,5 +64,5 @@ mixin joingameoptions()
     #roomnumcontainer
       input#roomnum(placeholder='#ROOM')
     .buttonrow
-      +subbutton('stopjoinroom','back')
-      +subbutton('joinroom','join room')
+      +subbutton('stopjoinroom','back','')
+      +subbutton('joinroom','join room','')

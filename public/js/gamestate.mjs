@@ -45,22 +45,29 @@ export class GameState {
 	isenemy(piece){return this.mycolour == piece.enemycolour;}
 	ismypiece(piece){return this.mycolour == piece.colour;}
 	
-	myking(boardmap){
+	kingPositions(boardmap){
+		// king pos plural - for checking castling legal
+		// (model as kings between rook and king)
+		var ks = [];
 		for (const [position, piece] of Object.entries(boardmap)){
-			if (piece.name=='king' && piece.colour==this.mycolour) return piece;
+			if (piece.name=='king' && piece.colour==this.mycolour) ks.push(piece.pos);
 		}
-		return null;
+		return ks;
 	}
 	
-	inCheck(boardmap){
-		var kingpos = this.myking(boardmap).pos;
+	myKing(){
+		return this.kingPositions(this.boardpiecemap)[0];
+	}
+	
+	inCheck(fromcol,boardmap){
+		var kingposs = this.kingPositions(boardmap);
 		for (const [position, piece] of Object.entries(boardmap)){
 			if (this.isenemy(piece)){
-				var moves = piece.candidateMoves(boardmap).map(m => m.move);
-				if (moves.includes(kingpos)){
-					// console.log('in check');
-					// console.log(position,piece,moves,kingpos);
-					return true;
+				var moves = piece.candidateMoves(fromcol,boardmap).map(m => m.move);
+				for (var i=0; i<kingposs.length; i+=1){
+					if (moves.includes(kingposs[i])){
+						return true;
+					}
 				}
 			}
 		}
@@ -68,7 +75,7 @@ export class GameState {
 	}
 	
 	meInCheck(){
-		return this.inCheck(this.boardpiecemap);
+		return this.inCheck(this.mycolour,this.boardpiecemap);
 	}
 	
 	allCandidateMoves(){
@@ -76,7 +83,7 @@ export class GameState {
 		var mycandidatemoves = {};
 		for (const [position, piece] of Object.entries(this.boardpiecemap)){
 			if (this.ismypiece(piece)) {
-				mycandidatemoves[piece.pos] = piece.candidateMoves(this.boardpiecemap);
+				mycandidatemoves[piece.pos] = piece.candidateMoves(this.mycolour,this.boardpiecemap);
 			}
 		}
 		console.log('solution candidate search:')
@@ -101,7 +108,7 @@ export class GameState {
 						}
 					}
 					// console.log(dupboardmap);
-					if (!this.inCheck(dupboardmap)) {
+					if (!this.inCheck(this.mycolour,dupboardmap)) {
 						// console.log('not in check!')
 						myvalidmoves[position].push(candmove);
 					}

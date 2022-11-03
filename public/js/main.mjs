@@ -24,8 +24,6 @@ const sharebutton = $("#sharebutton");
 const backsharearea = $("#backsharearea");
 const copytexts = $(".copytext");
 const boardarea = $("#boardarea");
-const mytimeel = $("#mytime");
-const opponenttimeel = $("#opponenttime");
 const leavewaitingroom = $("#leavewaitingroom");
 const leaveroom = $("#leaveroom");
 const offerdraw = $("#offerdraw");
@@ -73,8 +71,8 @@ function updateroomnumber() {
 }
 
 function updatetimeHTML() {
-  mytimeel.text("ME: " + strPrettyTimeFormat(localstate.mytime));
-  opponenttimeel.text("OP: " + strPrettyTimeFormat(localstate.opponenttime));
+  $("#mytime").text(strPrettyTimeFormat(localstate.mytime));
+  $("#opponenttime").text(strPrettyTimeFormat(localstate.opponenttime));
 }
 
 function updateMyTime(endmove){
@@ -164,6 +162,9 @@ function listensocket(){
     localstate.movehistory.push(movedata);
     console.log('move played on board', movedata);
     console.log(strPrettyTimeFormat(time[localstate.myplayerid]), strPrettyTimeFormat(time[localstate.opponentid]));
+    $('.prevmove').remove();
+    $('#'+movedata['from']).prepend('<div class="prevmove"></div>');
+    $('#'+movedata['to']).prepend('<div class="prevmove"></div>');
     console.log('-----');
   });
   
@@ -264,10 +265,15 @@ function onmymove() {
   localstate.mymove = true;
   body.addClass('mymove');
   localstate.mymovemillis = Date.now();
-  console.log('in check ' + localstate.inCheck(localstate.boardpiecemap).toString());
   localstate.findValidMoves();
+  const meincheck = localstate.meInCheck();
+  console.log('me in check ' + meincheck);
+  if (meincheck){
+    console.log(localstate.myKing());
+    $('#'+localstate.myKing()).prepend('<div class="incheck"></div>');
+  }
   if (localstate.noValidMoves()){
-    if (localstate.meInCheck())
+    if (meincheck)
       localstate.socket.emit('checkmate',localstate.myroom,localstate.myplayerid);
     else
       localstate.socket.emit('stalemate',localstate.myroom,localstate.myplayerid);
@@ -276,6 +282,8 @@ function onmymove() {
 }
 function offmymove() {
   $('.mypiece').off('click');
+  $('.incheck').remove();
+  $('.prevmove').remove();
   localstate.mymove = false;
   body.removeClass('mymove');
   localstate.opmovemillis = Date.now();
@@ -298,6 +306,7 @@ function gameOver(){
 function leaveaction() {
   gameOver();
   localstate.resetstate();
+  $('#timerow').remove();
   boardarea.find('#commonboard').remove();
   gameovermsg.empty();
   boardpopup.empty();

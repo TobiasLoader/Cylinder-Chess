@@ -52,10 +52,10 @@ export function initBoard(boardtype,mycolour){
 
 export function resizeCylinderBoard(){
   const w = $(window).width();
-  if (w < 600) {
-    document.getElementById('commonboard').style.setProperty("--relativesize",(Math.min($('#boardarea').width()/7,$(window).height()/13)).toString()+"px");
+  if (w < 800) {
+    document.getElementById('commonboard').style.setProperty("--relativesize",(Math.min($(window).width()/7,$(window).height()/13)).toString()+"px");
   } else {
-    document.getElementById('commonboard').style.setProperty("--relativesize",(Math.min($('#boardarea').width()/8,$(window).height()/15)).toString()+"px");
+    document.getElementById('commonboard').style.setProperty("--relativesize",(Math.min($(window).width()/8,$(window).height()/15)).toString()+"px");
   }
 }
 
@@ -139,7 +139,7 @@ function cylinderBoardGame(commonboard,mycolour){
 }
 
 export function resizeSquareBoard(){
-  document.getElementById('commonboard').style.setProperty("--relativesize",(Math.min($('#boardarea').width()/8,$(window).height()/13)).toString()+"px");
+  document.getElementById('commonboard').style.setProperty("--relativesize",(Math.min($(window).width()/8.5,$(window).height()/13)).toString()+"px");
 }
 
 function squareBoardGame(commonboard,mycolour){
@@ -205,10 +205,21 @@ export function resultMovePieces(playercolour,res){
   }
   const movereturn = localstate.boardpiecemap[res['from']].move(playercolour,res['to']);
   console.log(movereturn);
-  if (movereturn['queened']==false) {
-    console.log('not queened');
+  if (movereturn['special']=='queened') {
+    // localstate.boardpiecemap[res['to']] = localstate.boardpiecemap[res['from']];
+    console.log('queening complete')
+  } else if (movereturn['special']=='castled') {
+    const movedata = movereturn['data'];
+    localstate.boardpiecemap[movedata['newking']] = localstate.boardpiecemap[res['from']];
+    console.log(movedata['oldrook'],localstate.boardpiecemap[movedata['oldrook']])
+    localstate.boardpiecemap[movedata['newrook']] = localstate.boardpiecemap[movedata['oldrook']];
+    console.log(movedata['newrook'],localstate.boardpiecemap[movedata['newrook']])
+    delete localstate.boardpiecemap[movedata['oldrook']];
+    console.log('castle complete')
+  } else {
     localstate.boardpiecemap[res['to']] = localstate.boardpiecemap[res['from']];
   }
+  
   delete localstate.boardpiecemap[res['from']];
   console.log('board state after: ',localstate.boardpiecemap);
 }

@@ -1,6 +1,28 @@
 - function colourchangeyindex(col,y) {if (col=='w') return 8-y; else return y+1;}
 - function colourchangexindex(col,x) {if (col=='w') return x; else return 7-x;}
 
+mixin timerrows(mycolour)
+	if (mycolour=='w')
+		#timerow
+			#wtimer.timercontainer
+				.playericon
+				.timer
+					h3#mytime
+			#btimer.timercontainer
+				.timer
+					h3#opponenttime
+				.playericon
+	if (mycolour=='b')
+		#timerow
+			#btimer.timercontainer
+				.playericon
+				.timer
+					h3#mytime
+			#wtimer.timercontainer
+				.timer
+					h3#opponenttime
+				.playericon
+
 mixin cylinderboard(mycolour)
 	- let chessfiles = ['A','B','C','D','E','F','G','H'];
 	- let ba = 2*Math.PI/8; // base angle
@@ -21,6 +43,7 @@ mixin cylinderboard(mycolour)
 								if (y==7)
 									p.fileid !{chessfiles[endx]}
 		#opcapture.capturearea
+	+timerrows(mycolour)
 
 mixin squareboard(mycolour)
 	- let chessfiles = ['A','B','C','D','E','F','G','H'];
@@ -39,6 +62,7 @@ mixin squareboard(mycolour)
 								if (y==7)
 									p.fileid !{chessfiles[endx]}
 		#opcapture.capturearea
+	+timerrows(mycolour)
 
 if (boardtype == 'cylinder')
 	+cylinderboard(colour)

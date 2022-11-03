@@ -5,9 +5,13 @@ head
 	link(rel='stylesheet', href='styles/init-game-states.css')
 	link(rel='stylesheet', href='styles/styles.css')
 	link(rel='stylesheet', href='styles/mobile-styles.css')
+	link(rel="apple-touch-icon", sizes="180x180", href="/assets/favicon/apple-touch-icon.png")
+	link(rel="icon", type="image/png", sizes="32x32", href="/assets/favicon/favicon-32x32.png")
+	link(rel="icon", type="image/png", sizes="16x16", href="/assets/favicon/favicon-16x16.png")
+	link(rel="manifest", href="/assets/favicon/site.webmanifest")
 	meta(name="viewport", content="width=device-width, initial-scale=1.0")
 
-body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; --bgcol: 40,40,40;  --secbgcol: 10,10,10; --darkpricol:	39, 102, 82;`)
+body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; --bgcol: 40,40,40;  --secbgcol: 20,20,20; --darkpricol:	39, 102, 82;`)
 	img#cc-graphic(alt='graphic',src='/assets/cc-logo.svg')
 	include ui-components
 	#main.state-home
@@ -24,7 +28,7 @@ body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; 
 		#waitingarea
 			#waitingareacontent
 				h2.room
-				+subbutton('leavewaitingroom','leave')
+				+subbutton('leavewaitingroom','leave','')
 				p
 					| Waiting AREA
 		#gamearea
@@ -32,18 +36,15 @@ body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; 
 			//- h2.room
 			//- h3#movemade
 			#endgamerow.buttonrow
-				+inversesubbutton('leaveroom','leave room')
+				+inversesubbutton('leaveroom','leave room','')
 				+buttonrowmsg('gameovermsg','')
-				+inversesubbutton('offerdraw','offer draw')
+				+inversesubbutton('offerdraw','offer draw','')
 				+buttonrowmsg('drawoffersent','offer sent')
-				+subbutton('acceptdraw','accept draw')
-				+inversesubbutton('resigngame','resign game')
-				+inversesubbutton('offerrematch','rematch')
+				+subbutton('acceptdraw','accept draw','')
+				+inversesubbutton('resigngame','resign game','lastbutton')
+				+inversesubbutton('offerrematch','rematch','lastbutton')
 				+buttonrowmsg('rematchoffersent','rematch sent')
-				+subbutton('acceptrematch','accept rematch')
-			#timerow
-				h3#mytime
-				h3#opponenttime(style='display:inline;')
+				+subbutton('acceptrematch','accept rematch','lastbutton')
 			#boardarea
 				+popup('boardpopup')
 		#sharearea
@@ -53,7 +54,7 @@ body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; 
 				p.tocopy cylinderchess.com
 				img.clipboard-copy(alt='copy to clipboard',src='/assets/light-clipboard-copy.svg')
 			.buttonrow
-				+subbutton('backsharearea','back')
+				+subbutton('backsharearea','back','')
 		+popup('generalpopup')
 	h1#cylinder-title
 		| @ cylinderchess.com

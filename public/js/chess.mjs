@@ -75,7 +75,7 @@ export class Piece {
     this.hasmoved = true;
     this.placePiece(playercolour);
     this.playedlastmove = true;
-    return {'queened':false};
+    return {'special':false};
   }
 
   capture(piece){
@@ -135,7 +135,7 @@ export class Piece {
     return ms;
   }
   
-  candidateMoves(boardmap){
+  candidateMoves(fromcol,boardmap){
     return [];
   }
 
@@ -208,7 +208,7 @@ export class Pawn extends Piece {
     return ms;
   }
 
-  candidateMoves(boardmap){
+  candidateMoves(fromcol,boardmap){
     this.generateAbsoluteMoves();
     var possiblemoves = [];
     if (!this.hasmoved) this.addMoveDataIfUnique(this.filterAbsoluteMovesForNotAttack(boardmap,this.absolutemovegroups['fromstart'],true),possiblemoves);
@@ -232,18 +232,17 @@ export class Pawn extends Piece {
     this.playedlastmove = true;
     if (this.queeningCheck()) {
       queening(this,new Queen(this.id,this.colour,this.pos),playercolour);
-      return {'queened':true};
+      return {'special':'queened'};
     } else {
-      localstate.boardpiecemap[newpos] = this;
       this.placePiece(playercolour);
-      return {'queened':false};
+      return {'special':false};
     }
   }
 }
 
 function queening(pawn,queen,playercolour){
   // once pawn is on square to be queened
-  console.log(pawn,queen)
+  // console.log(pawn,queen)
   const pos = pawn.pos;
   // delete localstate.boardpiecemap[pos];  
   localstate.boardpiecemap[pos] = queen;
@@ -266,7 +265,7 @@ export class Queen extends Piece {
     }
   }
 
-  candidateMoves(boardmap){
+  candidateMoves(fromcol,boardmap){
     this.generateAbsoluteMoves();
     var possiblemoves = [];
     this.addMoveDataIfUnique(this.filterAbsoluteMoves(boardmap,this.absolutemovegroups['north'],true),possiblemoves);
@@ -292,7 +291,7 @@ export class Rook extends Piece {
     }
   }
 
-  candidateMoves(boardmap){
+  candidateMoves(fromcol,boardmap){
     this.generateAbsoluteMoves();
     var possiblemoves = [];
     this.addMoveDataIfUnique(this.filterAbsoluteMoves(boardmap,this.absolutemovegroups['north'],true),possiblemoves);
@@ -311,7 +310,7 @@ export class Knight extends Piece {
     }
   }
 
-  candidateMoves(boardmap){
+  candidateMoves(fromcol,boardmap){
     this.generateAbsoluteMoves();
     var possiblemoves = [];
     this.addMoveDataIfUnique(this.filterAbsoluteMoves(boardmap,this.absolutemovegroups['jumps'],false),possiblemoves);
@@ -330,7 +329,7 @@ export class Bishop extends Piece {
     }
   }
 
-  candidateMoves(boardmap){
+  candidateMoves(fromcol,boardmap){
     this.generateAbsoluteMoves();
     var possiblemoves = [];
     this.addMoveDataIfUnique(this.filterAbsoluteMoves(boardmap,this.absolutemovegroups['northeast'],true),possiblemoves);
@@ -346,13 +345,89 @@ export class King extends Piece {
     super(id,'king',colour,pos);
     this.relativemovegroups = {
       'radius1': [{x:0, y:1},{x:1, y:1},{x:1, y:0},{x:1, y:-1},{x:0, y:-1},{x:-1, y:-1},{x:-1, y:0},{x:-1, y:1}],
+      'castle-shortpath': [{x:1, y:0},{x:2, y:0}],
+      'castle-short': [{x:3, y:0}], // could also have {x:-4, y:0}
+      'castle-longpath': [{x:-1, y:0},{x:-2, y:0},{x:-3, y:0}],
+      'castle-long': [{x:-4, y:0}],    // could also have {x:5, y:0}
     }
+    this.castlenames = [['short','shortpath'],['long','longpath']];
   }
 
-  candidateMoves(boardmap){
+  castlingMoves(fromcol,boardmap){
+    var ms = [];
+    if (this.hasmoved == false) {
+      const absposmoves = [
+        {'move':this.absolutemovegroups['castle-short'][0],'capture':''},
+        {'move':this.absolutemovegroups['castle-long'][0],'capture':''}
+      ];
+      for (var i=0; i<2; i+=1){
+        const rookpos = absposmoves[i]['move'];
+        if (rookpos in boardmap){
+          if (boardmap[rookpos].name=='rook' && boardmap[rookpos].hasmoved==false){
+            var dupboardmap = {};
+            var castlingclear = true;
+            const movepackage = absposmoves[i];
+            for (var pos of this.absolutemovegroups['castle-'+this.castlenames[i][1]]){
+              if (pos in boardmap){
+                castlingclear = false;
+                break;
+              } else {
+                dupboardmap[pos] = new GhostPiece('king',this.colour,pos);
+              }
+            }
+            if (castlingclear){
+              for (const [p1, p2] of Object.entries(boardmap)){
+                if (p1==rookpos) dupboardmap[p1] = new GhostPiece('king',this.colour,pos);
+                else dupboardmap[p1] = p2;
+              }
+              if (!localstate.inCheck(fromcol,dupboardmap)){
+                console.log('castle '+this.castlenames[i][0]+' is possible');
+                ms.push({'status':'move','move':movepackage['move'],'capture':''});
+              }
+            }
+          }
+        }
+        // if (!(movepackage['move'] in boardmap) && (movepackage['capture'] in boardmap)){
+        //   const piecetocap = boardmap[movepackage['capture']];
+        //   // console.log(piecetocap)
+        //   if (piecetocap.name == 'pawn' && piecetocap.colour == this.enemycolour && piecetocap.madesinglemove && piecetocap.playedlastmove){
+        //     ms.push({'status':'attack','move':movepackage['move'],'capture':movepackage['capture']});
+        //   }
+        // }
+      }
+    }
+    return ms;
+  }
+
+  candidateMoves(fromcol,boardmap){
     this.generateAbsoluteMoves();
     var possiblemoves = [];
     this.addMoveDataIfUnique(this.filterAbsoluteMoves(boardmap,this.absolutemovegroups['radius1'],false),possiblemoves);
+    if (this.colour == fromcol) {
+      this.addMoveDataIfUnique(this.castlingMoves(fromcol,boardmap),possiblemoves);
+    }
     return possiblemoves;
+  }
+  
+  move(playercolour,newpos){
+    if (!(newpos in localstate.boardpiecemap) || localstate.boardpiecemap[newpos].colour != this.colour){
+      return super.move(playercolour,newpos);
+    } else {
+      console.log('start castle');
+      var newkingpos = '';
+      var oldrookpos = newpos;
+      var newrookpos = '';
+      if (newpos[0]=='A') {
+        newkingpos = intToFile(fileToInt(this.pos[0])-2)+this.pos[1];
+        newrookpos = intToFile(fileToInt(this.pos[0])-1)+this.pos[1];
+      }
+      if (newpos[0]=='H') {
+        newkingpos = intToFile(fileToInt(this.pos[0])+2)+this.pos[1];
+        newrookpos = intToFile(fileToInt(this.pos[0])+1)+this.pos[1];
+      }
+      localstate.boardpiecemap[oldrookpos].move(playercolour,newrookpos);
+      this.move(playercolour,newkingpos);
+      return {'special':'castled','data':{'newking':newkingpos,'oldrook':oldrookpos,'newrook':newrookpos}};
+    }
   }
 }

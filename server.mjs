@@ -77,9 +77,19 @@ app.post('/game_init', (req, res) => {
         res.end(Buffer.from(JSON.stringify(body)));
     });
 });
+// 
+// function clientIP(socket){
+//     return socket.request.connection.remoteAddress;
+// }
 
 io.sockets.on('connection', function (socket) {
     console.log('socket initiated');
+    
+    // for (var [room, bool] of Object.entries(roomplaying)){
+    //     if (bool){
+    //         
+    //     }
+    // }
 
     socket.on('createroom', function (room, user, colour, timestr, boardtype, showmoves) {
         console.log('room ' + room.toString() + ' created by ' + user);
@@ -168,7 +178,7 @@ io.sockets.on('connection', function (socket) {
     });
     
     socket.on('stalemate', function (room, player) {
-        io.to(room).emit('draw', 3-player, 'STALEMATE!', 'The game was a draw,it ended in a stalemate.');
+        io.to(room).emit('draw', 3-player, 'STALEMATE!', 'The game was a draw, it ended in a stalemate.');
     });
     
     socket.on('drawoffer', function (room, player) {
@@ -235,7 +245,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function (){
-        console.log('disconnect')
+        console.log('disconnect oops')
         socket.disconnect(0);
     })
 });

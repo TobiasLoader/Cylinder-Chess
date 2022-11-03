@@ -52,13 +52,12 @@ body.ingame #cc-graphic {
 
 h1#cylinder-title {
 	color: rgba(var(--pricol),1);
-	font-size: 30px;
 	text-align: center;
 	position: absolute;
 	bottom: 0;
 	left:0;
 	width:100%;
-	font-size: 20px;
+	font-size: 15px;
 	margin:0;
 	margin-bottom: 10px;
 }
@@ -82,6 +81,10 @@ h1#cylinder-title {
 	width: 100%;
 	display: flex;
 	flex-direction: column;
+}
+
+#main.state-gamearea {
+	max-width: 100%;
 }
 
 #gamebuttonscontainer {
@@ -297,6 +300,7 @@ h1#cylinder-title {
 
 #gamearea .buttonrow {
 	margin-top:0;
+	margin-bottom: 20px;
 }
 
 
@@ -306,7 +310,7 @@ h1#cylinder-title {
 
 #gamearea .submainbuttontitle {
 	line-height: 40px;
-	font-size: 17px;
+	font-size: 15px;
 }
 
 #gamearea .subbutton:hover {
@@ -316,19 +320,45 @@ h1#cylinder-title {
 #gamearea .subbutton:first-child {
 	margin-left:0;
 }
-#gamearea .subbutton:last-child {
+#gamearea .subbutton.lastbutton {
 	margin-right:0;
 }
 
 
 #timerow {
 	display: flex;
-	margin:20px 0;
+	margin:10px 0 0 0;
+	place-content: space-between;
+}
+.timercontainer {
+	display: flex;
+}
+.timer {
+	padding: 5px 10px;
+	border: rgba(var(--pricol),1) 1px solid;
 }
 #timerow h3 {
-	flex:1;
+	font-size: 16px;
 	margin: auto;
 	text-align: center;
+}
+.playericon {
+	border-radius:3px;
+	border: rgba(255,255,255,0.15) 1px solid;
+	width: 31px;
+	margin: 0;
+}
+#timerow .timercontainer:first-child .playericon {
+	margin-right: 10px;
+}
+#timerow .timercontainer:last-child .playericon {
+	margin-left: 10px;
+}
+#wtimer .playericon {
+	background: rgba(var(--pricol),1);
+}
+#btimer .playericon {
+	background: rgba(var(--secbgcol),1);
 }
 
 .buttonrowmsgcontainer {
@@ -446,7 +476,7 @@ h1#cylinder-title {
 	margin-left: 20px;
 	border-left: rgba(var(--tricol), 1) 1px solid;
 }
-.popup .popupcrossleft {transform: rotate(45deg);}
+.popup .popupcrossleft { transform: rotate(45deg);}
 .popup .popupcrossright {	transform: rotate(315deg);}
 
 #main.popup-active {
@@ -466,10 +496,15 @@ h1#cylinder-title {
 //////// GAME PLAY
 
 #gamearea {
+	width:min-content;
 	margin:auto;
 	display:none;
 	padding:10px;
 	color: rgba(var(--tricol), 1);
+}
+
+#boardarea {
+	width:min-content;
 }
 
 #commonboard {
@@ -488,6 +523,13 @@ h1#cylinder-title {
 	grid-template-columns: 1fr 1fr;
 	grid-auto-rows: calc(7*var(--relativesize)/10);
 	margin: 10% 0 auto 0;
+}
+
+#commonboard.cyl .capturearea:first-child {
+	margin-right: calc(7*var(--relativesize)/10);
+}
+#commonboard.cyl .capturearea:last-child {
+	margin-left: calc(7*var(--relativesize)/10);
 }
 
 #commonboard.cyl .capturearea > * {
@@ -565,10 +607,25 @@ h1#cylinder-title {
 	position: absolute;
 	width: var(--relativesize);
 	height: var(--relativesize);
-	background: rgba(var(--darkpricol), 1);
+	background: rgba(var(--darkpricol), 0.5);
 	border-radius: var(--relativesize);
-	opacity: 0.5;
-	overflow-y: hidden;
+}
+
+.incheck {
+	display: inline;
+	position: absolute;
+	width: var(--relativesize);
+	height: var(--relativesize);
+	background: rgb(140, 84, 84);
+	border-radius: var(--relativesize);
+}
+
+.prevmove {
+	display: inline;
+	position: absolute;
+	width: var(--relativesize);
+	height: var(--relativesize);
+	background: repeating-linear-gradient( 135deg, transparent, transparent 10px, rgba(0, 0, 0, 0.15) 10px, rgba(0, 0, 0, 0.15) 15px);
 }
 
 .mymove .validcandidate {
