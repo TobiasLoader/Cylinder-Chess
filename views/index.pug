@@ -16,16 +16,18 @@ body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; 
 	include ui-components
 	#main.state-home
 		#mainbuttonsrow
-			#gamebuttonscontainer
+			#gamebuttonscontainer.splitbuttonrow
 				+mainbutton('startbutton','Start Game')
 				+mainbutton('joinbutton','Join Game')
-			#sharebuttonscontainer
+			#sharebuttonscontainer.splitbuttonrow
 				+inversemainbuttonicon('sharebutton','Share','/assets/share_light.svg')
+				+inversemainbuttonicon('coffeebutton','Coffee','/assets/coffee-cup-v3.svg')
 		#startgame
 			+startgameoptions()
 		#joingame
 			+joingameoptions()
 		#waitingarea
+			#waitingbg
 			#waitingareacontent
 				h2.room
 				+subbutton('leavewaitingroom','leave','')

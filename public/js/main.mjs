@@ -21,6 +21,7 @@ const joinroom = $("#joinroom");
 const stopjoinroom = $('#stopjoinroom');
 const gamearea = $("#gamearea");
 const sharebutton = $("#sharebutton");
+const coffeebutton = $("#coffeebutton");
 const backsharearea = $("#backsharearea");
 const copytexts = $(".copytext");
 const boardarea = $("#boardarea");
@@ -59,6 +60,7 @@ function fetchBoard(board,col,afterfetch) {
   })
   .then((html) => {
     boardarea.prepend(html);
+    setInGameState('playstate');
     afterfetch();
   });
 }
@@ -88,6 +90,9 @@ function updateMyTime(endmove){
 
 function updateOpTime(){
   updateTimeTimeFormat(localstate.opponenttime, Date.now() - localstate.opmovemillis);
+  if (localstate.opponenttime.current_mil < 0) {
+    localstate.opponenttime = setToZero(localstate.opponenttime);
+  }
   updatetimeHTML();
   localstate.opmovemillis = Date.now();
 }
@@ -144,7 +149,6 @@ function listensocket(){
   
   localstate.socket.on('roomready', function () {
     console.log('room ready');
-    setInGameState('playstate');
     gameplay();
   });
   
@@ -222,8 +226,10 @@ function listensocket(){
     console.log('rematch start process');
     localstate.resetingamestate();
     localstate.rematchchange(time);
+    $('#timerow').remove();
     gameovermsg.empty();
     boardarea.find('#commonboard').remove();
+    setInGameState('noboard');
     // $('.capturearea').empty();
     // $('.piece').remove();
     // $('.mypiece').removeClass('mypiece');
@@ -244,7 +250,7 @@ function setupgame() {
   updateroomnumber();
   console.log('game is joined');
   setInitState('state-gamearea');
-  setInGameState('playstate');
+  setInGameState('noboard');
 }
 
 function begingame(){
@@ -356,11 +362,11 @@ stopjoinroom.click(function(e){setInitState('state-home',e)});
 
 function resetClasses(){
   $('.validcandidate').off( "click");
-  $('.piecechosen').removeClass('piecechosen');
   $('.validcandidate').removeClass('validcandidate');
   $('.capturecandidate').removeClass('capturecandidate');
   $('.silhouette').remove();
   $('.replacepiecehighlight').remove();
+  $('.piecechosen').remove();
 
   // for (var i=0; i<8; i+=1){
   //   for (var j=0; j<8; j+=1){
@@ -468,7 +474,11 @@ async function tryWebShare(){
 
 sharebutton.click(function(){
   tryWebShare();
-})
+});
+
+coffeebutton.click(function(){
+  window.open("https://www.buymeacoffee.com/johnsorrentino", '_blank');
+});
 
 copytexts.click(function(){
   navigator.clipboard.writeText($(this).children('p').text());

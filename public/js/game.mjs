@@ -168,7 +168,7 @@ function placePieceHighlight(pos){
 }
 
 export async function moveMade(frompos){
-  $('#'+frompos).addClass('piecechosen');
+  $('#'+frompos).prepend('<div class="piecechosen"></div>');
   const validcandidates = localstate.validmoves[frompos];
   console.log(validcandidates);
   validcandidates.forEach(function (movedata){

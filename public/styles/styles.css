@@ -20,7 +20,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  opacity: 0.3;
+  opacity: 0.5;
   max-width: 200px;
   width: 10%;
   padding: 30px 40px; }
@@ -58,10 +58,7 @@ h1#cylinder-title {
 #main.state-gamearea {
   max-width: 100%; }
 
-#gamebuttonscontainer {
-  display: flex; }
-
-#sharebuttonscontainer {
+.splitbuttonrow {
   display: flex; }
 
 .mainbutton {
@@ -78,10 +75,10 @@ h1#cylinder-title {
 .mainbutton:hover {
   cursor: pointer; }
 
-#gamebuttonscontainer .mainbutton:first-child {
+.splitbuttonrow .mainbutton:first-child {
   border-radius: 100px 0 0 100px; }
 
-#gamebuttonscontainer .mainbutton:last-child {
+.splitbuttonrow .mainbutton:last-child {
   border-radius: 0 100px 100px 0; }
 
 .inversemainbutton {
@@ -172,11 +169,16 @@ h1#cylinder-title {
   outline: none; }
 
 #waitingarea {
-  background: repeating-linear-gradient(135deg, transparent, transparent 10px, rgba(0, 0, 0, 0.1) 10px, rgba(0, 0, 0, 0.1) 15px);
   margin: auto;
   display: none;
-  padding-top: 100%;
-  border-radius: 3px; }
+  padding-top: 100%; }
+
+#waitingbg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-image: url("/assets/light-checker-sq.svg");
+  background-repeat: repeat; }
 
 #waitingareacontent {
   position: absolute;
@@ -324,6 +326,9 @@ h1#cylinder-title {
   display: none; }
 
 #gamearea #endgamerow #acceptrematch {
+  display: none; }
+
+#gamearea.noboard {
   display: none; }
 
 #gamearea.playstate #endgamerow #offerdraw {
@@ -517,6 +522,10 @@ h1#cylinder-title {
   opacity: 0.5;
   margin: calc(2*var(--relativesize)/10); }
 
+.col:nth-child(even) .cell:nth-child(even) .silhouette,
+.col:nth-child(odd) .cell:nth-child(odd) .silhouette {
+  opacity: 0.3; }
+
 .rankid {
   top: 0;
   left: 2px; }
@@ -526,30 +535,42 @@ h1#cylinder-title {
   bottom: 0; }
 
 .piecechosen {
-  background: rgba(var(--secbgcol), 1) !important; }
+  display: inline;
+  position: absolute;
+  width: calc(8*var(--relativesize)/10);
+  height: calc(8*var(--relativesize)/10);
+  background: none;
+  border: rgba(var(--darkpricol), 0.5) calc(var(--relativesize)/10) solid; }
 
 .replacepiecehighlight {
   display: inline;
   position: absolute;
-  width: var(--relativesize);
-  height: var(--relativesize);
+  width: calc(8*var(--relativesize)/10);
+  height: calc(8*var(--relativesize)/10);
   background: rgba(var(--darkpricol), 0.5);
-  border-radius: var(--relativesize); }
+  margin: calc(var(--relativesize)/10); }
 
 .incheck {
   display: inline;
   position: absolute;
-  width: var(--relativesize);
-  height: var(--relativesize);
   background: #8c5454;
-  border-radius: var(--relativesize); }
+  width: calc(8*var(--relativesize)/10);
+  height: calc(8*var(--relativesize)/10);
+  margin: calc(var(--relativesize)/10); }
 
 .prevmove {
   display: inline;
   position: absolute;
-  width: var(--relativesize);
-  height: var(--relativesize);
-  background: repeating-linear-gradient(135deg, transparent, transparent 10px, rgba(0, 0, 0, 0.15) 10px, rgba(0, 0, 0, 0.15) 15px); }
+  width: calc(8*var(--relativesize)/10);
+  height: calc(8*var(--relativesize)/10);
+  margin: calc(var(--relativesize)/10);
+  background: url("/assets/light-checker-sq.svg");
+  background-size: 100%; }
+
+.col:nth-child(even) .cell:nth-child(even) .prevmove,
+.col:nth-child(odd) .cell:nth-child(odd) .prevmove {
+  background: url("/assets/dark-checker-sq.svg");
+  background-size: 100%; }
 
 .mymove .validcandidate {
   cursor: pointer; }
