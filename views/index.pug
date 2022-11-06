@@ -13,6 +13,8 @@ head
 
 body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; --bgcol: 40,40,40;  --secbgcol: 20,20,20; --darkpricol:	39, 102, 82;`)
 	img#cc-graphic(alt='graphic',src='/assets/cc-logo.svg')
+	h1#cylinder-title
+		a(href="cylinderchess.com") cylinderchess.com
 	include ui-components
 	#main.state-home
 		#mainbuttonsrow
@@ -58,8 +60,14 @@ body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; 
 			.buttonrow
 				+subbutton('backsharearea','back','')
 		+popup('generalpopup')
-	h1#cylinder-title
-		| @ cylinderchess.com
+	#copyright-content
+		p#desktop-copyright
+			a.footer-link(href='https://cylinderchess.com') cylinderchess.com
+			| &nbsp;|&nbsp;copyright&nbsp;
+			span(style='font-family:Arial, sans-serif;') &copy;&nbsp;
+			| &nbsp;2022 
+			a.footer-link(href='https://www.linkedin.com/in/tobiasloader/') tobias&nbsp;loader
+			| &nbsp;&mdash;&nbsp;all&nbsp;rights&nbsp;reserved
 	script(src='/js/jquery.min.js')
 	script(src='/socket.io/socket.io.js')
 	script(type='module', src='/js/main.mjs')

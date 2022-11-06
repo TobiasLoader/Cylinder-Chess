@@ -166,15 +166,15 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('outoftime', function (room, player) {
-        io.to(room).emit('victory', 3-player, 'You Won!','You\'re opponent ran out of time.','Out of Time!','You\'re opponent won because you ran out of time.');
+        io.to(room).emit('victory', 3-player, 'You Won!','Your opponent ran out of time.','Out of Time!','Your opponent won because you ran out of time.');
     });
 
     socket.on('resign', function (room, player) {
-        io.to(room).emit('victory', 3-player, 'You Won!','You\'re opponent resigned the game.','Resigned','You\'re opponent won because you resigned the game.');
+        io.to(room).emit('victory', 3-player, 'You Won!','Your opponent resigned the game.','Resigned','Your opponent won because you resigned the game.');
     });
     
     socket.on('checkmate', function (room, player) {
-        io.to(room).emit('victory', 3-player, 'CHECKMATE!', 'You won the game!',  'CHECKMATE!', 'You\'re opponent won the game because they put you into checkmate. Your king was in check and you had no legal moves.');
+        io.to(room).emit('victory', 3-player, 'CHECKMATE!', 'You won the game!',  'CHECKMATE!', 'Your opponent won the game because they put you into checkmate. Your king was in check and you had no legal moves.');
     });
     
     socket.on('stalemate', function (room, player) {
@@ -214,7 +214,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('leaveroom', function (room,player) {
         console.log('player ',player,' leave from room ',room);
         if (roomplaying[room]){
-            io.sockets.in(room).emit('victory', 3-player, 'You Won!', "You're opponent left the room mid game.", 'You left the room!', 'You forfeit the game.');
+            io.sockets.in(room).emit('victory', 3-player, 'You Won!', "Your opponent left the room mid game.", 'You left the room!', 'You forfeit the game.');
             socket.emit('leaveserverconfirm');
             socket.on('leaveclientconfirm',function(){
                 socket.emit('leaveacknowledged');

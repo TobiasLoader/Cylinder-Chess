@@ -79,14 +79,14 @@
 		width: calc(5*var(--relativesize)/10);
 	}
 	h1#cylinder-title {
-		font-size:15px;	
-	}
-	body.ingame h1#cylinder-title {
-		display: none;
+		font-size:13px;	
 	}
 	.popup {
 		width: calc(100% - 30px);
 		margin: 0 15px;
+	}
+	#copyright-content p {
+		font-size:10px;
 	}
 }
 

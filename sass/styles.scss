@@ -43,23 +43,29 @@ body {
 	opacity: 0.5;
 	max-width: 200px;
 	width:10%;
-	padding: 30px 40px;
+	margin: 30px 40px;
 }
 
 body.ingame #cc-graphic {
 	display: none;
 }
 
-h1#cylinder-title {
-	color: rgba(var(--pricol),1);
-	text-align: center;
+h1#cylinder-title a {
+	color: rgba(var(--pricol), 0.8);
+	text-align: right;
 	position: absolute;
-	bottom: 0;
-	left:0;
-	width:100%;
-	font-size: 15px;
-	margin:0;
-	margin-bottom: 10px;
+	right: 0;
+	font-size: 17px;
+	margin: 0;
+	padding: 10px 20px;
+	margin: 30px 40px;
+	border: rgba(var(--pricol), 0.3) 1px solid;
+	box-shadow: rgba(var(--secbgcol), 0.8) 0px 0px 30px 5px;
+	text-decoration: none;
+}
+
+body.ingame h1#cylinder-title {
+	display: none;
 }
 
 .state-home {
@@ -350,8 +356,8 @@ h1#cylinder-title {
 }
 .playericon {
 	border-radius:3px;
-	border: rgba(255,255,255,0.15) 1px solid;
-	width: 31px;
+	// border: rgba(var(--tricol), 1) 1px solid;
+	width: 34px;
 	margin: 0;
 }
 #timerow .timercontainer:first-child .playericon {
@@ -494,6 +500,10 @@ h1#cylinder-title {
 #main.popup-active .popup {
 	display: block;
 	pointer-events: auto;
+}
+
+#gamearea .popup {
+	top: calc(50% - 22px);
 }
 
 .ingame #generalpopup {
@@ -713,7 +723,7 @@ h1#cylinder-title {
 	height: var(--relativesize);
 }
 
-//////// SQUARE BOARD
+/////////////// SQUARE BOARD
 
 #squarearea {
 	display: flex;
@@ -735,4 +745,37 @@ h1#cylinder-title {
 #square .cell {
 	height: var(--relativesize);
 	width: var(--relativesize);
+}
+
+
+// COPYRIGHT
+
+#copyright-content {
+	width: 100%;
+	margin: 0;
+	position: absolute;
+	bottom: 0;
+}
+
+#copyright-content p {
+	left: 50%;
+	text-align: center;
+	display: block;
+	font-size: 12px;
+	margin-bottom: 10px;
+	color: rgba(var(--tricol),0.6);
+	font-size: 12px;
+}
+
+#copyright-content .footer-link {
+	color: rgba(var(--pricol),0.8);
+}
+
+#copyright-content .footer-link:hover {
+	color: rgba(var(--pricol),1);
+}
+
+#copyright-content .footer-link {
+	text-decoration: none;
+	text-underline-offset: 5px;
 }
