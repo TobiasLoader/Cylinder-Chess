@@ -21,8 +21,10 @@ const joinroom = $("#joinroom");
 const stopjoinroom = $('#stopjoinroom');
 const gamearea = $("#gamearea");
 const sharebutton = $("#sharebutton");
+const aboutbutton = $("#aboutbutton");
 const coffeebutton = $("#coffeebutton");
 const backsharearea = $("#backsharearea");
+const backaboutarea = $("#backaboutarea");
 const copytexts = $(".copytext");
 const boardarea = $("#boardarea");
 const leavewaitingroom = $("#leavewaitingroom");
@@ -39,6 +41,11 @@ const generalpopup = $('#generalpopup .popupcontent');
 const boardpopup = $('#boardpopup .popupcontent');
 const popups = $('.popup .popupcontent')
 const popupcrosses = $('.popupcross');
+
+const audioMove = document.createElement('audio');
+audioMove.setAttribute('src', 'assets/move-self.mp3');
+const audioCapture = document.createElement('audio');
+audioCapture.setAttribute('src', 'assets/capture.mp3');
 
 function setInitState(state,event){
   if (event != undefined) event.stopPropagation();
@@ -102,30 +109,35 @@ function waitingroom() {
   setInitState('state-waitingarea');
 }
 
+function setuproom(id, board, col, time, showmoves, fetchboardcallback){
+  localstate.boardtype = board;
+  localstate.myplayerid = id;
+  localstate.opponentid = 3 - id;
+  localstate.mycolour = col;
+  localstate.showmoves = showmoves;
+  localstate.mytime = time[localstate.myplayerid];
+  localstate.opponenttime = time[localstate.opponentid];
+  fetchBoard(localstate.boardtype,localstate.mycolour,fetchboardcallback);
+}
+
 function listensocket(){
-  localstate.socket.on('setup', (id, board, col, time, showmoves) => {
-    localstate.boardtype = board;
-    localstate.myplayerid = id;
-    localstate.opponentid = 3 - id;
-    localstate.mycolour = col;
-    localstate.showmoves = showmoves;
-    console.log('my player id: ' + id);
-    localstate.mytime = time[localstate.myplayerid];
-    localstate.opponenttime = time[localstate.opponentid];
-    fetchBoard(localstate.boardtype,localstate.mycolour,begingame);
+  localstate.socket.on('setup', (id, board, col, time, showmoves, uniquegameid) => {
+    setCookie('uniquegameid',uniquegameid.toString(),1);
+    setuproom(id, board, col, time, showmoves, begingame);
   });
   
-  // localstate.socket.on('status', (msg, room) => {
-  //   if (msg == 'joined') {
-  //     console.log('joined')
-  //     localstate.socket.room = room;
-  //     setupgame();
-  //   }
-  // });
-  
   localstate.socket.on('joined', (room) => {
-    console.log('socket joined');
     localstate.myroom = room;
+  });
+    
+  localstate.socket.on('rejoin', function (room, id, board, col, time, showmoves) {
+    console.log('have rejoined same room');
+    localstate.myroom = room;
+    setuproom(id, board, col, time, showmoves, ()=>{
+      begingame();
+      setupgame();
+      localstate.socket.emit('readytoreceiverejoinmoves', room, id);
+    });
   });
   
   localstate.socket.on('roomstatus', (fullstatus) => {
@@ -137,6 +149,7 @@ function listensocket(){
   localstate.socket.on('kick', function() {
     console.log('kicked');
     setInitState('state-home');
+    deleteCookie('uniquegameid');
     localstate.socket.emit('disconnect');
   });
   
@@ -158,7 +171,11 @@ function listensocket(){
   });
   
   localstate.socket.on('boardmove', function (movedata, time) {
+    console.log('boardmove')
+    if (movedata['capture']) audioCapture.play();
+    else audioMove.play();
     resultMovePieces(localstate.mycolour,movedata);
+    console.log('moved piece');
     resetClasses();
     localstate.mytime = time[localstate.myplayerid];
     localstate.opponenttime = time[localstate.opponentid];
@@ -318,16 +335,21 @@ function leaveaction() {
   boardpopup.empty();
   setInGameState();
   setInitState('state-home');
-  console.log('left room');
+  deleteCookie('uniquegameid');
+  // console.log('left room');
 }
 
-startbutton.click(function(e){setInitState('state-startgame',e)});
+startbutton.click(function(e){
+  audioMove.play();
+  setInitState('state-startgame',e)
+});
 
 function getStartGameOption(name){
   return $('#startgame-options input[name="'+name+'"]:checked').val();
 }
 
 createroom.click(function(){
+  audioCapture.play();
   fetch("/game_init", {
     method: "POST",
     headers: { 'Content-Type': 'application/json' },
@@ -341,7 +363,7 @@ createroom.click(function(){
     if (data['request'] == 'init_room') {
       localstate.socket = io();
       localstate.socket.emit('createroom', data['room'], 'user-1', getStartGameOption('colour'), getStartGameOption('time'), getStartGameOption('surface'),getStartGameOption('showmoves'));
-      localstate.socket.emit('join', data['room']);
+      localstate.socket.emit('join', data['room'], getCookie('uniquegameid'));
       listensocket();
     }
   });
@@ -349,12 +371,16 @@ createroom.click(function(){
 
 stopcreateroom.click(function(e){setInitState('state-home',e)});
 
-joinbutton.click(function(e){setInitState('state-joingame',e)});
+joinbutton.click(function(e){
+  audioMove.play();
+  setInitState('state-joingame',e)
+});
 
 joinroom.click(function () {
+  audioCapture.play();
   localstate.socket = io();
   var roomnum = Number.parseInt(document.getElementById('roomnum').value);
-  if (roomnum != undefined && roomnum >= 1000) localstate.socket.emit('join', roomnum);
+  if (roomnum != undefined && roomnum >= 1000) localstate.socket.emit('join', roomnum, getCookie('uniquegameid'));
   listensocket();
 });
 
@@ -456,6 +482,18 @@ leavewaitingroom.click(function(){
   localstate.socket.emit('destroyroom',localstate.myroom,localstate.myplayerid);
 });
 
+aboutbutton.click(function(){
+  setInitState('state-aboutarea');
+});
+
+backaboutarea.click(function(){
+  setInitState('state-home');
+});
+
+coffeebutton.click(function(){
+  window.open("https://donate.stripe.com/6oEcQCdCzc4e6MU000", '_blank');
+});
+
 async function tryWebShare(){
   if (navigator.share) {
     try {
@@ -476,10 +514,6 @@ sharebutton.click(function(){
   tryWebShare();
 });
 
-coffeebutton.click(function(){
-  window.open("https://www.buymeacoffee.com/johnsorrentino", '_blank');
-});
-
 copytexts.click(function(){
   navigator.clipboard.writeText($(this).children('p').text());
   $('#sharearea .titlebanner').text('thank you!');
@@ -492,4 +526,60 @@ backsharearea.click(function(){
 $(window).on('resize',function(){
   if (localstate.boardtype=='cylinder') resizeCylinderBoard();
   if (localstate.boardtype=='square') resizeSquareBoard();
+});
+
+function setCookie(cname, cvalue, exdays) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  let expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+function deleteCookie(cname) {
+  if(getCookie(cname)!="") {
+    document.cookie = cname + "=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT";
+  }
+}
+
+var online = true;
+window.addEventListener('offline', function(){
+  online = false;
+  if (localstate.myroom!=0){  
+    boardpopup.empty();  
+    boardpopup.append('<h2>OH NOES!</h2><p>You have disconnected from the internet mid game!<br><br>Try to get back online. When you do:<br>1. Refresh the page,<br>2. To rejoin the game, click join and enter room number: '+localstate.myroom.toString()+'<br>3. Voila you are done! Hopefully you can get right back in the game :)</p>');
+  } else {
+    generalpopup.empty();
+    generalpopup.append('<h2>OH NOES!</h2><p>You have disconnected from the internet.<br><br>Sorry you can\'t do much on cylinderchess.com until you get back online.</p>');
+  }
+  main.addClass('popup-active');
+});
+
+window.addEventListener('online', function(){
+  if (!online){
+    if (localstate.myroom!=0){
+      boardpopup.empty();  
+      boardpopup.append('<h2>YESSS</h2><p>You have reconnected to the internet!<br><br>If you haven\'t done so already:<br>1. Refresh the page,<br>2. To rejoin the game, click join and enter room number: '+localstate.myroom.toString()+'<br>3. Voila you are done! Hopefully you should be right back in the game :)</p>');
+    } else {
+      generalpopup.empty();
+      generalpopup.append('<h2>YESS!</h2><p>You\'re back online :)<br><br>Time to get back to cylinder chessing.</p>');
+    }
+    main.addClass('popup-active');
+  }
+  online = true;
 });

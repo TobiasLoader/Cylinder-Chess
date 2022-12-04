@@ -50,21 +50,24 @@ body.ingame #cc-graphic {
 	display: none;
 }
 
-h1#cylinder-title a {
-	color: rgba(var(--pricol), 0.8);
-	text-align: right;
+#cylinder-title {
 	position: absolute;
-	right: 0;
-	font-size: 17px;
-	margin: 0;
-	padding: 10px 20px;
 	margin: 30px 40px;
 	border: rgba(var(--pricol), 0.3) 1px solid;
-	box-shadow: rgba(var(--secbgcol), 0.8) 0px 0px 30px 5px;
+	box-shadow: rgba(var(--secbgcol), 0.5) 0px 0px 20px 5px;
+	height: 40px;
+	right: 0;
+}
+#cylinder-title a {
+	color: rgba(var(--pricol), 0.8);
+	text-align: right;
+	font-size: 17px;
+	line-height: 40px;
+	padding: 11px 20px;
 	text-decoration: none;
 }
 
-body.ingame h1#cylinder-title {
+body.ingame #cylinder-title {
 	display: none;
 }
 
@@ -133,8 +136,8 @@ body.ingame h1#cylinder-title {
 }
 
 .iconbutton img {
-	width: 30px;
-	margin: 0 10px;
+	height: 30px;
+	margin: auto 10px;
 	opacity: 0.6;
 }
 
@@ -163,6 +166,10 @@ body.ingame h1#cylinder-title {
 
 .subbutton:hover {
 	cursor:pointer;
+}
+
+.subbutton.iconbutton {
+	display: flex;
 }
 
 .inversesubbutton {
@@ -447,6 +454,38 @@ body.ingame h1#cylinder-title {
 	padding: 0 15px;
 }
 
+#aboutarea #abouttxtarea {
+	margin:10px 10px 20px 10px;
+	max-height: 70vh;
+	overflow: auto;
+}
+#aboutarea #toby-pic {
+	width: 110px;
+	margin-right: 20px;
+	margin-bottom: 10px;
+	float: left;
+	border: rgba(255,255,255,0.5) 1px solid;
+}
+#aboutarea h2 {
+	color: rgba(var(--tricol),0.9);
+}
+#aboutarea p {
+	color: rgba(var(--tricol),0.7);
+	text-align: justify;
+}
+#aboutarea p a {
+	text-decoration: none;
+}
+#aboutarea .linkedin {
+	color: #0092df;
+}
+#aboutarea .github {
+	color: #79c0ff;
+}
+#aboutarea #coffeebutton {
+	width:auto;
+}
+
 
 // POPUP
 
@@ -463,6 +502,7 @@ body.ingame h1#cylinder-title {
 	background: #3c3c3c;
 	box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 50px;
 	border: rgba(var(--tricol), 0.5) 1px solid;
+	overflow: auto;
 }
 
 .popupcontent {
@@ -514,6 +554,7 @@ body.ingame h1#cylinder-title {
 //////// GAME PLAY
 
 #gamearea {
+	position: relative;
 	width:min-content;
 	margin:auto;
 	display:none;
@@ -768,7 +809,7 @@ body.ingame h1#cylinder-title {
 }
 
 #copyright-content .footer-link {
-	color: rgba(var(--pricol),0.8);
+	color: rgba(var(--tricol),0.6);
 }
 
 #copyright-content .footer-link:hover {

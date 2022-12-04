@@ -2,6 +2,9 @@
 	body {
 		font-size: 13px;
 	}
+	#cylinder-title {
+		display: none;
+	}
 	#mainbuttonsrow {
 		width:80%;
 	}
@@ -32,6 +35,12 @@
 		flex: 1;
 		margin: 0 5px;
 	}
+	.submainbuttontitle {
+		font-size: 13px;
+	}
+	.iconbutton.subbutton img {
+		display: none;
+	}
 	#roomnumcontainer {
 		margin: 10px 5px;
 	}
@@ -52,7 +61,7 @@
 	#gamearea .submainbuttontitle {
 		line-height: 35px;
 		font-size: 13px;
-	} 
+	}
 	.buttonrowmsgcontainer {
 		height: 35px;
 	}
@@ -78,15 +87,34 @@
 	#commonboard.sqr .captured.piece {
 		width: calc(5*var(--relativesize)/10);
 	}
-	h1#cylinder-title {
-		font-size:13px;	
+	#cylinder-title {
+		height: 35px;
+	}
+	#cylinder-title a {
+		font-size: 13px;
+		line-height: 35px;
 	}
 	.popup {
 		width: calc(100% - 30px);
 		margin: 0 15px;
 	}
+	#copyright-content {
+		display: none;
+		bottom: calc(50% - 235px);
+		left: 10px;
+		transform: rotate(270deg);
+		transform-origin: left;
+	}
 	#copyright-content p {
 		font-size:10px;
+		color: rgba(var(--tricol), 0.4);
+		text-align: left;
+	}
+	#copyright-content .footer-link {
+		color: rgba(var(--tricol), 0.4);
+	}
+	.state-home + #copyright-content, .state-gamearea + #copyright-content {
+		display:block;
 	}
 }
 

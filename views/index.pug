@@ -13,8 +13,8 @@ head
 
 body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; --bgcol: 40,40,40;  --secbgcol: 20,20,20; --darkpricol:	39, 102, 82;`)
 	img#cc-graphic(alt='graphic',src='/assets/cc-logo.svg')
-	h1#cylinder-title
-		a(href="cylinderchess.com") cylinderchess.com
+	#cylinder-title
+		a(href="https://cylinderchess.com") cylinderchess.com
 	include ui-components
 	#main.state-home
 		#mainbuttonsrow
@@ -22,8 +22,8 @@ body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; 
 				+mainbutton('startbutton','Start Game')
 				+mainbutton('joinbutton','Join Game')
 			#sharebuttonscontainer.splitbuttonrow
+				+inversemainbutton('aboutbutton','About Me')
 				+inversemainbuttonicon('sharebutton','Share','/assets/share_light.svg')
-				+inversemainbuttonicon('coffeebutton','Coffee','/assets/coffee-cup-v3.svg')
 		#startgame
 			+startgameoptions()
 		#joingame
@@ -58,14 +58,27 @@ body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; 
 				p.tocopy cylinderchess.com
 				img.clipboard-copy(alt='copy to clipboard',src='/assets/light-clipboard-copy.svg')
 			.buttonrow
-				+subbutton('backsharearea','back','')
+				+inversesubbutton('backsharearea','back','')
+		#aboutarea
+			#abouttxtarea
+				h2 A bit about me!
+				p 
+					img(id='toby-pic', alt='Tobias Loader', src='/assets/Toby-Col-sq.jpeg')
+					| Hi, I'm Tobias Loader. A bit of background about myself: I'm a student at the University of Oxford reading Maths and CompSci and love building fun coding projects. My  
+					a(class='linkedin',href='https://www.linkedin.com/in/tobiasloader/') LinkedIn
+					|  and 
+					a(class='github',href='https://github.com/TobiasLoader') Github
+					| .<br><br>Whilst playing chess one day with a friend from school and we thought why not imagine we've glued the A and H files together? We soon realised how interesting and complex this variant was and I set out to build an app to play cylinder chess online!<br><br>Many coffee's were consumed in the making of this app! I would be really grateful if you donated the cost of a coffee to help me bring out more features. In the pipes: user accounts, eval engine & ELO, matching random players. Thanks very much :)
+			.buttonrow
+				+inversesubbutton('backaboutarea','back','')
+				+subbuttonicon('coffeebutton','Buy me a Coffee','/assets/coffee-cup-v3.svg')
 		+popup('generalpopup')
 	#copyright-content
 		p#desktop-copyright
 			a.footer-link(href='https://cylinderchess.com') cylinderchess.com
 			| &nbsp;|&nbsp;copyright&nbsp;
 			span(style='font-family:Arial, sans-serif;') &copy;&nbsp;
-			| &nbsp;2022 
+			| &nbsp;2022&nbsp;
 			a.footer-link(href='https://www.linkedin.com/in/tobiasloader/') tobias&nbsp;loader
 			| &nbsp;&mdash;&nbsp;all&nbsp;rights&nbsp;reserved
 	script(src='/js/jquery.min.js')

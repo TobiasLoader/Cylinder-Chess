@@ -46,6 +46,7 @@ function cloneStandardStartingPositions(){
 export function initBoard(boardtype,mycolour){
   const commonboard = $('#commonboard');
   localstate.boardpiecemap = cloneStandardStartingPositions();
+  console.log(localstate.boardpiecemap);
   if (boardtype=='cylinder') cylinderBoardGame(commonboard,mycolour);
   if (boardtype=='square') squareBoardGame(commonboard,mycolour);
 }
@@ -203,6 +204,9 @@ export function resultMovePieces(playercolour,res){
     localstate.boardpiecemap[res['from']].capture(localstate.boardpiecemap[res['capture']]);
     delete localstate.boardpiecemap[res['capture']];
   }
+  console.log('done capture')
+  console.log(localstate.boardpiecemap)
+  console.log(localstate.boardpiecemap[res['from']],playercolour,res['to'])
   const movereturn = localstate.boardpiecemap[res['from']].move(playercolour,res['to']);
   console.log(movereturn);
   if (movereturn['special']=='queened') {
