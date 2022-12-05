@@ -193,15 +193,15 @@ io.sockets.on('connection', function (socket) {
     });
     
     socket.on('readytoreceiverejoinmoves',function(room, player){
-        console.log('readytoreceiverejoinmoves')
+        // console.log('readytoreceiverejoinmoves')
         for (var move of roomgamemoves[room]){
-            console.log(move);
+            // console.log(move);
             socket.emit('boardmove', move['movedata'], move['time']);
         }
-        console.log(parseInt(player))
-        console.log(roomsocketplayersturn[room])
+        // console.log(parseInt(player))
+        // console.log(roomsocketplayersturn[room])
         if (roomsocketplayersturn[room]!=undefined && parseInt(player) == roomsocketplayersturn[room]){
-            console.log('play')
+            // console.log('play')
             socket.emit('play');
         }
     });
