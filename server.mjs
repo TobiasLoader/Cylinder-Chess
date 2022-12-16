@@ -152,7 +152,9 @@ io.sockets.on('connection', function (socket) {
             socket.emit('error', 'roomabandoned');
         } else if (existinguniqueid!="" && roomuniquegameids[room]!=undefined && (Object.values(roomuniquegameids[room])).includes(parseInt(existinguniqueid))){
             const myid = Object.keys(roomuniquegameids[room])[Object.values(roomuniquegameids[room]).indexOf(parseInt(existinguniqueid))];
+            console.log('rejoin',myid,existinguniqueid,room,roomuniquegameids[room]);
             roomsockets[room][myid].leave(room);
+            roomsockets[room][myid].emit('kick');
             roomsockets[room][myid] = socket;
             socket.join(room);
             socket.emit('rejoin',room,myid,roomboardtype[room],roomplayercolours[room][myid], roomtimes[room], roomshowmoves[room]);

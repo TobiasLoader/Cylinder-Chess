@@ -13,7 +13,12 @@ body {
   margin: 0;
   overflow: hidden;
   font-family: "JetBrains Mono", monospace;
-  display: flex; }
+  display: flex;
+  z-index: -2;
+  user-select: none; }
+
+h2 {
+  font-weight: normal; }
 
 #cc-graphic {
   display: block;
@@ -22,7 +27,7 @@ body {
   left: 0;
   opacity: 0.5;
   max-width: 200px;
-  width: 10%;
+  width: 8%;
   margin: 30px 40px; }
 
 body.ingame #cc-graphic {
@@ -69,10 +74,43 @@ body.ingame #cylinder-title {
 .splitbuttonrow {
   display: flex; }
 
+#helpbtn {
+  position: absolute;
+  right: 0;
+  bottom: 0; }
+
+@keyframes pulse {
+  0% {
+    box-shadow: rgba(var(--pricol), 0.4) 0 0 10px 3px;
+    background: rgba(var(--secbgcol), 1); }
+  50% {
+    box-shadow: rgba(0, 0, 0, 0) 0 0 10px 3px;
+    background: rgba(var(--bgcol), 1); }
+  100% {
+    box-shadow: rgba(var(--pricol), 0.4) 0 0 10px 3px;
+    background: rgba(var(--secbgcol), 1); } }
+
+#helpbtn .mainbutton {
+  animation: pulse 2s infinite;
+  width: auto;
+  height: 20px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  border: rgba(var(--pricol), 0.5) 1px solid;
+  margin: 10px; }
+
+#helpbtn .mainbuttontitle {
+  font-size: 18px;
+  line-height: 20px;
+  padding: 0; }
+
+body.ingame #helpbtn {
+  display: none; }
+
 .mainbutton {
   width: 100%;
-  padding: 10px 20px;
-  margin: 10px 7.5px;
+  padding: 7.5px 7.5px;
+  margin: 7.5px 7.5px;
   display: block;
   cursor: pointer;
   text-align: center;
@@ -113,7 +151,7 @@ body.ingame #cylinder-title {
 .mainbuttontitle {
   margin: 0;
   padding: 5px;
-  font-size: 22px; }
+  font-size: 20px; }
 
 .subbutton {
   height: 50px;
@@ -260,10 +298,10 @@ body.ingame #cylinder-title {
   margin-bottom: 20px; }
 
 #gamearea .subbutton {
-  height: 40px; }
+  height: 30px; }
 
 #gamearea .submainbuttontitle {
-  line-height: 40px;
+  line-height: 30px;
   font-size: 15px; }
 
 #gamearea .subbutton:first-child {
@@ -385,6 +423,19 @@ body.ingame #cylinder-title {
 #gamearea.rematchreceived #boardarea {
   filter: grayscale(0.7); }
 
+.qrrow {
+  margin: 10px;
+  display: flex;
+  place-content: space-between; }
+
+.qrrow h2 {
+  line-height: 30px;
+  font-size: 20px; }
+
+#qr {
+  width: 150px;
+  background: rgba(var(--secbgcol), 0.5); }
+
 #sharearea .copytext {
   background: rgba(var(--secbgcol), 1);
   display: flex;
@@ -407,14 +458,28 @@ body.ingame #cylinder-title {
   width: 20px;
   padding: 0 15px; }
 
+::-webkit-scrollbar {
+  width: 5px; }
+
+::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0); }
+
+::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  outline: 1px solid rgba(20, 20, 20, 0.8);
+  background-color: rgba(20, 20, 20, 0.6); }
+
 #aboutarea #abouttxtarea {
   margin: 10px 10px 20px 10px;
   max-height: 70vh;
   overflow: auto; }
 
+#aboutarea #abouttxtarea.scrollpadding {
+  padding-right: 10px; }
+
 #aboutarea #toby-pic {
   width: 110px;
-  margin-right: 20px;
+  margin-right: 15px;
   margin-bottom: 10px;
   float: left;
   border: rgba(255, 255, 255, 0.5) 1px solid; }
@@ -424,16 +489,14 @@ body.ingame #cylinder-title {
 
 #aboutarea p {
   color: rgba(var(--tricol), 0.7);
-  text-align: justify; }
+  text-align: justify;
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 21px; }
 
 #aboutarea p a {
-  text-decoration: none; }
-
-#aboutarea .linkedin {
-  color: #0092df; }
-
-#aboutarea .github {
-  color: #79c0ff; }
+  text-decoration: none;
+  color: rgba(var(--pricol), 1); }
 
 #aboutarea #coffeebutton {
   width: auto; }
@@ -460,7 +523,8 @@ body.ingame #cylinder-title {
   margin: 20px 0; }
 
 .popup p {
-  margin: 0; }
+  margin: 0;
+  line-height: 20px; }
 
 .popup .popupcross {
   position: absolute;
@@ -506,6 +570,23 @@ body.ingame #cylinder-title {
 
 #boardarea {
   width: min-content; }
+
+#commonboard.sqr ~ #yourmoveslider {
+  display: none; }
+
+#boardarea #yourmoveslider {
+  bottom: calc(50% - 50px);
+  left: 50%;
+  position: absolute;
+  width: 100px;
+  transition: left 500ms;
+  transform: rotate(270deg);
+  transform-origin: left;
+  z-index: -1;
+  opacity: 0.5; }
+
+body.mymove #boardarea #yourmoveslider {
+  left: 100%; }
 
 #commonboard {
   display: flex;
@@ -681,10 +762,12 @@ body.ingame #cylinder-title {
   width: var(--relativesize); }
 
 #copyright-content {
+  z-index: -1;
   width: 100%;
   margin: 0;
   position: absolute;
-  bottom: 0; }
+  bottom: 0;
+  pointer-events: none; }
 
 #copyright-content p {
   left: 50%;
@@ -696,11 +779,10 @@ body.ingame #cylinder-title {
   font-size: 12px; }
 
 #copyright-content .footer-link {
-  color: rgba(var(--tricol), 0.6); }
+  pointer-events: auto;
+  color: rgba(var(--tricol), 0.6);
+  text-decoration: none;
+  text-underline-offset: 5px; }
 
 #copyright-content .footer-link:hover {
   color: rgba(var(--pricol), 1); }
-
-#copyright-content .footer-link {
-  text-decoration: none;
-  text-underline-offset: 5px; }

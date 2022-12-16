@@ -15,15 +15,28 @@
 	#sharebuttonscontainer {
 		flex-direction: column;
 	}
+	.qrrow h2 {
+		line-height: 20px;
+		font-size:15px;
+	}
 	.mainbutton {
 		border-radius:100px !important;
-		width: auto;
+		width: 60%;
+		margin: 10px auto;
 	}
 	.mainbuttontitle {
 		font-size:18px;
 	}
 	.titlebanner {
 		margin: 5px;
+	}
+	#aboutarea #toby-pic {
+		width:90px;
+	}
+	#aboutarea p {
+		font-size: 11px; 
+		line-height: 18px;
+		text-align: left;
 	}
 	#startgame-options .game-option {
 		padding: 5px 0;
@@ -33,10 +46,14 @@
 	}
 	.buttonrow .subbutton {
 		flex: 1;
-		margin: 0 5px;
+		margin: 0 2px;
+	}
+	.subbutton {
+		height:30px;
 	}
 	.submainbuttontitle {
 		font-size: 13px;
+		line-height: 30px;
 	}
 	.iconbutton.subbutton img {
 		display: none;
@@ -54,20 +71,15 @@
 		left:0;
 		width:100%;
 	}
-	#gamearea .subbutton {
-		// margin:0 5px !important;
-		height: 35px;
-	}
 	#gamearea .submainbuttontitle {
-		line-height: 35px;
-		font-size: 13px;
+		font-size: 11px;
 	}
 	.buttonrowmsgcontainer {
-		height: 35px;
+		height: 30px;
 	}
 	.buttonrowmsg {
-		font-size: 13px;
-		line-height: 35px;
+		font-size: 11px;
+		line-height: 30px;
 	}
 	.piece {
 		width: calc(var(--relativesize));
