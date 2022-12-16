@@ -3,7 +3,7 @@
 //   +gameoption('roomsize-3','roomsize','room size 3','3',false)
 
 import {strPrettyTimeFormat, updateTimeTimeFormat, updateAfterMove, setToZero } from './time.mjs';
-import {initBoard, resizeCylinderBoard, resizeSquareBoard, moveMade, resultMovePieces} from './game.mjs';
+import {initBoard, resizeCylinderBoard, resizeSquareBoard, moveMade, resultMovePieces, mousecylindrag} from './game.mjs';
 import {GameState} from './gamestate.mjs';
 
 export const localstate = new GameState();
@@ -41,6 +41,7 @@ const generalpopup = $('#generalpopup .popupcontent');
 const boardpopup = $('#boardpopup .popupcontent');
 const popups = $('.popup .popupcontent')
 const popupcrosses = $('.popupcross');
+const helpbtn = $('#helpbtn');
 
 const audioMove = document.createElement('audio');
 audioMove.setAttribute('src', 'assets/move-self.mp3');
@@ -143,7 +144,10 @@ function listensocket(){
   localstate.socket.on('roomstatus', (fullstatus) => {
     console.log('room status: ' + fullstatus)
     if (fullstatus == 'not full') waitingroom();
-    else if (fullstatus == 'full') setupgame();
+    else if (fullstatus == 'full') {
+      setupgame();
+      setInGameState('noboard');
+    }
   });
   
   localstate.socket.on('kick', function() {
@@ -267,7 +271,6 @@ function setupgame() {
   updateroomnumber();
   console.log('game is joined');
   setInitState('state-gamearea');
-  setInGameState('noboard');
 }
 
 function begingame(){
@@ -393,7 +396,7 @@ function resetClasses(){
   $('.silhouette').remove();
   $('.replacepiecehighlight').remove();
   $('.piecechosen').remove();
-
+  localstate.currentpiece =  '';
   // for (var i=0; i<8; i+=1){
   //   for (var j=0; j<8; j+=1){
   //     const c = 'tocapture-'+String.fromCharCode(65+i)+(1+j).toString();
@@ -405,13 +408,16 @@ function resetClasses(){
 function listenMoveMade(){
   $('.cell').click(function (e) {
     e.stopPropagation();
-    resetClasses();
-    if ($(this).hasClass('mypiece')) {
-      console.log('is my move?', localstate.mymove)
-      if (localstate.mymove) {
-        localstate.currentpiece = $(this).attr('id');
-        console.log('move from ',localstate.currentpiece)
-        makeMove(localstate.currentpiece);
+    if (localstate.boardtype=='square' || !mousecylindrag){
+      const clickchosenpiece = $(this).children('.piecechosen').length > 0;
+      resetClasses();
+      if (!clickchosenpiece && $(this).hasClass('mypiece')) {
+        console.log('is my move?', localstate.mymove)
+        if (localstate.mymove) {
+          localstate.currentpiece = $(this).attr('id');
+          console.log('move from ',localstate.currentpiece)
+          makeMove(localstate.currentpiece);
+        }
       }
     }
   });
@@ -431,16 +437,38 @@ async function makeMove(frompos){
 }
 
 function popUpNoSuchRoom(){
-  generalpopup.append('<h2>OH NOES!</h2><p>No such room exists. Please try a different room id, or start a new game.</p>');
+  generalpopup.append('<h2>OOPS!</h2><p>No such room exists. Please try a different room id, or start a new game.</p>');
   main.addClass('popup-active');
 }
 function popUpRoomAbandoned(){
-  generalpopup.append('<h2>OH NOES!</h2><p>The room you tried to enter was abandoned. A game happened here but one (or both) players have left.</p>');
+  generalpopup.append('<h2>WHOOPS!</h2><p>The room you tried to enter was abandoned. A game happened here but one (or both) players have left.</p>');
   main.addClass('popup-active');
 }
 function popUpRoomFull(){
-  generalpopup.append('<h2>OH NOES!</h2><p>The room is at full capacity. Sorry you can\'t enter.</p>');
+  generalpopup.append('<h2>YIKES!</h2><p>The room is at full capacity. Sorry you can\'t enter.</p>');
   main.addClass('popup-active');
+}
+
+function popUpHelp(){
+  if ($('#main').hasClass('state-home')){
+    generalpopup.append('<h2>Help? -- Main Menu</h2><p>This is the main menu.<br><br>From here you can "Start Game". This allows a player to initiate a new game and choose the configurations they wish (eg. the time format). Once completed, they will enter a "Waiting Room" with a unique room ID. They can share this room ID with their opponent so that they can join the same room. For every game, at least one player must go through this process <br><br>The other button is to "Join Game". This joins a room with a unique room ID (supplied by a player who has already gone through the process of "Start Game").<br><br></p>');
+    main.addClass('popup-active');
+  } else if ($('#main').hasClass('state-startgame')){
+    generalpopup.append('<h2>Help? -- Game Configs</h2><p>Choose your game configurations!<br><br>Player Colour: you have a choice between white, black, or randomised.<br><br>Geometry: both options are topologically equivalent, ie. the A and H files have been effectively glued together. However the player can choose the geometric projection of the board (a 3d cylinder, or a flattened square board)</p>');
+    main.addClass('popup-active');
+  }  else if ($('#main').hasClass('state-joingame')){
+    generalpopup.append('<h2>Help? -- Join Game</h2><p>Type in the room ID of the room you wish to join (if you are not sure you can ask you opponent for theirs, or start a new  game and share that room id with someone).<br><br>Feature coming in the future: randomly match players with similar ELO (so that you could play against people you do not know and you wouldn\'t need to ask them for a room id).</p>');
+    main.addClass('popup-active');
+  }   else if ($('#main').hasClass('state-aboutarea')){
+    generalpopup.append('<h2>Help? -- About</h2><p>Here I\'m just telling you a bit more about me :)<br><br>Also if you\'d like to support me further, you can check out some cool merch I made at:<br>https://www.bagsoflove.co.uk/stores/tobias-loader</p>');
+    main.addClass('popup-active');
+  } else if ($('#main').hasClass('state-sharearea')){
+    generalpopup.append('<h2>Help? -- Share</h2><p>These are the ways you can share cylinderchess.com and spread the word around. You can scan the QR code with a mobile device, and that links to cylinderchess.com :)</p>');
+    main.addClass('popup-active');
+  }  else if ($('#main').hasClass('state-waitingarea')){
+    generalpopup.append('<h2>Help? -- Waiting Room</h2><p>Awesome! You\'ve created a new room (where the game will be played). You just need to invite an opponent to the room. Message them (or communicate in some way) the Room ID, then they can join this room.</p>');
+    main.addClass('popup-active');
+  }
 }
 
 popupcrosses.click(function(){
@@ -484,6 +512,8 @@ leavewaitingroom.click(function(){
 
 aboutbutton.click(function(){
   setInitState('state-aboutarea');
+  $('.scrollpadding').removeClass('scrollpadding');
+  scrollbarPosResizing();
 });
 
 backaboutarea.click(function(){
@@ -523,6 +553,11 @@ backsharearea.click(function(){
   setInitState('state-home');
 });
 
+helpbtn.click(function(){
+  popUpHelp();
+  // setInitState('state-help');
+});
+
 $(window).on('resize',function(){
   if (localstate.boardtype=='cylinder') resizeCylinderBoard();
   if (localstate.boardtype=='square') resizeSquareBoard();
@@ -557,6 +592,21 @@ function deleteCookie(cname) {
   }
 }
 
+function scrollbarVisible(element) {
+  return element.scrollHeight > element.clientHeight;
+}
+function scrollbarPosResizing(){
+  if (scrollbarVisible(document.getElementById('abouttxtarea'))){
+    $('#abouttxtarea').addClass('scrollpadding');
+  } else {
+    $('.scrollpadding').removeClass('scrollpadding');
+  }
+}
+
+window.addEventListener('resize', function(event) {
+  scrollbarPosResizing();
+});
+
 var online = true;
 window.addEventListener('offline', function(){
   online = false;
@@ -565,7 +615,7 @@ window.addEventListener('offline', function(){
     boardpopup.append('<h2>OH NOES!</h2><p>You have disconnected from the internet mid game!<br><br>Try to get back online. When you do:<br>1. Refresh the page,<br>2. To rejoin the game, click join and enter room number: '+localstate.myroom.toString()+'<br>3. Voila you are done! Hopefully you can get right back in the game :)</p>');
   } else {
     generalpopup.empty();
-    generalpopup.append('<h2>OH NOES!</h2><p>You have disconnected from the internet.<br><br>Sorry you can\'t do much on cylinderchess.com until you get back online.</p>');
+    generalpopup.append('<h2>YIKES!</h2><p>You have disconnected from the internet.<br><br>Sorry you can\'t do much on cylinderchess.com until you get back online.</p>');
   }
   main.addClass('popup-active');
 });
@@ -574,10 +624,10 @@ window.addEventListener('online', function(){
   if (!online){
     if (localstate.myroom!=0){
       boardpopup.empty();  
-      boardpopup.append('<h2>YESSS</h2><p>You have reconnected to the internet!<br><br>If you haven\'t done so already:<br>1. Refresh the page,<br>2. To rejoin the game, click join and enter room number: '+localstate.myroom.toString()+'<br>3. Voila you are done! Hopefully you should be right back in the game :)</p>');
+      boardpopup.append('<h2>YESS!</h2><p>You have reconnected to the internet!<br><br>If you haven\'t done so already:<br>1. Refresh the page,<br>2. To rejoin the game, click join and enter room number: '+localstate.myroom.toString()+'<br>3. Voila you are done! Hopefully you should be right back in the game :)</p>');
     } else {
       generalpopup.empty();
-      generalpopup.append('<h2>YESS!</h2><p>You\'re back online :)<br><br>Time to get back to cylinder chessing.</p>');
+      generalpopup.append('<h2>YESS!</h2><p>You\'re back :)<br><br>Time for some more cylinder chessin’?</p>');
     }
     main.addClass('popup-active');
   }

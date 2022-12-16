@@ -3,6 +3,8 @@ import {localstate} from './main.mjs';
 
 var movenum = 0;
 
+export var mousecylindrag = false;
+
 function cloneStandardStartingPositions(){
   return {
     'A1': new Rook('0','w','A1'), 
@@ -69,6 +71,55 @@ function scrollMapping(x,y){
   return ((x+y)*Math.abs(ax-ay))/(ax+ay);
 }
 
+( function() {
+
+// Based on easing equations from Robert Penner (http://www.robertpenner.com/easing)
+
+var baseEasings = {};
+
+$.each( [ "Quad", "Cubic", "Quart", "Quint", "Expo" ], function( i, name ) {
+    baseEasings[ name ] = function( p ) {
+      return Math.pow( p, i + 2 );
+    };
+} );
+
+$.extend( baseEasings, {
+    Sine: function( p ) {
+        return 1 - Math.cos( p * Math.PI / 2 );
+    },
+    Circ: function( p ) {
+        return 1 - Math.sqrt( 1 - p * p );
+    },
+    Elastic: function( p ) {
+        return p === 0 || p === 1 ? p :
+            -Math.pow( 2, 8 * ( p - 1 ) ) * Math.sin( ( ( p - 1 ) * 80 - 7.5 ) * Math.PI / 15 );
+    },
+    Back: function( p ) {
+        return p * p * ( 3 * p - 2 );
+    },
+    Bounce: function( p ) {
+        var pow2,
+            bounce = 4;
+
+        while ( p < ( ( pow2 = Math.pow( 2, --bounce ) ) - 1 ) / 11 ) {}
+        return 1 / Math.pow( 4, 3 - bounce ) - 7.5625 * Math.pow( ( pow2 * 3 - 2 ) / 22 - p, 2 );
+    }
+} );
+
+$.each( baseEasings, function( name, easeIn ) {
+    $.easing[ "easeIn" + name ] = easeIn;
+    $.easing[ "easeOut" + name ] = function( p ) {
+        return 1 - easeIn( 1 - p );
+    };
+    $.easing[ "easeInOut" + name ] = function( p ) {
+        return p < 0.5 ?
+            easeIn( p * 2 ) / 2 :
+            1 - easeIn( p * -2 + 2 ) / 2;
+    };
+} );
+
+} )();
+
 function cylinderBoardGame(commonboard,mycolour){
   commonboard.addClass('cyl');
   const cylinderarea = document.getElementById("cylinderarea");
@@ -87,6 +138,16 @@ function cylinderBoardGame(commonboard,mycolour){
     cylinder.css('transform','rotateY('+cylinderroty.toString()+'deg)');
     applyCylinderShadow(cylinderroty,cols);
   });//, {passive: true}
+  
+  $(window).keydown(function(e){
+    console.log(e.keyCode);
+    if (e.keyCode==37){
+      cylinder.cylmomentum(45);
+    } else if (e.keyCode==39){
+      cylinder.cylmomentum(-45);
+    }
+  });
+  
   
   var touchstartx = 0;
   var touchcurrentx = 0;
@@ -111,13 +172,52 @@ function cylinderBoardGame(commonboard,mycolour){
     // }
   });
   
+  commonboard.on('touchend',function(e){
+    cylinder.cylmomentum(-5*touchoffsetx);
+  });
+  
+  commonboard.on('mousedown',function(e){
+    e.stopPropagation();
+    e.preventDefault();
+    touchstartx = e.clientX;
+    touchcurrentx = e.clientX;
+    cylinder.stop(true,true);
+    mousecylindrag = true;
+  });
+  
+  $(window).on('mousemove',function(e){
+    if (mousecylindrag){
+      touchcurrentx = e.clientX;
+      touchoffsetx = touchcurrentx - touchstartx;
+      cylinderroty += touchoffsetx;
+      cylinder.css('transform','rotateY('+cylinderroty.toString()+'deg)');
+      applyCylinderShadow(cylinderroty,cols);
+      touchstartx = e.clientX;
+    }
+  });
+  
+  $(window).on('mouseup',function(e){
+    if (mousecylindrag){
+      e.stopPropagation();
+      e.preventDefault();
+      mousecylindrag = false;
+      cylinder.cylmomentum(-5*touchoffsetx);
+    }
+  });
+  
+  
   $.fn.cylmomentum = function(angle, complete) {
     return this.each(function() {
       var $elem = $(this);
+      var pnow = angle;
+      var dnow = 0;
       $({deg: angle}).animate({deg: 0}, {
         duration: 200,
+        easing: 'easeOutQuart',
         step: function(now) {
-          cylinderroty += now;
+          dnow = now - pnow;
+          pnow = now;
+          cylinderroty += dnow;
           $elem.css({
             transform: 'rotateY(' + cylinderroty + 'deg)'
           });
@@ -126,17 +226,10 @@ function cylinderBoardGame(commonboard,mycolour){
         complete: function(){
           touchstartx = touchcurrentx;
           touchoffsetx = 0;
-          console.log('end anim');
         } 
       });
     });
   };
-
-  
-  commonboard.on('touchend',function(e){
-    cylinder.cylmomentum(touchoffsetx);
-    console.log('end touch');
-  });
 }
 
 export function resizeSquareBoard(){
@@ -171,7 +264,7 @@ function placePieceHighlight(pos){
 export async function moveMade(frompos){
   $('#'+frompos).prepend('<div class="piecechosen"></div>');
   const validcandidates = localstate.validmoves[frompos];
-  console.log(validcandidates);
+  // console.log(validcandidates);
   validcandidates.forEach(function (movedata){
     $('#'+movedata.move).addClass('validcandidate');
     if (movedata.status=='attack') $('#'+movedata.move).addClass('capturecandidate');
@@ -204,20 +297,20 @@ export function resultMovePieces(playercolour,res){
     localstate.boardpiecemap[res['from']].capture(localstate.boardpiecemap[res['capture']]);
     delete localstate.boardpiecemap[res['capture']];
   }
-  console.log('done capture')
-  console.log(localstate.boardpiecemap)
-  console.log(localstate.boardpiecemap[res['from']],playercolour,res['to'])
+  // console.log('done capture')
+  // console.log(localstate.boardpiecemap)
+  // console.log(localstate.boardpiecemap[res['from']],playercolour,res['to'])
   const movereturn = localstate.boardpiecemap[res['from']].move(playercolour,res['to']);
-  console.log(movereturn);
+  // console.log(movereturn);
   if (movereturn['special']=='queened') {
     // localstate.boardpiecemap[res['to']] = localstate.boardpiecemap[res['from']];
     console.log('queening complete')
   } else if (movereturn['special']=='castled') {
     const movedata = movereturn['data'];
     localstate.boardpiecemap[movedata['newking']] = localstate.boardpiecemap[res['from']];
-    console.log(movedata['oldrook'],localstate.boardpiecemap[movedata['oldrook']])
+    // console.log(movedata['oldrook'],localstate.boardpiecemap[movedata['oldrook']])
     localstate.boardpiecemap[movedata['newrook']] = localstate.boardpiecemap[movedata['oldrook']];
-    console.log(movedata['newrook'],localstate.boardpiecemap[movedata['newrook']])
+    // console.log(movedata['newrook'],localstate.boardpiecemap[movedata['newrook']])
     delete localstate.boardpiecemap[movedata['oldrook']];
     console.log('castle complete')
   } else {
