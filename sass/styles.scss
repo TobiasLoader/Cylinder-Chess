@@ -25,6 +25,14 @@ body {
 
 h2 {
 	font-weight: normal;
+	font-size:21px;
+	line-height:30px;
+}
+
+p {
+	font-size: 13px;
+	line-height: 21px;
+	margin:0;
 }
 // 
 // body.mymove {
@@ -77,11 +85,11 @@ body.ingame #cylinder-title {
 	display: none;
 }
 
-.state-home {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-}
+// .state-home {
+// 	display: flex;
+// 	flex-direction: row;
+// 	justify-content: center;
+// }
 
 //////// UI ELEMENTS
 
@@ -149,7 +157,7 @@ body.ingame #helpbtn {
 
 .mainbutton {
 	width: 100%;
-	padding: 7.5px 7.5px;
+	padding: 5px 5px;
 	margin: 7.5px 7.5px;
 	display: block;
 	cursor: pointer;
@@ -173,7 +181,7 @@ body.ingame #helpbtn {
 .inversemainbutton {
 	background: rgba(var(--bgcol),1);
 	color: rgba(var(--pricol),1);
-	border:rgba(var(--pricol),1) 2px solid;
+	border:rgba(var(--pricol),1) 1px solid;
 	border-radius: 100px;
 }
 
@@ -185,7 +193,7 @@ body.ingame #helpbtn {
 .iconbutton img {
 	height: 30px;
 	margin: auto 10px;
-	opacity: 0.6;
+	opacity: 0.9;
 }
 
 .inversemainbutton:hover {
@@ -249,10 +257,8 @@ body.ingame #helpbtn {
 }
 
 .titlebanner {
-	height: 50px;
-	margin: 10px;
+	margin: 10px 10px 20px 10px;
 	color: rgba(var(--tricol), 1);
-	line-height: 50px;
 }
 
 #roomnumcontainer {
@@ -302,6 +308,7 @@ body.ingame #helpbtn {
 }
 #waitingareacontent p {
 	text-align: center;
+	margin:10px 0;
 }
 
 #waitingarea .room {
@@ -324,6 +331,10 @@ body.ingame #helpbtn {
 	place-content: space-around;
 	color: rgba(var(--tricol), 1);
 	padding: 10px 0;
+}
+
+#colour.game-option {
+	padding-top:0;
 }
 
 .radiobuttonoption {
@@ -370,12 +381,14 @@ body.ingame #helpbtn {
 }
 
 #gamearea .subbutton {
-	height: 30px;
+	// height: 30px;
+	height: auto;
+	padding:5px 0;
 }
 
 #gamearea .submainbuttontitle {
-	line-height: 30px;
-	font-size: 15px;
+	line-height: 17px;
+	font-size: 13px;
 }
 
 #gamearea .subbutton:hover {
@@ -479,14 +492,15 @@ body.ingame #helpbtn {
 	display: flex;
 	place-content: space-between;
 }
-.qrrow h2 {
-	line-height: 30px;
-	font-size: 20px;
+.qrrow p {
+	color: rgba(var(--tricol), 1);
 }
 
 #qr {
-	width:150px;
-	background: rgba(var(--secbgcol),0.5);
+	width: 75px;
+	height: 75px;
+	margin-top: 5px;
+	// background: rgba(var(--secbgcol),0.5);
 }
 
 #sharearea .copytext {
@@ -511,19 +525,23 @@ body.ingame #helpbtn {
 }
 
 #sharearea .clipboard-copy {
-	width: 20px;
-	padding: 0 15px;
+	width: 25px;
+	padding: 0 12px;
+	opacity: 0.9;
+}
+#sharearea .copytext:hover .clipboard-copy {
+	opacity: 1;
 }
 
-::-webkit-scrollbar {
+#aboutarea ::-webkit-scrollbar {
 	width: 5px;
 }
 
-::-webkit-scrollbar-track {
+#aboutarea ::-webkit-scrollbar-track {
 	background-color: rgba(0,0,0,0);
 }
 
-::-webkit-scrollbar-thumb {
+#aboutarea ::-webkit-scrollbar-thumb {
 	// left:10px;
 	// border: 4px solid rgba(0, 0, 0, 0);
 	border-radius:9999px;
@@ -541,7 +559,7 @@ body.ingame #helpbtn {
 }
 
 #aboutarea #toby-pic {
-	width: 110px;
+	width: 100px;
 	margin-right: 15px;
 	margin-bottom: 10px;
 	float: left;
@@ -554,8 +572,8 @@ body.ingame #helpbtn {
 	color: rgba(var(--tricol),0.7);
 	text-align: justify;
 	font-size: 13px; 
-	font-weight: 300;
 	line-height: 21px;
+	margin: 0 0 10px;
 }
 #aboutarea p a {
 	text-decoration: none;
@@ -574,10 +592,11 @@ body.ingame #helpbtn {
 	top: 50%;
 	transform: translateY(-50%);
 	position: absolute;
-	width: 80%;
-	height: 40%;
-	margin: 0 0 0 10%;
+	width: 100%;
+	// margin: 0 0 0 10%;
+	margin:0;
 	min-height: 300px;
+	max-height: 500px;
 	background: #3c3c3c;
 	box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 50px;
 	border: rgba(var(--tricol), 0.5) 1px solid;
@@ -585,15 +604,15 @@ body.ingame #helpbtn {
 }
 
 .popupcontent {
+	text-align: justify;
 	padding:40px;
 }
 
 .popup h2 {
-	margin: 20px 0;
+	// margin: 20px 0;
 }
 .popup p {
-	margin:0;
-	line-height: 20px;
+	margin: 0 0 10px;
 }
 .popup .popupcross {
 	position: absolute;

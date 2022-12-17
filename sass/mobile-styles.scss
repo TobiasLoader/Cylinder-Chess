@@ -5,9 +5,9 @@
 	#cylinder-title {
 		display: none;
 	}
-	#mainbuttonsrow {
-		width:80%;
-	}
+	// #mainbuttonsrow {
+	// 	width:80%;
+	// }
 	#gamebuttonscontainer {
 		display: flex;
 		flex-direction: column;
@@ -65,21 +65,22 @@
 		background: none;
 	}
 	.state-gamearea {
-		position: absolute !important;
-		margin-top: 5px;
+		// position: absolute !important;
+		// margin-top: 5px;
 		top:0;
 		left:0;
 		width:100%;
 	}
 	#gamearea .submainbuttontitle {
 		font-size: 11px;
+		line-height: 14px;
 	}
 	.buttonrowmsgcontainer {
-		height: 30px;
+		// height: 30px;
 	}
 	.buttonrowmsg {
 		font-size: 11px;
-		line-height: 30px;
+		line-height: 14px;
 	}
 	.piece {
 		width: calc(var(--relativesize));
@@ -110,6 +111,21 @@
 		width: calc(100% - 30px);
 		margin: 0 15px;
 	}
+	.popup .popupcross {
+		width: 20px;
+		height: 20px;
+		padding: 10px;
+		margin:0;
+	}
+	.popup .crossline {
+		height: 20px;
+		width: 1px;
+		margin-left: 10px;
+	}
+	.popupcontent {
+		text-align: left;
+		padding: 20px;
+	}
 	#copyright-content {
 		display: none;
 		bottom: calc(50% - 235px);
@@ -130,14 +146,8 @@
 	}
 }
 
-@media only screen and (min-width: 600px) and (max-height: 800px) {
-	#gamearea .submainbuttontitle {
-		font-size: 13px;
-	} 
-}
-
-@media only screen and (max-height: 700px) {
-	#gamearea .submainbuttontitle {
-		font-size: 11px;
-	} 
-}
+// @media only screen and (min-width: 600px) and (max-height: 800px) {
+// 	#gamearea .submainbuttontitle {
+// 		font-size: 13px;
+// 	} 
+// }

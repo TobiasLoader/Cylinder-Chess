@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-  <circle style="fill: rgba(255, 255, 255, 0); stroke-width: 65.0871px; stroke: rgb(255, 255, 255);" transform="matrix(0.621762, 0, 0, 0.607361, 61.428932, -113.871086)" cx="441.602" cy="434.455" r="80.417"/>
-  <circle style="fill: rgba(255, 255, 255, 0); stroke-width: 65.0871px; stroke: rgb(255, 255, 255);" transform="matrix(0.621762, 0, 0, 0.607361, -147.445343, -4.279103)" cx="471.958" cy="416.756" r="80.417"/>
-  <circle style="fill: rgba(255, 255, 255, 0); stroke-width: 65.0871px; stroke: rgb(255, 255, 255);" transform="matrix(0.621762, 0, 0, 0.607361, 47.422276, 114.949913)" cx="464.129" cy="387.002" r="80.417"/>
-  <path style="fill: rgba(255, 255, 255, 0); stroke-width: 40px; stroke: rgb(255, 255, 255);" d="M 194.73 226.947 C 225.769 211.821 256.807 196.696 287.846 181.57" transform="matrix(0.999391, -0.034899, 0.034899, 0.999391, -6.981435, 8.545134)"/>
-  <path style="fill: rgba(255, 255, 255, 0); stroke-width: 40px; stroke: rgb(255, 255, 255);" d="M 190.558 269.59 C 221.945 285.609 253.333 301.626 284.721 317.646" transform="matrix(0.999848, 0.017453, -0.017453, 0.999848, 5.16071, -4.102799)"/>
+  <circle style="fill: rgba(255, 255, 255, 0); stroke: rgb(255, 255, 255); stroke-width: 32.5435px;" transform="matrix(0.621762, 0, 0, 0.607361, 61.428932, -113.871086)" cx="441.602" cy="434.455" r="80.417"/>
+  <circle style="fill: rgba(255, 255, 255, 0); stroke: rgb(255, 255, 255); stroke-width: 32.5435px;" transform="matrix(0.621762, 0, 0, 0.607361, -147.445343, -4.279103)" cx="471.958" cy="416.756" r="80.417"/>
+  <circle style="fill: rgba(255, 255, 255, 0); stroke: rgb(255, 255, 255); stroke-width: 32.5435px;" transform="matrix(0.621762, 0, 0, 0.607361, 47.422276, 114.949913)" cx="464.129" cy="387.002" r="80.417"/>
+  <path style="fill: rgba(255, 255, 255, 0); stroke: rgb(255, 255, 255); stroke-width: 20px;" d="M 194.73 226.947 C 225.769 211.821 256.807 196.696 287.846 181.57" transform="matrix(0.999391, -0.034899, 0.034899, 0.999391, -6.981435, 8.545134)"/>
+  <path style="fill: rgba(255, 255, 255, 0); stroke: rgb(255, 255, 255); stroke-width: 20px;" d="M 190.558 269.59 C 221.945 285.609 253.333 301.626 284.721 317.646" transform="matrix(0.999848, 0.017453, -0.017453, 0.999848, 5.16071, -4.102799)"/>
 </svg>

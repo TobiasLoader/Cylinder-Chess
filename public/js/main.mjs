@@ -450,17 +450,18 @@ function popUpRoomFull(){
 }
 
 function popUpHelp(){
+  popups.empty();
   if ($('#main').hasClass('state-home')){
-    generalpopup.append('<h2>Help? -- Main Menu</h2><p>This is the main menu.<br><br>From here you can "Start Game". This allows a player to initiate a new game and choose the configurations they wish (eg. the time format). Once completed, they will enter a "Waiting Room" with a unique room ID. They can share this room ID with their opponent so that they can join the same room. For every game, at least one player must go through this process <br><br>The other button is to "Join Game". This joins a room with a unique room ID (supplied by a player who has already gone through the process of "Start Game").<br><br></p>');
+    generalpopup.append('<h2>Help? -- Main Menu</h2><p>This is the main menu.</p><p>From here you can "Start Game". This allows a player to initiate a new game and choose the configurations they wish (eg. the time format). Once completed, they will enter a "Waiting Room" with a unique room ID. They can share this room ID with their opponent so that they can join the same room. For every game, at least one player must go through this process.</p><p>The other button is to "Join Game". This joins a room with a unique room ID (supplied by a player who has already gone through the process of "Start Game").</p><p>Each of the main buttons have an associated help dialogue. These are always accessible via the help icon in the bottom right of the screen :)</p>');
     main.addClass('popup-active');
   } else if ($('#main').hasClass('state-startgame')){
-    generalpopup.append('<h2>Help? -- Game Configs</h2><p>Choose your game configurations!<br><br>Player Colour: you have a choice between white, black, or randomised.<br><br>Geometry: both options are topologically equivalent, ie. the A and H files have been effectively glued together. However the player can choose the geometric projection of the board (a 3d cylinder, or a flattened square board)</p>');
+    generalpopup.append('<h2>Help? -- Game Configs</h2><p>Choose your game configurations!</p><p>Player Colour: you have a choice between white, black, or randomised.</p><p>Geometry: both options are topologically equivalent, ie. the A and H files have been effectively glued together. However the player can choose the geometric projection of the board (a 3d cylinder, or a flattened square board)</p>');
     main.addClass('popup-active');
   }  else if ($('#main').hasClass('state-joingame')){
-    generalpopup.append('<h2>Help? -- Join Game</h2><p>Type in the room ID of the room you wish to join (if you are not sure you can ask you opponent for theirs, or start a new  game and share that room id with someone).<br><br>Feature coming in the future: randomly match players with similar ELO (so that you could play against people you do not know and you wouldn\'t need to ask them for a room id).</p>');
+    generalpopup.append('<h2>Help? -- Join Game</h2><p>Type in the room ID of the room you wish to join (if you are not sure you can ask you opponent for theirs, or start a new  game and share that room id with someone).</p><p>Feature coming in the future: randomly match players with similar ELO (so that you could play against people you do not know and you wouldn\'t need to ask them for a room id).</p>');
     main.addClass('popup-active');
   }   else if ($('#main').hasClass('state-aboutarea')){
-    generalpopup.append('<h2>Help? -- About</h2><p>Here I\'m just telling you a bit more about me :)<br><br>Also if you\'d like to support me further, you can check out some cool merch I made at:<br>https://www.bagsoflove.co.uk/stores/tobias-loader</p>');
+    generalpopup.append('<h2>Help? -- About</h2><p>Here I\'m just telling you a bit more about me :)</p><p>Also if you\'d like to support me further, you can check out some cool merch I made at: https://www.bagsoflove.co.uk/stores/tobias-loader</p>');
     main.addClass('popup-active');
   } else if ($('#main').hasClass('state-sharearea')){
     generalpopup.append('<h2>Help? -- Share</h2><p>These are the ways you can share cylinderchess.com and spread the word around. You can scan the QR code with a mobile device, and that links to cylinderchess.com :)</p>');
@@ -612,10 +613,10 @@ window.addEventListener('offline', function(){
   online = false;
   if (localstate.myroom!=0){  
     boardpopup.empty();  
-    boardpopup.append('<h2>OH NOES!</h2><p>You have disconnected from the internet mid game!<br><br>Try to get back online. When you do:<br>1. Refresh the page,<br>2. To rejoin the game, click join and enter room number: '+localstate.myroom.toString()+'<br>3. Voila you are done! Hopefully you can get right back in the game :)</p>');
+    boardpopup.append('<h2>OH NOES!</h2><p>You have disconnected from the internet mid game!</p><p>Try to get back online. When you do:<br>1. Refresh the page,<br>2. To rejoin the game, click join and enter room number: '+localstate.myroom.toString()+'<br>3. Voila you are done! Hopefully you can get right back in the game :)</p>');
   } else {
     generalpopup.empty();
-    generalpopup.append('<h2>YIKES!</h2><p>You have disconnected from the internet.<br><br>Sorry you can\'t do much on cylinderchess.com until you get back online.</p>');
+    generalpopup.append('<h2>YIKES!</h2><p>You have disconnected from the internet.</p><p>Sorry you can\'t do much on cylinderchess.com until you get back online.</p>');
   }
   main.addClass('popup-active');
 });
@@ -624,10 +625,10 @@ window.addEventListener('online', function(){
   if (!online){
     if (localstate.myroom!=0){
       boardpopup.empty();  
-      boardpopup.append('<h2>YESS!</h2><p>You have reconnected to the internet!<br><br>If you haven\'t done so already:<br>1. Refresh the page,<br>2. To rejoin the game, click join and enter room number: '+localstate.myroom.toString()+'<br>3. Voila you are done! Hopefully you should be right back in the game :)</p>');
+      boardpopup.append('<h2>YESS!</h2><p>You have reconnected to the internet!</p><p>If you haven\'t done so already:<br>1. Refresh the page,<br>2. To rejoin the game, click join and enter room number: '+localstate.myroom.toString()+'<br>3. Voila you are done! Hopefully you should be right back in the game :)</p>');
     } else {
       generalpopup.empty();
-      generalpopup.append('<h2>YESS!</h2><p>You\'re back :)<br><br>Time for some more cylinder chessin’?</p>');
+      generalpopup.append('<h2>YESS!</h2><p>You\'re back :)</p><p>Time for some more cylinder chessin’?</p>');
     }
     main.addClass('popup-active');
   }

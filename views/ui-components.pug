@@ -20,9 +20,14 @@ mixin inversesubbutton(id,title,className)
     h3.submainbuttontitle !{title}
 
 mixin subbuttonicon(buttonid,title,iconsrc)
-    .iconbutton.subbutton(id=buttonid)
-      h3.submainbuttontitle !{title}
-      img(alt='icon',src=iconsrc)
+  .iconbutton.subbutton(id=buttonid)
+    h3.submainbuttontitle !{title}
+    img(alt='icon',src=iconsrc)
+
+mixin subbuttoniconwurl(buttonid,title,iconsrc,url)
+  .iconbutton.subbutton(id=buttonid,title=url)
+    h3.submainbuttontitle !{title}
+    img(alt='icon',src=iconsrc)
 
 mixin inversesubbuttonicon(buttonid,title,iconsrc)
   .inversesubbutton.iconbutton.subbutton(id=buttonid)
@@ -48,7 +53,7 @@ mixin popup(id)
 mixin startgameoptions()
   #startgame-options
     h2.titlebanner
-      | Choose Game Config:
+      | Choose Your Game Config:
     ul#colour.game-option
       +gameoption('colour-white','colour','white','w',true)
       +gameoption('colour-black','colour','black','b',false)
@@ -70,7 +75,7 @@ mixin startgameoptions()
 mixin joingameoptions()
   #joingame-options
     h2.titlebanner
-      | Enter ROOM ID:
+      | Enter the ROOM ID:
     #roomnumcontainer
       input#roomnum(placeholder='#ROOM')
     .buttonrow
