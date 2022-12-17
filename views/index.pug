@@ -12,12 +12,12 @@ head
 	meta(name="viewport", content="width=device-width, initial-scale=1.0")
 
 body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; --bgcol: 40,40,40;  --secbgcol: 20,20,20; --darkpricol:	39, 102, 82;`)
-	a(href="https://cylinderchess.com")
+	a(href="https://www.cylinderchess.com")
 		img#cc-graphic(alt='graphic',src='/assets/cc-logo.svg')
 	#cylinder-title
-		a(href="https://cylinderchess.com") cylinderchess.com
+		a(href="https://www.cylinderchess.com") cylinderchess.com
 	include ui-components
-	#helpbtn
+	#helpbtn(title='Help')
 		+inversemainbutton('help','?')
 	#main.state-home
 		#mainbuttonsrow
@@ -57,39 +57,44 @@ body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; 
 				#yourmoveslider
 					| Your Move
 		#sharearea
+			h2.titlebanner Share:
 			.qrrow
-				h2.titlebanner
-					| Here's a QR code --><br>and below is the URL.<br>So please share if you<br>like cylinderchess :)
+				div
+					p Here's a QR code --><br>and below is the URL.<br>So please share if you<br>like cylinderchess :)
 				img#qr(alt='qr',src='/assets/qr.png')
 			.copytext
-				p.tocopy https://cylinderchess.com
-				img.clipboard-copy(alt='copy to clipboard',src='/assets/light-clipboard-copy.svg')
+				p.tocopy https://www.cylinderchess.com
+				img.clipboard-copy(alt='copy to clipboard',src='/assets/light-clipboard-copy.svg',title='copy to clipboard')
 			.buttonrow
 				+inversesubbutton('backsharearea','back','')
 		#aboutarea
+			h2.titlebanner About:
 			#abouttxtarea
-				h2 A bit about the project!
 				p 
 					img(id='toby-pic', alt='Tobias Loader', src='/assets/Toby-Col-sq.jpeg')
-					| Hi, I'm Tobias Loader. I'm a student at the University of Oxford studying Maths and CompSci and I love building fun coding projects. Check out my 
+					| Hi, I'm Tobias Loader. I'm a student at the University of Oxford studying Maths and CompSci and I love building fun coding projects.
+				p Check out my 
 					a(class='linkedin',href='https://www.linkedin.com/in/tobiasloader/') LinkedIn
 					|  and 
-					a(class='github',href='https://github.com/TobiasLoader') Github
-					|  if you'd like more info.<br><br>While playing chess one day with my old school-friend Will, we said, "let's imagine we've glued the A and H files together" – effectively turning the board into a cylinder, enabling continuous movement around it. Having discovered how interesting and complex this variant can be, I thought I'd have a go at building this cylinder chess app as my holiday project. I've enjoyed playing it online with friends and hope you do too!<br><br>If you have any feature requests, bug reports, etc, you can get in touch via 
+					a(class='github',href='https://github.com/TobiasLoader') GitHub
+					|  if you'd like more info.
+				p While playing chess one day with my old school-friend Will, we said, "Let's imagine we've glued the A and H files together" – effectively turning the board into a cylinder, enabling continuous movement around it. Having discovered how interesting and complex this variant can be, I thought I'd have a go at building this cylinder chess app as my holiday project. I've enjoyed playing it online with friends and hope you do too!
+				p If you have any feature requests, bug reports, etc, you can get in touch via 
 					a(href="mailto:cylinderchess@tobiasloader.com",style='color:rgba(255,255,255,0.6);') cylinderchess@tobiasloader.com
-					| .<br><br>A lot of coffees were consumed in the making of this app! If you've enjoyed playing it and you feel happy and able to donate the price of a coffee to help out with my server costs I'd be very grateful. I'm keen to keep developing this project and have plans in the pipes for user accounts, an eval engine & ELO, and matching random players. Thanks very much :)
+					| .
+				p A lot of coffees were consumed in the making of this app! If you've enjoyed playing it and you feel happy and able to donate the price of a coffee to help out with my server costs I'd be very grateful. I'm keen to keep developing this project and have plans in the pipes for user accounts, an evaluation engine and Elo rating, and matching random players. Thanks very much :)
 
 			.buttonrow
 				+inversesubbutton('backaboutarea','back','')
-				+subbuttonicon('coffeebutton','Buy me a Coffee','/assets/coffee-cup-v3.svg')
+				+subbuttoniconwurl('coffeebutton','buy me a coffee','/assets/coffee-cup-v3.svg','https://checkout.stripe.com/')
 		+popup('generalpopup')
 	#copyright-content
 		p#desktop-copyright
-			a.footer-link(href='https://cylinderchess.com') cylinderchess.com
+			a.footer-link(href='https://www.cylinderchess.com') cylinderchess.com
 			| &nbsp;|&nbsp;copyright&nbsp;
 			span(style='font-family:Arial, sans-serif;') &copy;&nbsp;
 			| &nbsp;2022&nbsp;
-			a.footer-link(href='https://www.linkedin.com/in/tobiasloader/') tobias&nbsp;loader
+			a.footer-link(href='https://www.linkedin.com/in/tobiasloader/') Tobias&nbsp;Loader
 			| &nbsp;&mdash;&nbsp;all&nbsp;rights&nbsp;reserved
 	script(src='/js/jquery.min.js')
 	script(src='/socket.io/socket.io.js')
