@@ -17,6 +17,7 @@ export class GameState {
 	}
 	
 	resetingamestate(){
+		this.movenum = 0;
 		this.mymove = false;
 		this.gameover = false;
 		this.mytime = null;

@@ -52,8 +52,8 @@ mixin popup(id)
 
 mixin startgameoptions()
   #startgame-options
-    h2.titlebanner
-      | Choose Your Game Config:
+    h2.titlebanner Start Game
+    h3.subtitlebanner Choose Your Game Config:
     ul#colour.game-option
       +gameoption('colour-white','colour','white','w',true)
       +gameoption('colour-black','colour','black','b',false)
@@ -69,15 +69,15 @@ mixin startgameoptions()
       +gameoption('moves-t','showmoves','show moves','t',true)
       +gameoption('moves-f','showmoves','hide moves','f',false)
     .buttonrow
-      +inversesubbutton('stopcreateroom','back','')
+      +inversesubbutton('stopcreateroom','&larr; back','')
       +subbutton('createroom','create room','')
   
 mixin joingameoptions()
   #joingame-options
-    h2.titlebanner
-      | Enter the ROOM ID:
+    h2.titlebanner Join Game
+    h3.subtitlebanner Enter the ROOM ID:
     #roomnumcontainer
-      input#roomnum(placeholder='#ROOM')
+      input#roomnum(placeholder='_ _ _ _')
     .buttonrow
-      +inversesubbutton('stopjoinroom','back','')
+      +inversesubbutton('stopjoinroom','&larr; back','')
       +subbutton('joinroom','join room','')

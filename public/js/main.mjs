@@ -3,7 +3,7 @@
 //   +gameoption('roomsize-3','roomsize','room size 3','3',false)
 
 import {strPrettyTimeFormat, updateTimeTimeFormat, updateAfterMove, setToZero } from './time.mjs';
-import {initBoard, resizeCylinderBoard, resizeSquareBoard, moveMade, resultMovePieces, mousecylindrag} from './game.mjs';
+import {initBoard, resizeCylinderBoard, resizeSquareBoard, moveMade, resultMovePieces, mousecylindrag, democylpiece} from './game.mjs';
 import {GameState} from './gamestate.mjs';
 
 export const localstate = new GameState();
@@ -43,17 +43,47 @@ const popups = $('.popup .popupcontent')
 const popupcrosses = $('.popupcross');
 const helpbtn = $('#helpbtn');
 
+$(document).ready(function (){
+  $('#email-address').attr("href", atob('bWFpbHRvOmN5bGluZGVyY2hlc3NAdG9iaWFzbG9hZGVyLmNvbQ=='));
+  $('#email-address').text(atob('Y3lsaW5kZXJjaGVzc0B0b2JpYXNsb2FkZXIuY29t'));
+  loadDemoCylinder();
+})
+
 const audioMove = document.createElement('audio');
 audioMove.setAttribute('src', 'assets/move-self.mp3');
 const audioCapture = document.createElement('audio');
 audioCapture.setAttribute('src', 'assets/capture.mp3');
 
+function loadDemoCylinder(){
+  fetch('/game/cylinder/w')
+  .then((response) => {
+    return response.text();
+  })
+  .then((html) => {
+    $('#democyl').html(html);
+    $('#timerow').remove();
+    $('.capturearea').remove();
+    resizeCylinderBoard();
+    democylpiece();
+  });
+}
+
 function setInitState(state,event){
   if (event != undefined) event.stopPropagation();
   main.removeClass();
   main.addClass(state);
+  
   if (state == 'state-gamearea') body.addClass('ingame');
   else if (body.hasClass('ingame')) body.removeClass('ingame');
+  
+  if (state == 'state-home') {
+    body.addClass('inhome');
+    loadDemoCylinder();
+  }
+  else if (body.hasClass('inhome')) {
+    $('#democyl').empty();
+    body.removeClass('inhome');
+  }
 }
 
 function setInGameState(state){
@@ -76,7 +106,7 @@ function fetchBoard(board,col,afterfetch) {
 function updateroomnumber() {
   const rooms = $(".room");
   for (var i = 0; i < rooms.length; i += 1) {
-    rooms[i].innerText = "ROOM ID: " + localstate.myroom.toString();
+    rooms[i].innerHTML = "<span style='opacity:0.5;user-select: none;'>ROOM ID: </span>" + localstate.myroom.toString() + "<span class='copy-room-id'><img class='copy-id' alt='copy to clipboard' src='/assets/light-clipboard-copy.svg'><img class='tick-id' alt='tick' src='/assets/tick.svg'></span>";
   }
 }
 
@@ -166,7 +196,7 @@ function listensocket(){
   
   localstate.socket.on('roomready', function () {
     console.log('room ready');
-    gameplay();
+    // timinggameplay();
   });
   
   localstate.socket.on('play', function () {
@@ -181,6 +211,8 @@ function listensocket(){
     resultMovePieces(localstate.mycolour,movedata);
     console.log('moved piece');
     resetClasses();
+    if (localstate.movenum==0) timinggameplay();
+    localstate.movenum += 1;
     localstate.mytime = time[localstate.myplayerid];
     localstate.opponenttime = time[localstate.opponentid];
     $('#movemade').text('move: from ' + movedata['from'] + ', to ' + movedata['to']);
@@ -214,15 +246,15 @@ function listensocket(){
     if (!localstate.gameover){
       popUpGameOver();
       gameOver();
-      console.log(player,wintitle,winmsg,losetitle,losemsg);
-      console.log(player==3-localstate.myplayerid);
+      // console.log(player,wintitle,winmsg,losetitle,losemsg);
+      // console.log(player==3-localstate.myplayerid);
       if (player==localstate.myplayerid) {
         boardpopup.append('<h2>'+wintitle+'</h2><p>'+winmsg+'</p>');
-        gameovermsg.append('VICTORY!');
+        gameovermsg.text('VICTORY!');
       }
       else if (player==3-localstate.myplayerid)  {
         boardpopup.append('<h2>'+losetitle+'</h2><p>'+losemsg+'</p>');
-        gameovermsg.append('DEFEAT');
+        gameovermsg.text('DEFEAT');
         if (losetitle=='Out of Time!') {
           localstate.opponenttime = setToZero(localstate.opponenttime);
         }
@@ -239,7 +271,7 @@ function listensocket(){
       popUpGameOver();
       gameOver();
       boardpopup.append('<h2>'+title+'</h2><p>'+msg+'</p>');
-      gameovermsg.append('DRAW!');
+      gameovermsg.text('DRAW!');
     }
   });
   
@@ -279,7 +311,7 @@ function begingame(){
   localstate.socket.emit('ready',localstate.myroom);
 }
 
-function gameplay() {
+function timinggameplay() {
   localstate.mymovemillis = Date.now();
   localstate.opmovemillis = Date.now();
   localstate.mytimerticking = setInterval(function(){if (!localstate.gameover && localstate.mymove) updateMyTime(false)},1000);
@@ -427,7 +459,7 @@ async function makeMove(frompos){
   var m = {};
   // localstate.startedmove = true;
   await moveMade(frompos).then((movedata)=>{m = movedata});
-  updateMyTime(true);
+  if (localstate.movenum>0) updateMyTime(true);
   const newtimeobject = {};
   newtimeobject[localstate.myplayerid] = localstate.mytime;
   newtimeobject[localstate.opponentid] = localstate.opponenttime;
@@ -451,23 +483,23 @@ function popUpRoomFull(){
 
 function popUpHelp(){
   popups.empty();
-  if ($('#main').hasClass('state-home')){
-    generalpopup.append('<h2>Help? -- Main Menu</h2><p>This is the main menu.</p><p>From here you can "Start Game". This allows a player to initiate a new game and choose the configurations they wish (eg. the time format). Once completed, they will enter a "Waiting Room" with a unique room ID. They can share this room ID with their opponent so that they can join the same room. For every game, at least one player must go through this process.</p><p>The other button is to "Join Game". This joins a room with a unique room ID (supplied by a player who has already gone through the process of "Start Game").</p><p>Each of the main buttons have an associated help dialogue. These are always accessible via the help icon in the bottom right of the screen :)</p>');
+  if (main.hasClass('state-home')){
+    generalpopup.append('<h2>Help? -- Main Menu</h2><p>This is the main menu.</p><p>To play cylinder chess:</p><p>Use the "Start Game" button to view and set your game options. Then hit the "create room" button to enter the "Waiting Room" with a unique ROOM ID. Once you\'ve shared this ROOM ID with your chosen opponent they can login via the "Join Game" button and play can commence!</p><p>Good to know: each of the main buttons on this site have an associated help dialogue like this one. These are always accessible via the help icon in the bottom right of the screen :)</p>');
     main.addClass('popup-active');
-  } else if ($('#main').hasClass('state-startgame')){
-    generalpopup.append('<h2>Help? -- Game Configs</h2><p>Choose your game configurations!</p><p>Player Colour: you have a choice between white, black, or randomised.</p><p>Geometry: both options are topologically equivalent, ie. the A and H files have been effectively glued together. However the player can choose the geometric projection of the board (a 3d cylinder, or a flattened square board)</p>');
+  }  else if (main.hasClass('state-startgame')){
+    generalpopup.append('<h2>Help? -- Start Game</h2><p>Choose your game configurations:</p><p>Piece colour – choose between white, black or randomised.</p><p>Board geometry – cylinder or square. Although topologically equivalent (the A and H files of both boards having, in effect, been glued together), you can choose the geometry of your board, either a 3D cylinder or a flattened square.:</p><p>Game duration – choose from 1m + 5s, 5m + 0s or unlimited duration.:</p><p>Show or hide moves – choose whether players will be able to see the starting and finishing position of their opponent\'s latest move.</p>');
     main.addClass('popup-active');
-  }  else if ($('#main').hasClass('state-joingame')){
-    generalpopup.append('<h2>Help? -- Join Game</h2><p>Type in the room ID of the room you wish to join (if you are not sure you can ask you opponent for theirs, or start a new  game and share that room id with someone).</p><p>Feature coming in the future: randomly match players with similar ELO (so that you could play against people you do not know and you wouldn\'t need to ask them for a room id).</p>');
+  }  else if (main.hasClass('state-joingame')){
+    generalpopup.append('<h2>Help? -- Join Game</h2><p>Type or paste in the ROOM ID for the game you wish to join. The person setting up the game (your opponent player) will normally have already shared their ROOM ID with you). If not, you can always start a new game yourself via the "Start Game" button and then share that ROOM ID with someone).</p><p>Good to know: I hope to add a feature to randomly match players having a similar ELO, thus enabling games between peers who are unknown to each other and without the need for a ROOM ID.</p>');
     main.addClass('popup-active');
-  }   else if ($('#main').hasClass('state-aboutarea')){
-    generalpopup.append('<h2>Help? -- About</h2><p>Here I\'m just telling you a bit more about me :)</p><p>Also if you\'d like to support me further, you can check out some cool merch I made at: https://www.bagsoflove.co.uk/stores/tobias-loader</p>');
+  }  else if (main.hasClass('state-waitingarea')){
+    generalpopup.append('<h2>Help? -- Waiting Room</h2><p>Awesome! You\'ve created a new room (where the game will soon be played). Now all you need to do is share the ROOM ID with your opponent so that they can join you via the "Join Game" button in their own browser window. Have a great game :)</p>');
     main.addClass('popup-active');
-  } else if ($('#main').hasClass('state-sharearea')){
-    generalpopup.append('<h2>Help? -- Share</h2><p>These are the ways you can share cylinderchess.com and spread the word around. You can scan the QR code with a mobile device, and that links to cylinderchess.com :)</p>');
+  }  else if (main.hasClass('state-aboutarea')){
+    generalpopup.append('<h2>Help? -- About</h2><p>This is just a bit of info about me and how cylinderchess.com came about :)</p>');
     main.addClass('popup-active');
-  }  else if ($('#main').hasClass('state-waitingarea')){
-    generalpopup.append('<h2>Help? -- Waiting Room</h2><p>Awesome! You\'ve created a new room (where the game will be played). You just need to invite an opponent to the room. Message them (or communicate in some way) the Room ID, then they can join this room.</p>');
+  }  else if (main.hasClass('state-sharearea')){
+    generalpopup.append('<h2>Help? -- Share</h2><p>Here are a couple of ways to help you share cylinderchess.com with your friends and generally spread the word around a bit:</p><p>The QR code links to https://www.cylinderchess.com – simply scan it with a mobile device to open in a browser; or just click the URL field to copy https://www.cylinderchess.com to your clipboard for easy messaging, etc.</p></p>Thanks :)<p>');
     main.addClass('popup-active');
   }
 }
@@ -547,7 +579,13 @@ sharebutton.click(function(){
 
 copytexts.click(function(){
   navigator.clipboard.writeText($(this).children('p').text());
-  $('#sharearea .titlebanner').text('thank you!');
+  $('#sharearea .titlebanner').text('Copied: thank you!');
+});
+
+$('#waitingarea .room').click(function(){
+  navigator.clipboard.writeText($(this).text().substring(9));
+  $('.copy-id').css('display','none');
+  $('.tick-id').css('display','inline-block');
 });
 
 backsharearea.click(function(){
@@ -560,7 +598,7 @@ helpbtn.click(function(){
 });
 
 $(window).on('resize',function(){
-  if (localstate.boardtype=='cylinder') resizeCylinderBoard();
+  if (localstate.boardtype=='cylinder' || main.hasClass('state-home')) resizeCylinderBoard();
   if (localstate.boardtype=='square') resizeSquareBoard();
 });
 

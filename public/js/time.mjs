@@ -18,8 +18,12 @@ export function printTimeFormat(t) {
 
 export function strPrettyTimeFormat(t) {
   if (t.unlimited) return '∞';
-  const m = Math.floor(t.current_mil / 60000);
-  const strs = (Math.round((t.current_mil / 1000) % 60)/1000).toFixed(3).toString()
+  const wholemil = Math.floor(t.current_mil);
+  // var minutes = Math.floor(t.current_mil / 60000);
+  // var seconds = ((t.current_mil % 60000) / 1000).toFixed(0);
+  // return minutes.toString() + ":" + (seconds < 10 ? '0' : '') + seconds.toString();
+  const m = Math.floor(wholemil / 60000);
+  const strs = (Math.round((wholemil / 1000) % 60)/1000).toFixed(3).toString();
   const s = strs.substring(strs.length-2,strs.length);
   return m.toString() + ":" + s.toString();
 }

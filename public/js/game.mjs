@@ -1,8 +1,6 @@
 import {Pawn,  Knight, Bishop, Rook, Queen, King} from './chess.mjs';
 import {localstate} from './main.mjs';
 
-var movenum = 0;
-
 export var mousecylindrag = false;
 
 function cloneStandardStartingPositions(){
@@ -44,6 +42,13 @@ function cloneStandardStartingPositions(){
     'H7': new Pawn('31','b','H7'), 
   };
 };
+
+export function democylpiece(){
+  const ps = cloneStandardStartingPositions();
+  for (const [position, piece] of Object.entries(ps)){
+    piece.placePiece('w');
+  }
+}
 
 export function initBoard(boardtype,mycolour){
   const commonboard = $('#commonboard');
