@@ -1,102 +1,104 @@
 doctype html
-head
-	title Cylinder Chess
-	link(rel='stylesheet', href='styles/font.css')
-	link(rel='stylesheet', href='styles/init-game-states.css')
-	link(rel='stylesheet', href='styles/styles.css')
-	link(rel='stylesheet', href='styles/mobile-styles.css')
-	link(rel="apple-touch-icon", sizes="180x180", href="/assets/favicon/apple-touch-icon.png")
-	link(rel="icon", type="image/png", sizes="32x32", href="/assets/favicon/favicon-32x32.png")
-	link(rel="icon", type="image/png", sizes="16x16", href="/assets/favicon/favicon-16x16.png")
-	link(rel="manifest", href="/assets/favicon/site.webmanifest")
-	meta(name="viewport", content="width=device-width, initial-scale=1.0")
-
-body(style=`--pricol: 100, 158, 141; --seccol: 60,60,60; --tricol: 220,220,220; --bgcol: 40,40,40;  --secbgcol: 20,20,20; --darkpricol:	39, 102, 82;`)
-	a(href="https://www.cylinderchess.com")
-		img#cc-graphic(alt='graphic',src='/assets/cc-logo.svg')
-	#cylinder-title
-		a(href="https://www.cylinderchess.com") cylinderchess.com
-	include ui-components
-	#helpbtn(title='Help')
-		+inversemainbutton('help','?')
-	#main.state-home
-		#mainbuttonsrow
-			#gamebuttonscontainer.splitbuttonrow
-				+mainbutton('startbutton','Start Game')
-				+mainbutton('joinbutton','Join Game')
-			#sharebuttonscontainer.splitbuttonrow
-				+inversemainbutton('aboutbutton','About')
-				+inversemainbuttonicon('sharebutton','Share','/assets/share_light.svg')
-		#startgame
-			+startgameoptions()
-		#joingame
-			+joingameoptions()
-		#waitingarea
-			#waitingbg
-			#waitingareacontent
-				h2.room
-				+subbutton('leavewaitingroom','leave','')
-				p
-					| Waiting AREA
-		#gamearea
-			//- | Game AREA
-			//- h2.room
-			//- h3#movemade
-			#endgamerow.buttonrow
-				+inversesubbutton('leaveroom','leave room','')
-				+buttonrowmsg('gameovermsg','')
-				+inversesubbutton('offerdraw','offer draw','')
-				+buttonrowmsg('drawoffersent','offer sent')
-				+subbutton('acceptdraw','accept draw','')
-				+inversesubbutton('resigngame','resign game','lastbutton')
-				+inversesubbutton('offerrematch','rematch','lastbutton')
-				+buttonrowmsg('rematchoffersent','rematch sent')
-				+subbutton('acceptrematch','accept rematch','lastbutton')
-			#boardarea
-				+popup('boardpopup')
-				#yourmoveslider
-					| Your Move
-		#sharearea
-			h2.titlebanner Share:
-			.qrrow
-				div
-					p Here's a QR code --><br>and below is the URL.<br>So please share if you<br>like cylinderchess :)
-				img#qr(alt='qr',src='/assets/qr.png')
-			.copytext
-				p.tocopy https://www.cylinderchess.com
-				img.clipboard-copy(alt='copy to clipboard',src='/assets/light-clipboard-copy.svg',title='copy to clipboard')
-			.buttonrow
-				+inversesubbutton('backsharearea','back','')
-		#aboutarea
-			h2.titlebanner About:
-			#abouttxtarea
-				p 
-					img(id='toby-pic', alt='Tobias Loader', src='/assets/Toby-Col-sq.jpeg')
-					| Hi, I'm Tobias Loader. I'm a student at the University of Oxford studying Maths and CompSci and I love building fun coding projects.
-				p Check out my 
-					a(class='linkedin',href='https://www.linkedin.com/in/tobiasloader/') LinkedIn
-					|  and 
-					a(class='github',href='https://github.com/TobiasLoader') GitHub
-					|  if you'd like more info.
-				p While playing chess one day with my old school-friend Will, we said, "Let's imagine we've glued the A and H files together" – effectively turning the board into a cylinder, enabling continuous movement around it. Having discovered how interesting and complex this variant can be, I thought I'd have a go at building this cylinder chess app as my holiday project. I've enjoyed playing it online with friends and hope you do too!
-				p If you have any feature requests, bug reports, etc, you can get in touch via 
-					a(href="mailto:cylinderchess@tobiasloader.com",style='color:rgba(255,255,255,0.6);') cylinderchess@tobiasloader.com
-					| .
-				p A lot of coffees were consumed in the making of this app! If you've enjoyed playing it and you feel happy and able to donate the price of a coffee to help out with my server costs I'd be very grateful. I'm keen to keep developing this project and have plans in the pipes for user accounts, an evaluation engine and Elo rating, and matching random players. Thanks very much :)
-
-			.buttonrow
-				+inversesubbutton('backaboutarea','back','')
-				+subbuttoniconwurl('coffeebutton','buy me a coffee','/assets/coffee-cup-v3.svg','https://checkout.stripe.com/')
-		+popup('generalpopup')
-	#copyright-content
-		p#desktop-copyright
-			a.footer-link(href='https://www.cylinderchess.com') cylinderchess.com
-			| &nbsp;|&nbsp;copyright&nbsp;
-			span(style='font-family:Arial, sans-serif;') &copy;&nbsp;
-			| &nbsp;2022&nbsp;
-			a.footer-link(href='https://www.linkedin.com/in/tobiasloader/') Tobias&nbsp;Loader
-			| &nbsp;&mdash;&nbsp;all&nbsp;rights&nbsp;reserved
-	script(src='/js/jquery.min.js')
-	script(src='/socket.io/socket.io.js')
-	script(type='module', src='/js/main.mjs')
-	script(src='/js/ui-components.js')
+html(lang="en-GB")
+	head
+		meta(charset="utf-8")
+		title Cylinder Chess
+		meta(name="description", content="Chess on a CYLINDER")
+		link(rel='stylesheet', href='styles/font.css')
+		link(rel='stylesheet', href='styles/init-game-states.css')
+		link(rel='stylesheet', href='styles/styles.css')
+		link(rel='stylesheet', href='styles/mobile-styles.css')
+		link(rel="apple-touch-icon", sizes="180x180", href="/assets/favicon/apple-touch-icon.png")
+		link(rel="icon", type="image/png", sizes="32x32", href="/assets/favicon/favicon-32x32.png")
+		link(rel="icon", type="image/png", sizes="16x16", href="/assets/favicon/favicon-16x16.png")
+		link(rel="manifest", href="/assets/favicon/site.webmanifest")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+	
+	body(style=`--pricol: 110,145,119; --seccol: 60,60,60; --tricol: 220,220,220; --bgcol: 40,40,40;  --secbgcol: 30,30,30; --darkpricol:	66,92,72;`,class='inhome')
+		a(href="https://www.cylinderchess.com")
+			img#cc-graphic(alt='graphic',src='/assets/cc-logo.svg')
+		#cylinder-title
+			a(href="https://www.cylinderchess.com") cylinderchess.com
+		include ui-components
+		#helpbtn(title='Help')
+			+inversemainbutton('help','?')
+		#main.state-home
+			#democyl
+			#mainbuttonsrow
+				#gamebuttonscontainer.splitbuttonrow
+					+mainbutton('startbutton','Start Game')
+					+mainbutton('joinbutton','Join Game')
+				#sharebuttonscontainer.splitbuttonrow
+					+inversemainbutton('aboutbutton','About')
+					+inversemainbuttonicon('sharebutton','Share','/assets/share_light.svg')
+			#startgame
+				+startgameoptions()
+			#joingame
+				+joingameoptions()
+			#waitingarea
+				#waitingbg
+				#waitingareacontent
+					h2.titlebanner(style="text-align: center;") Waiting Room
+					h3.subtitlebanner(style="text-align: center;")
+						| Share with your opponent:
+					h3.room(title='Copy to clipboard') 1000
+					+inversesubbutton('leavewaitingroom','&larr; leave waiting room','')
+			#gamearea
+				#endgamerow.buttonrow
+					+inversesubbutton('leaveroom','leave room','')
+					+buttonrowmsg('gameovermsg','message')
+					+inversesubbutton('offerdraw','offer draw','')
+					+buttonrowmsg('drawoffersent','offer sent')
+					+subbutton('acceptdraw','accept draw','')
+					+inversesubbutton('resigngame','resign game','lastbutton')
+					+inversesubbutton('offerrematch','rematch','lastbutton')
+					+buttonrowmsg('rematchoffersent','rematch sent')
+					+subbutton('acceptrematch','accept rematch','lastbutton')
+				#boardarea
+					+popup('boardpopup')
+					#yourmoveslider
+						| Your Move
+			#sharearea
+				h2.titlebanner Share
+				.qrrow
+					div
+						p Here's a QR code --><br>and below is the URL.<br>So please share if you<br>like cylinderchess :)
+					img#qr(alt='qr',src='/assets/qr.png')
+				.copytext(title='Copy to Clipboard')
+					p.tocopy https://www.cylinderchess.com
+					img.clipboard-copy(alt='copy to clipboard',src='/assets/light-clipboard-copy.svg')
+				.buttonrow
+					+inversesubbutton('backsharearea','&larr; back','')
+			#aboutarea
+				h2.titlebanner About
+				#abouttxtarea
+					p 
+						img(id='toby-pic', alt='Tobias Loader', src='/assets/Toby-Col-sq.jpeg')
+						| Hi, I'm Tobias Loader. I'm a student at the University of Oxford studying Maths and CompSci and I love building fun coding projects.
+					p Check out my 
+						a(class='linkedin',href='https://www.linkedin.com/in/tobiasloader/') LinkedIn
+						|  and 
+						a(class='github',href='https://github.com/TobiasLoader') GitHub
+						|  if you'd like more info.
+					p While playing chess one day with my old school-friend Will, we said, "Let's imagine we've glued the A and H files together" – effectively turning the board into a cylinder, enabling continuous movement around it. Having discovered how interesting and complex this variant can be, I thought I'd have a go at building this cylinder chess app as my holiday project. I've enjoyed playing it online with friends and hope you do too!
+					p If you have any feature requests, bug reports, etc, you can get in touch via 
+						a(id="email-address",href="")
+						| .
+					p A lot of coffees were consumed in the making of this app! If you've enjoyed playing it and you feel happy and able to donate the price of a coffee to help out with my server costs I'd be very grateful. I'm keen to keep developing this project and have plans in the pipes for user accounts, an evaluation engine and Elo rating, and matching random players. Thanks very much :)
+	
+				.buttonrow
+					+inversesubbutton('backaboutarea','&larr; back','')
+					+subbuttoniconwurl('coffeebutton','buy me a coffee','/assets/coffee-cup-v3.svg','https://checkout.stripe.com/')
+			+popup('generalpopup')
+		#copyright-content
+			p#desktop-copyright
+				a.footer-link(href='https://www.cylinderchess.com') cylinderchess.com
+				| &nbsp;|&nbsp;copyright&nbsp;
+				span(style='font-family:Arial, sans-serif;') &copy;&nbsp;
+				| &nbsp;2022&nbsp;
+				a.footer-link(href='https://www.linkedin.com/in/tobiasloader/') Tobias&nbsp;Loader
+				| &nbsp;&mdash;&nbsp;all&nbsp;rights&nbsp;reserved
+		script(src='/js/jquery.min.js')
+		script(src='/socket.io/socket.io.js')
+		script(type='module', src='/js/main.mjs')
+		script(src='/js/ui-components.js')

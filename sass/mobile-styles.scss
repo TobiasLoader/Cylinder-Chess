@@ -2,8 +2,25 @@
 	body {
 		font-size: 13px;
 	}
+	h2 {
+		font-weight: normal;
+		font-size:20px;
+		line-height:30px;
+	}
+	h3 {
+		font-weight: normal;
+		font-size:15px;
+		line-height:23px;
+	}
 	#cylinder-title {
 		display: none;
+	}
+	#cc-graphic {
+		width:10%;
+		display: none;
+	}
+	body.inhome #cc-graphic {
+		display: block;
 	}
 	// #mainbuttonsrow {
 	// 	width:80%;
@@ -28,6 +45,9 @@
 		font-size:18px;
 	}
 	.titlebanner {
+		margin: 5px;
+	}
+	.subtitlebanner {
 		margin: 5px;
 	}
 	#aboutarea #toby-pic {
@@ -63,6 +83,19 @@
 	}
 	#main.state-waitingarea #waitingarea {
 		background: none;
+	}
+	#waitingarea .room .copy-room-id {
+		margin-top: 0;
+		right: 0;
+		position: relative;
+	}
+	#waitingarea .room .copy-id {
+		height: 14px;
+		margin-left:15px;
+	}
+	#waitingarea .room .tick-id {
+		height: 10px;
+		margin-left:15px;
 	}
 	.state-gamearea {
 		// position: absolute !important;
@@ -110,6 +143,7 @@
 	.popup {
 		width: calc(100% - 30px);
 		margin: 0 15px;
+		max-height: 450px;
 	}
 	.popup .popupcross {
 		width: 20px;
