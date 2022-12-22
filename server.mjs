@@ -1,5 +1,11 @@
 import { TimeFormat, printTimeFormat, readTimeStr } from './public/js/time.mjs';
 
+// About Page button row -> add back in after back button
+// +subbuttoniconwurl('coffeebutton','buy me a coffee','/assets/coffee-cup-v3.svg','https://checkout.stripe.com/')
+
+// About Page final paragraph -> merge back in before "I'm keen..."
+// A lot of coffees were consumed in the making of this app! If you've enjoyed playing it and you feel happy and able to donate the price of a coffee to help out with my server costs I'd be very grateful. 
+
 // Implement the old require function
 import { createRequire } from 'module'
 const require = createRequire(import.meta.url)
