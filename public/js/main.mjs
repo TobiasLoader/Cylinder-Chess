@@ -562,7 +562,7 @@ async function tryWebShare(){
     try {
       await navigator.share({
         title: "CylinderChess.com",
-        url: 'cylinderchess.com'
+        url: 'https://www.cylinderchess.com'
       });
       console.log("Data was shared successfully");
     } catch (err) {
