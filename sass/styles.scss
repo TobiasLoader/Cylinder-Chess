@@ -538,14 +538,14 @@ body.ingame #helpbtn {
 
 .buttonrowmsgcontainer {
 	flex: 1;
-	margin:0 10px;
-	height: 40px;
+	margin: auto 10px;
+	height: auto;
 }
 
 .buttonrowmsg {
 	margin: auto;
-	line-height: 40px;
-	font-size: 17px;
+	line-height: 17px;
+	font-size: 13px;
 	text-align: center;
 }
 

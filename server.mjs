@@ -10,7 +10,25 @@ import { TimeFormat, printTimeFormat, readTimeStr } from './public/js/time.mjs';
 import { createRequire } from 'module'
 const require = createRequire(import.meta.url)
 
-var gameid = 1000;
+const fs = require('fs');
+const fileName = '/Users/Toby/project-disk-data/CylinderChess/analytics.json';
+const analytics = require(fileName);
+
+function updateAnalytics(key,value){
+    analytics[key] = value;
+    fs.writeFile(fileName, JSON.stringify(analytics), function writeJSON(err) {
+      if (err) return console.log(err);
+      console.log(JSON.stringify(analytics));
+      console.log('writing to ' + fileName);
+    });
+}
+
+var gameid = analytics.roomid;
+var gamesplayed = analytics.gamesplayed;
+var gamesresigned = analytics.gamesresigned;
+var gamescheckmate = analytics.gamescheckmate;
+var gamesdrawn = analytics.gamesdrawn;
+
 var gamehost = {};
 var numplayers = {};
 var roomsockets = {};
@@ -33,7 +51,6 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const pug = require('pug');
-
 app.use(express.static('public'));
 
 app.set('views', './views')
@@ -83,6 +100,7 @@ app.post('/game_init', (req, res) => {
         if (body['request'] == 'init_room') {
             body['room'] = gameid;
             gameid += 1;
+            updateAnalytics("roomid",gameid);
         }
         res.writeHead(200);
         res.end(Buffer.from(JSON.stringify(body)));
@@ -217,6 +235,8 @@ io.sockets.on('connection', function (socket) {
     socket.on('ready', function (room) {
         roomreadynum[room] += 1;
         if (roomreadynum[room]==numplayers[room]) {
+            gamesplayed += 1;
+            updateAnalytics("gamesplayed",gamesplayed);
             roomready[room] = true;
             roomplaying[room] = true;
             io.sockets.in(room).emit('roomready');
@@ -245,14 +265,20 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('resign', function (room, player) {
+        gamesresigned += 1;
+        updateAnalytics("gamesresigned",gamesresigned);
         io.to(room).emit('victory', 3-player, 'You Won!','Your opponent resigned the game.','Resigned','Your opponent won because you resigned the game.');
     });
 
     socket.on('checkmate', function (room, player) {
+        gamescheckmate += 1;
+        updateAnalytics("gamescheckmate",gamescheckmate);
         io.to(room).emit('victory', 3-player, 'CHECKMATE!', 'You won the game!',  'CHECKMATE!', 'Your opponent won the game because they put you into checkmate. Your king was in check and you had no legal moves.');
     });
 
     socket.on('stalemate', function (room, player) {
+        gamesdrawn += 1;
+        updateAnalytics("gamesdrawn",gamesdrawn);
         io.to(room).emit('draw', 3-player, 'STALEMATE!', 'The game was a draw, it ended in a stalemate.');
     });
 
@@ -265,6 +291,8 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('drawaccept', function (room, player) {
+        gamesdrawn += 1;
+        updateAnalytics("gamesdrawn",gamesdrawn);
         io.sockets.in(room).emit('draw', 3-player, 'DRAW!', '🤝 The players agreed to a draw.');
     });
 
