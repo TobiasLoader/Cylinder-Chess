@@ -170,6 +170,32 @@ body.ingame #helpbtn {
 	display: none;
 }
 
+#vertbuttonshome {
+	position: absolute;
+	display: flex;
+	right: 26px;
+	transform: rotate(270deg) translateX(50%);
+	transform-origin: right;
+	bottom:110px;
+}
+
+#vertbuttonshome p, #vertbuttonshome a {
+	color: rgba(var(--pricol),1);
+	padding: 0 10px;
+	font-size: 12px;
+	text-decoration: none;
+	line-height: 21px;
+}
+
+#vertbuttonshome p:hover, #vertbuttonshome a:hover {
+	color: rgba(var(--tricol),0.7);
+	cursor: pointer;
+}
+
+body.ingame #vertbuttonshome {
+	display: none;
+}
+
 #democyl {
 	pointer-events: none;
 	user-select: none;
@@ -710,6 +736,10 @@ body.ingame #helpbtn {
 }
 .popup p {
 	margin: 0 0 10px;
+}
+.popup a {
+	color: rgba(var(--pricol), 1);
+	text-decoration: none;
 }
 .popup .popupcross {
 	position: absolute;

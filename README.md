@@ -3,3 +3,5 @@
 ## [cylinderchess.com](https://www.cylinderchess.com)
 
 Enjoy realistic cylindrical gameplay on a unique animated 3D board; or choose traditional square geometry. Play against friends. No sign-up needed and no ads!
+
+![Cylinder Chess](https://github.com/TobiasLoader/CylinderChess/blob/master/public/assets/cylinderchesscom.png)
