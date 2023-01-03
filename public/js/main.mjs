@@ -42,6 +42,7 @@ const boardpopup = $('#boardpopup .popupcontent');
 const popups = $('.popup .popupcontent')
 const popupcrosses = $('.popupcross');
 const helpbtn = $('#helpbtn');
+const credits = $('#credits');
 
 $(document).ready(function (){
   $('#email-address').attr("href", atob('bWFpbHRvOmN5bGluZGVyY2hlc3NAdG9iaWFzbG9hZGVyLmNvbQ=='));
@@ -594,7 +595,12 @@ backsharearea.click(function(){
 
 helpbtn.click(function(){
   popUpHelp();
-  // setInitState('state-help');
+});
+
+credits.click(function(){
+  popups.empty();
+  generalpopup.append('<h2>Credits</h2><p>I\'m grateful to <span><a href="https://uk.linkedin.com/in/maurizio-monge-7300474a">Maurizio Monge</a></span>  for designing the excellent chess pieces that I\'ve used, and for making them available as SVG files on <span><a href="https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces/Maurizio_Monge">Wikimedia Commons</a></span> and on his <span><a href="https://poisson.phc.dm.unipi.it/~monge/chess_art.php">website</a></span>.</p><p><br> – Tobias Loader</p>');
+  main.addClass('popup-active');
 });
 
 $(window).on('resize',function(){
