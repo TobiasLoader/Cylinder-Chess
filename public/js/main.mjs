@@ -48,6 +48,10 @@ $(document).ready(function (){
   $('#email-address').attr("href", atob('bWFpbHRvOmN5bGluZGVyY2hlc3NAdG9iaWFzbG9hZGVyLmNvbQ=='));
   $('#email-address').text(atob('Y3lsaW5kZXJjaGVzc0B0b2JpYXNsb2FkZXIuY29t'));
   loadDemoCylinder();
+  if (getCookie('cookie-is-set')=="") {
+    $('#cookiebg-parent').removeClass();
+    $('#cookiebg-parent').addClass('on');
+  }
 })
 
 const audioMove = document.createElement('audio');
@@ -636,6 +640,38 @@ function deleteCookie(cname) {
     document.cookie = cname + "=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT";
   }
 }
+function cookiepopupdone(){
+  $('#cookiebg-parent').removeClass();
+  $('#cookiebg-parent').addClass('done');
+  $('#cookiebg-parent').addClass('off');
+}
+
+$('#cookie-yes').click(function(){
+  setCookie('cookie-is-set','yes',31);
+  // here google analytics cookies
+  // google analytics cookies
+  $.ajax({
+    url: "https://www.googletagmanager.com/gtag/js?id=G-3KC2R6KTHJ",
+    dataType: "script",
+    cache: true,
+    success: function() {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-3KC2R6KTHJ');
+    }
+  });
+  cookiepopupdone();
+});
+$('#cookie-info, #privacy').click(function(){
+  generalpopup.empty();
+  generalpopup.append('<h2>Cookies & Privacy info.</h2><p>I\'m collecting some usage info (with Google Analytics 4) to enable visitor traffic to the site to be analysed so I can better understand how my site is used, and give me an indication as to which of my projects to prioritise.</p><div class="cookies-table-container"><h3>1 – Required Cookies</h3><table class="cookie-table"><thead><tr><th scope="col">Cookie Name</th><th scope="col">Set By</th><th scope="col">Duration</th><th scope="col">Description</th></tr></thead><tbody><tr><td>unique<br>gameid</td><td>Cylinder<br>Chess<td>1 day</td></td><td class="cookie-table-desc">Session cookie to allow you to rejoin an ongoing game if you disconnect (eg. from internet)</td></tr></tbody></table><h3>2 – Optional Cookies</h3><table class="cookie-table"><thead><tr><th scope="col">Cookie Name</th><th scope="col">Set By</th><th scope="col">Duration</th><th scope="col">Description</th></tr></thead><tbody><tr><td>cookie<br>-is<br>-set</td><td>Cylinder<br>Chess</td><td>31 days</td><td class="cookie-table-desc">I store this cookie if you clicked \'yes absolutely\' to indicate that you agree to the cookies. It then removes the cookie notice from the website for 31 days.</td></tr><td>_ga</td><td>Google<br>Analytics<td>?</td></td><td class="cookie-table-desc">Used to distinguish users.</td></tr><tr><td>_ga_&lt;id&gt;</td><td>Google<br>Analytics</td><td>?</td><td class="cookie-table-desc">Used to persist session state.</td></tr></tbody></table></div>');
+  main.addClass('popup-active');
+});
+$('#cookie-no').click(function(){
+  // setCookie('cookie-is-set','no',1);
+  cookiepopupdone();
+});
 
 function scrollbarVisible(element) {
   return element.scrollHeight > element.clientHeight;
