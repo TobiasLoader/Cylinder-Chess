@@ -51,6 +51,8 @@ $(document).ready(function (){
   if (getCookie('cookie-is-set')=="") {
     $('#cookiebg-parent').removeClass();
     $('#cookiebg-parent').addClass('on');
+  } else if (getCookie('cookie-is-set')=="yes") {
+    fetchGoogleTag();
   }
 })
 
@@ -612,6 +614,20 @@ $(window).on('resize',function(){
   if (localstate.boardtype=='square') resizeSquareBoard();
 });
 
+function fetchGoogleTag(){
+  $.ajax({
+    url: "https://www.googletagmanager.com/gtag/js?id=G-3KC2R6KTHJ",
+    dataType: "script",
+    cache: true,
+    success: function() {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-3KC2R6KTHJ');
+    }
+  });
+}
+
 function setCookie(cname, cvalue, exdays) {
   const d = new Date();
   d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -650,17 +666,7 @@ $('#cookie-yes').click(function(){
   setCookie('cookie-is-set','yes',31);
   // here google analytics cookies
   // google analytics cookies
-  $.ajax({
-    url: "https://www.googletagmanager.com/gtag/js?id=G-3KC2R6KTHJ",
-    dataType: "script",
-    cache: true,
-    success: function() {
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-3KC2R6KTHJ');
-    }
-  });
+  fetchGoogleTag();
   cookiepopupdone();
 });
 $('#cookie-info, #privacy').click(function(){
