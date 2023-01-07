@@ -901,6 +901,7 @@ body.mymove #boardarea #yourmoveslider {
   z-index: 2; }
 
 #cookiebg-parent.off {
+  visibility: hidden;
   pointer-events: none; }
 
 #cookiebg-parent.on {
@@ -933,7 +934,7 @@ body.mymove #boardarea #yourmoveslider {
   margin: auto;
   padding: 0;
   color: white;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.9);
   padding: 40px; }
 
 #cookiebanner h2 {
