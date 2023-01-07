@@ -1076,19 +1076,14 @@ body.mymove #boardarea #yourmoveslider {
 	z-index: 2;
 }
 #cookiebg-parent.off {
-	visibility: hidden;
 	pointer-events: none;
+	visibility: hidden;
 }
 #cookiebg-parent.on {
-	animation: enable-pointer-events 1s linear;
-}
-@keyframes enable-pointer-events {
-  0%, 99% {
-	pointer-events: none;  
-  }
-  100% {
 	pointer-events: auto;
-  }
+}
+#cookiebg-parent.done {
+	pointer-events: none;
 }
 #cookiebg {
 	display: flex;
@@ -1097,14 +1092,12 @@ body.mymove #boardarea #yourmoveslider {
 	background: rgb(20,20,20);
 	opacity: 0;
 	transition: opacity 0.5s ease, pointer-events 1s;
-	transition-delay: 1s;
 }
 #cookiebg-parent.on #cookiebg {
 	opacity: 0.8;
 }
 #cookiebg-parent.done #cookiebg {
 	opacity: 0;
-	transition-delay: 0s;
 }
 #cookiebanner {
 	width: fit-content;

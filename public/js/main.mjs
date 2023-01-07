@@ -49,8 +49,10 @@ $(document).ready(function (){
   $('#email-address').text(atob('Y3lsaW5kZXJjaGVzc0B0b2JpYXNsb2FkZXIuY29t'));
   loadDemoCylinder();
   if (getCookie('cookie-is-set')=="") {
-    $('#cookiebg-parent').removeClass();
-    $('#cookiebg-parent').addClass('on');
+    setTimeout(()=>{
+      $('#cookiebg-parent').removeClass();
+      $('#cookiebg-parent').addClass('on');
+    }, 1000);
   } else if (getCookie('cookie-is-set')=="yes") {
     fetchGoogleTag();
   }
@@ -659,7 +661,6 @@ function deleteCookie(cname) {
 function cookiepopupdone(){
   $('#cookiebg-parent').removeClass();
   $('#cookiebg-parent').addClass('done');
-  $('#cookiebg-parent').addClass('off');
 }
 
 $('#cookie-yes').click(function(){
