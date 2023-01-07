@@ -120,7 +120,7 @@ body.ingame #helpbtn {
   right: 26px;
   transform: rotate(270deg) translateX(50%);
   transform-origin: right;
-  bottom: 110px; }
+  bottom: 145px; }
 
 #vertbuttonshome p, #vertbuttonshome a {
   color: rgba(var(--pricol), 1);
@@ -619,7 +619,8 @@ body.ingame #vertbuttonshome {
   background: #3c3c3c;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 50px;
   border: rgba(var(--tricol), 0.5) 1px solid;
-  overflow: auto; }
+  overflow: auto;
+  z-index: 3; }
 
 .popupcontent {
   text-align: justify;
@@ -892,3 +893,104 @@ body.mymove #boardarea #yourmoveslider {
 
 #copyright-content .footer-link:hover {
   color: rgba(var(--pricol), 1); }
+
+#cookiebg-parent {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 2; }
+
+#cookiebg-parent.off {
+  pointer-events: none; }
+
+#cookiebg-parent.on {
+  animation: enable-pointer-events 1s linear; }
+
+@keyframes enable-pointer-events {
+  0%, 99% {
+    pointer-events: none; }
+  100% {
+    pointer-events: auto; } }
+
+#cookiebg {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background: #141414;
+  opacity: 0;
+  transition: opacity 0.5s ease, pointer-events 1s;
+  transition-delay: 1s; }
+
+#cookiebg-parent.on #cookiebg {
+  opacity: 0.8; }
+
+#cookiebg-parent.done #cookiebg {
+  opacity: 0;
+  transition-delay: 0s; }
+
+#cookiebanner {
+  width: fit-content;
+  margin: auto;
+  padding: 0;
+  color: white;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 40px; }
+
+#cookiebanner h2 {
+  text-align: center; }
+
+#cookiebanner p {
+  padding: 3px; }
+
+#cookiebanner p:hover {
+  cursor: pointer; }
+
+#cookiebanner p span {
+  opacity: 0.3; }
+
+#cookiebanner p:hover span {
+  opacity: 1; }
+
+.cookies-table-container {
+  margin-top: 40px; }
+
+.cookie-table {
+  border-collapse: separate;
+  border-spacing: 1px;
+  margin: 0;
+  font-size: 11px;
+  border-radius: 7px;
+  color: white;
+  width: 100%; }
+
+.cookie-table a {
+  color: white; }
+
+.cookie-table th {
+  background: rgba(50, 50, 50, 0.9);
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 10px;
+  padding: 14px;
+  text-align: center; }
+
+.cookie-table td {
+  background: rgba(50, 50, 50, 0.6);
+  padding: 12px;
+  text-align: center;
+  vertical-align: middle; }
+
+.cookie-table td.cookie-table-desc {
+  text-align: left; }
+
+.cookie-table thead tr th:first-child {
+  border-top-left-radius: 7px; }
+
+.cookie-table thead tr th:last-child {
+  border-top-right-radius: 7px; }
+
+.cookie-table tr:last-child td:first-child {
+  border-bottom-left-radius: 7px; }
+
+.cookie-table tr:last-child td:last-child {
+  border-bottom-right-radius: 7px; }
