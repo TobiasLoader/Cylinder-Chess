@@ -14,6 +14,17 @@ const fs = require('fs');
 const fileName = '/Users/Toby/project-disk-data/CylinderChess/analytics.json';
 const analytics = require(fileName);
 
+const startyear = 2022;
+function updateCopyright(){
+    const d = new Date();
+    const currentyr = d.getFullYear();
+    var copyyr = startyear.toString();
+    if (currentyr>startyear){
+        copyyr += "&ndash;" + currentyr.toString();
+    }
+    return copyyr;
+}
+
 function updateAnalytics(key,value){
     analytics[key] = value;
     fs.writeFile(fileName, JSON.stringify(analytics), function writeJSON(err) {
@@ -70,7 +81,8 @@ app.get('/favicon', (req, res) => {
 })
 
 app.get('/', (req, res) => {
-    res.render('index');
+    const copyrightYears = updateCopyright();
+    res.render('index',{copyyr:copyrightYears});
 })
 
 app.get('/game/cylinder/w', (req, res) => {

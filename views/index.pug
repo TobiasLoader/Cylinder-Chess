@@ -34,7 +34,7 @@ html(lang="en-GB")
 					+mainbutton('joinbutton','Join Game')
 				#sharebuttonscontainer.splitbuttonrow
 					+inversemainbutton('aboutbutton','About')
-					+inversemainbuttonicon('sharebutton','Share','/assets/share_light.svg')
+					+inversemainbutton('sharebutton','Share')
 			#startgame
 				+startgameoptions()
 			#joingame
@@ -97,25 +97,26 @@ html(lang="en-GB")
 				a.footer-link(href='https://www.cylinderchess.com') cylinderchess.com
 				| &nbsp;|&nbsp;copyright&nbsp;
 				span(style='font-family:Arial, sans-serif;') &copy;&nbsp;
-				| &nbsp;2022&nbsp;
+				| &nbsp;!{copyyr}&nbsp;
 				a.footer-link(href='https://www.linkedin.com/in/tobiasloader/') Tobias&nbsp;Loader
 				| &nbsp;&mdash;&nbsp;all&nbsp;rights&nbsp;reserved
 		#cookiebg-parent.off
 			#cookiebg
-				#cookiebanner
-					h2 Optional Cookies?
-					p#cookie-yes 
-						span ------ 
-						| absolutely yes
-						span  ------ 
-					p#cookie-info 
-						span ------ 
-						| more info pls?
-						span  ------ 
-					p#cookie-no  
-						span ------ 
-						| no maybe later
-						span  ------ 
+				#cookiebanner-parent
+					#cookiebanner
+						h2 Accept Cookies?
+						p#cookie-yes 
+							span --- 
+							| absolutely, yes!
+							span  --- 
+						p#cookie-info 
+							span --- 
+							| more info please
+							span  --- 
+						p#cookie-no  
+							span --- 
+							| no, maybe later!
+							span  --- 
 		script(src='/js/jquery.min.js')
 		script(src='/socket.io/socket.io.js')
 		script(type='module', src='/js/main.mjs')
