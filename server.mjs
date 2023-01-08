@@ -20,7 +20,7 @@ function updateCopyright(){
     const currentyr = d.getFullYear();
     var copyyr = startyear.toString();
     if (currentyr>startyear){
-        copyyr += "&ndash;" + currentyr.toString();
+        copyyr += "&NoBreak;&ndash;&NoBreak;" + currentyr.toString();
     }
     return copyyr;
 }
