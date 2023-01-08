@@ -16,6 +16,12 @@
     display: none; }
   body.inhome #cc-graphic {
     display: block; }
+  #vertbuttonshome {
+    display: none; }
+  body.inhome #vertbuttonshome {
+    display: flex; }
+  #main.state-home {
+    width: 80%; }
   #gamebuttonscontainer {
     display: flex;
     flex-direction: column; }
@@ -26,7 +32,7 @@
     font-size: 15px; }
   .mainbutton {
     border-radius: 100px !important;
-    width: 60%;
+    width: 80%;
     margin: 10px auto; }
   .mainbuttontitle {
     font-size: 18px; }
@@ -125,4 +131,8 @@
   #copyright-content .footer-link {
     color: rgba(var(--tricol), 0.4); }
   .state-home + #copyright-content, .state-gamearea + #copyright-content {
-    display: block; } }
+    display: block; }
+  #cookiebanner-parent {
+    width: 80%; }
+  #cookiebanner {
+    padding: 50px 0; } }

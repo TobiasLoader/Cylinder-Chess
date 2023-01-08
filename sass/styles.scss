@@ -1089,29 +1089,37 @@ body.mymove #boardarea #yourmoveslider {
 	display: flex;
 	width: 100%;
 	height: 100%;
-	background: rgb(20,20,20);
+	background: rgba(0,0,0,0.0);
 	opacity: 0;
 	transition: opacity 0.5s ease, pointer-events 1s;
 }
 #cookiebg-parent.on #cookiebg {
-	opacity: 0.8;
+	opacity: 1;
 }
 #cookiebg-parent.done #cookiebg {
 	opacity: 0;
 }
-#cookiebanner {
-	width: fit-content;
+#cookiebanner-parent {
 	margin: auto;
-	padding: 0;
+	max-width:630px;
+	width:100%;
+}
+#cookiebanner {
+	margin: 0 15px;
 	color: white;
-	background: rgba(0,0,0,0.9);
-	padding: 40px;
+	// background: rgba(47, 60, 49, 1);
+	background: linear-gradient(180deg, rgba(47, 60, 49,1) 0%, rgba(39, 44, 40, 1) 80%);
+	padding: 60px;
+	// box-shadow: rgba(var(--darkpricol),0.4) 0 0 10px 5px;
+	border: rgba(var(--tricol),0.4) 1px solid;
 }
 #cookiebanner h2 {
 	text-align: center;
 }
 #cookiebanner p {
-	padding:3px;
+	padding: 5px 0;
+	margin: 8px auto;
+	width: fit-content;
 }
 #cookiebanner p:hover {
 	cursor: pointer;
@@ -1125,6 +1133,7 @@ body.mymove #boardarea #yourmoveslider {
 
 .cookies-table-container {
 	margin-top:40px;
+	overflow: auto;
 }
 
 .cookie-table {
