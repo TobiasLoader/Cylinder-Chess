@@ -171,7 +171,7 @@
 	}
 	#copyright-content {
 		display: none;
-		bottom: calc(50% - 248px);
+		bottom: calc(50% - 182px);
 		left: 12px;
 		transform: rotate(270deg);
 		transform-origin: left;
@@ -186,6 +186,9 @@
 	}
 	.state-home + #copyright-content, .state-gamearea + #copyright-content {
 		display:block;
+	}
+	#copyright-content .hideonmobile {
+		display: none;
 	}
 	#cookiebanner-parent {
 		width: 80%;
