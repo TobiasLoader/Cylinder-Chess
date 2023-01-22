@@ -42,8 +42,8 @@ html(lang="en-GB")
 			#waitingarea
 				#waitingbg
 				#waitingareacontent
-					h2.titlebanner(style="text-align: center;") Waiting Room
-					h3.subtitlebanner(style="text-align: center;")
+					h2.titlearea(style="text-align: center;") Waiting Room
+					h3.subtitlearea(style="text-align: center;")
 						| Share with your opponent:
 					h3.room(title='Copy to clipboard') 1000
 					+inversesubbutton('leavewaitingroom','&larr; leave waiting room','')
@@ -63,7 +63,7 @@ html(lang="en-GB")
 					#yourmoveslider
 						| Your Move
 			#sharearea
-				h2.titlebanner Share
+				h2.titlearea Share
 				.qrrow
 					div
 						p Here's a QR code --><br>and below is the URL.<br>So please share if you<br>like cylinderchess :)
@@ -74,10 +74,10 @@ html(lang="en-GB")
 				.buttonrow
 					+inversesubbutton('backsharearea','&larr; back','')
 			#aboutarea
-				h2.titlebanner About
+				h2.titlearea About
 				#abouttxtarea
 					p 
-						img(id='toby-pic', alt='Tobias Loader', src='/assets/Toby-Col-sq.jpeg')
+						img(id='toby-pic', alt='Tobias Loader', src='/assets/Toby-Col-sq-100px.jpg')
 						| Hi, I'm Tobias Loader. I'm a student at the University of Oxford studying Maths and CompSci and I love building fun coding projects.
 					p Check out my 
 						a(class='linkedin',href='https://www.linkedin.com/in/tobiasloader/') LinkedIn
@@ -102,8 +102,8 @@ html(lang="en-GB")
 				span(class="hideonmobile") &nbsp;&mdash;&nbsp;all&nbsp;rights&nbsp;reserved
 		#cookiebg-parent.off
 			#cookiebg
-				#cookiebanner-parent
-					#cookiebanner
+				#cookiearea-parent
+					#cookiearea
 						h2 Accept Cookies?
 						p#cookie-yes 
 							span --- 

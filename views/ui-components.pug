@@ -52,8 +52,8 @@ mixin popup(id)
 
 mixin startgameoptions()
   #startgame-options
-    h2.titlebanner Start Game
-    h3.subtitlebanner Choose Your Game Config:
+    h2.titlearea Start Game
+    h3.subtitlearea Choose Your Game Config:
     ul#colour.game-option
       +gameoption('colour-white','colour','white','w',true)
       +gameoption('colour-black','colour','black','b',false)
@@ -74,8 +74,8 @@ mixin startgameoptions()
   
 mixin joingameoptions()
   #joingame-options
-    h2.titlebanner Join Game
-    h3.subtitlebanner Enter the ROOM ID:
+    h2.titlearea Join Game
+    h3.subtitlearea Enter the ROOM ID:
     #roomnumcontainer
       input#roomnum(placeholder='_ _ _ _')
     .buttonrow

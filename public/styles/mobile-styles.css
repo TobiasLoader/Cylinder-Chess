@@ -36,9 +36,9 @@
     margin: 10px auto; }
   .mainbuttontitle {
     font-size: 18px; }
-  .titlebanner {
+  .titlearea {
     margin: 5px; }
-  .subtitlebanner {
+  .subtitlearea {
     margin: 5px; }
   #aboutarea #toby-pic {
     width: 90px; }
@@ -134,7 +134,7 @@
     display: block; }
   #copyright-content .hideonmobile {
     display: none; }
-  #cookiebanner-parent {
+  #cookiearea-parent {
     width: 80%; }
-  #cookiebanner {
+  #cookiearea {
     padding: 50px 0; } }
