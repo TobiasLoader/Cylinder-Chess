@@ -588,7 +588,7 @@ sharebutton.click(function(){
 
 copytexts.click(function(){
   navigator.clipboard.writeText($(this).children('p').text());
-  $('#sharearea .titlebanner').text('Copied: thank you!');
+  $('#sharearea .titlearea').text('Copied: thank you!');
 });
 
 $('#waitingarea .room').click(function(){

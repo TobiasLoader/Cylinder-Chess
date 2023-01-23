@@ -339,12 +339,12 @@ body.ingame #vertbuttonshome {
 	margin:0 10px;
 }
 
-.titlebanner {
+.titlearea {
 	margin: 10px 10px 20px 10px;
 	color: rgba(var(--tricol), 1);
 }
 
-.subtitlebanner {
+.subtitlearea {
 	margin: 10px 10px 20px 10px;
 	color: rgba(var(--tricol), 0.6);
 }
@@ -1099,12 +1099,12 @@ body.mymove #boardarea #yourmoveslider {
 #cookiebg-parent.done #cookiebg {
 	opacity: 0;
 }
-#cookiebanner-parent {
+#cookiearea-parent {
 	margin: auto;
 	max-width:630px;
 	width:100%;
 }
-#cookiebanner {
+#cookiearea {
 	margin: 0 15px;
 	color: white;
 	// background: rgba(47, 60, 49, 1);
@@ -1113,21 +1113,21 @@ body.mymove #boardarea #yourmoveslider {
 	// box-shadow: rgba(var(--darkpricol),0.4) 0 0 10px 5px;
 	border: rgba(var(--tricol),0.4) 1px solid;
 }
-#cookiebanner h2 {
+#cookiearea h2 {
 	text-align: center;
 }
-#cookiebanner p {
+#cookiearea p {
 	padding: 5px 0;
 	margin: 8px auto;
 	width: fit-content;
 }
-#cookiebanner p:hover {
+#cookiearea p:hover {
 	cursor: pointer;
 }
-#cookiebanner p span {
+#cookiearea p span {
 	opacity: 0.3;
 }
-#cookiebanner p:hover span {
+#cookiearea p:hover span {
 	opacity: 1;
 }
 
