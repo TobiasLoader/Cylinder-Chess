@@ -38,6 +38,7 @@ var gameid = analytics.roomid;
 var gamesplayed = analytics.gamesplayed;
 var gamesresigned = analytics.gamesresigned;
 var gamescheckmate = analytics.gamescheckmate;
+var gamesoutoftime = analytics.gamesoutoftime;
 var gamesdrawn = analytics.gamesdrawn;
 
 var gamehost = {};
@@ -273,6 +274,8 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('outoftime', function (room, player) {
+        gamesoutoftime += 1;
+        updateAnalytics("gamesoutoftime",gamesoutoftime);
         io.to(room).emit('victory', 3-player, 'You Won!','Your opponent ran out of time.','Out of Time!','Your opponent won because you ran out of time.');
     });
 
