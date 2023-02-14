@@ -113,6 +113,7 @@ app.post('/game_init', (req, res) => {
         if (body['request'] == 'init_room') {
             body['room'] = gameid;
             gameid += 1;
+            if (gameid>9999) gameid = 1000;
             updateAnalytics("roomid",gameid);
         }
         res.writeHead(200);
