@@ -56,6 +56,21 @@ $(document).ready(function (){
   } else if (getCookie('cookie-is-set')=="yes") {
     fetchGoogleTag();
   }
+  
+  var ogdemomillis = Date.now();
+  var prevx = null;
+  var demodegoffset = 0;
+  $('.inhome').on('mouseover',function(event){
+    prevx = event.clientX;
+  });
+  $('.inhome').on('mousemove',function(event){
+    if (prevx!=null) demodegoffset += (event.clientX-prevx)/5;
+    prevx = event.clientX;
+  });
+  setInterval(function(){
+    console.log(demodegoffset)
+    $('#democyl #commonboard #cylinder').css('transform',' rotateY('+((Date.now()-ogdemomillis)*0.03+demodegoffset)+'deg)');
+  },15);
 })
 
 const audioMove = document.createElement('audio');
