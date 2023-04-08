@@ -68,7 +68,6 @@ $(document).ready(function (){
     prevx = event.clientX;
   });
   setInterval(function(){
-    console.log(demodegoffset)
     $('#democyl #commonboard #cylinder').css('transform',' rotateY('+((Date.now()-ogdemomillis)*0.03+demodegoffset)+'deg)');
   },15);
 })
