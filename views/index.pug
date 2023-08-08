@@ -13,6 +13,18 @@ html(lang="en-GB")
 		link(rel="icon", type="image/png", sizes="16x16", href="/assets/favicon/favicon-16x16.png")
 		link(rel="manifest", href="/assets/favicon/site.webmanifest")
 		meta(name="viewport", content="width=device-width, initial-scale=1.0")
+		script(type="application/ld+json").
+			{
+				"@context": "https://schema.org/",
+				"@type": "ImageObject",
+				"contentUrl": "https://www.cylinderchess.com/assets/cylinderchesscom.png",
+				"creditText": "Tobias Loader – cylinderchess.com",
+				"creator": {
+					"@type": "Person",
+					"name": "Tobias Loader"
+				},
+				"copyrightNotice": "Tobias Loader – all rights reserved"
+			}
 	
 	body(style=`--pricol: 110,145,119; --seccol: 60,60,60; --tricol: 220,220,220; --bgcol: 40,40,40;  --secbgcol: 30,30,30; --darkpricol:	66,92,72;`,class='inhome')
 		a(href="https://www.cylinderchess.com")
